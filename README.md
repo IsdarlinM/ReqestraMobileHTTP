@@ -136,6 +136,14 @@ Requisitos:
 - JDK 17.
 - Android SDK 36.
 
+El repositorio no almacena binarios generados. En la primera ejecución, `gradlew` o `gradlew.bat` ejecuta `gradle/wrapper/WrapperBootstrap.java`, descarga el JAR oficial de Gradle 8.13 y exige este SHA-256 antes de usarlo:
+
+```text
+81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f
+```
+
+Si el archivo ya existe y coincide, no se realiza ninguna conexión adicional para restaurarlo.
+
 Linux/macOS:
 
 ```bash
