@@ -1,0 +1,22 @@
+[PASS] HTTPS accepted
+[PASS] HTTP blocked by default
+[PASS] HTTP allowed with lab opt-in
+[PASS] URL credentials rejected
+[PASS] URL fragment rejected
+[PASS] Host header editable
+[PASS] Content-Length controlled
+[PASS] CRLF header rejected
+[PASS] Custom method accepted
+[PASS] Invalid custom method rejected
+[PASS] GET body rejected
+[PASS] POST empty body generated
+[PASS] Base64 binary decoded
+[PASS] Invalid Base64 rejected
+[PASS] Cookie parsing
+[PASS] Cookie control characters rejected
+[PASS] Request headers override session headers
+[PASS] Cookie precedence session < header < editor
+[PASS] Sensitive header redaction
+[PASS] Sensitive query redaction
+[PASS] Timeout validation
+TOTAL_PASS=21

@@ -1,0 +1,8 @@
+Reqestra v2.0.0 - contract compilation validation
+Date: 2026-07-25
+
+NETWORK_CORE_COMPILE_OK
+ANDROID_SESSION_COMPILE_OK
+VIEWMODEL_COMPILE_OK
+
+Scope: Kotlin sources compiled against minimal local stubs matching the Android/OkHttp signatures used by the project. This catches Kotlin syntax and called-signature errors but does not replace an Android SDK build.
