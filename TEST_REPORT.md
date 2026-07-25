@@ -47,7 +47,9 @@ Estas comprobaciones detectan errores Kotlin y discrepancias en las firmas utili
 - Delimitadores Kotlin/KTS balanceados.
 - Sin referencias activas al nombre o package anterior.
 - Sintaxis del script Linux comprobada con `sh -n`.
-- Gradle Wrapper JAR presente y checksum registrado.
+- `WrapperBootstrap.java` compilado con JDK 17.
+- Bootstrap probado contra el JAR oficial de Gradle 8.13.
+- SHA-256 exigido: `81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f`.
 - Integridad final del ZIP comprobada con `unzip -t`.
 
 ## Pruebas Android incluidas
