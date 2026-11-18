@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Reqestra Studio: cliente HTTP web para inspección, colecciones, variables, pruebas y exploración autorizada.">
+  <meta name="theme-color" content="#07131F">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Reqestra Studio — Web</title>
+  <script src="./config.js" defer></script>
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#content">Saltar al contenido</a>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Navegación">
+      <div class="brand"><span class="brand-icon" aria-hidden="true">R/</span><div><strong>Reqestra</strong><small>HTTP STUDIO · WEB 3.3</small></div></div>
+      <div class="side-caption">ESPACIO DE TRABAJO</div>
+      <nav class="side-nav" aria-label="Secciones">
+        <button data-section="studio" class="active">⌘ &nbsp; Estudio</button>
+        <button data-section="collections">▤ &nbsp; Colecciones</button>
+        <button data-section="tests">✓ &nbsp; Pruebas</button>
+        <button data-section="discovery">◇ &nbsp; Explorar</button>
+        <button data-section="history">◷ &nbsp; Historial</button>
+        <button data-section="inspector">≡ &nbsp; Inspector</button>
+        <button data-section="preview">▣ &nbsp; Vista previa</button>
+        <button data-section="session">♧ &nbsp; Sesiones</button>
+        <button data-section="plugins">◈ &nbsp; Extensiones</button>
+        <button data-section="support">♥ &nbsp; Donar / Ayuda</button>
+      </nav>
+      <div class="sidebar-footer"><span class="status-dot"></span> Cliente local · sin telemetría
+        <p>Las peticiones HTTP se envían solo cuando tú lo ordenas.</p>
+      </div>
+    </aside>
+    <div class="main-area">
+      <header class="topbar">
+        <div class="topbar-brand"><span class="brand-icon small">R/</span><span>Reqestra <small>WEB</small></span></div>
+        <div class="topbar-right">
+          <span id="vaultStatus" class="pill muted">Modo temporal</span>
+          <span id="engineStatus" class="pill muted">Motor navegador</span>
+          <button id="themeToggle" class="icon-button" aria-label="Alternar apariencia">◐</button>
+        </div>
+      </header>
+      <main id="content">
+        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+        <section id="studio" class="page active" aria-labelledby="studioTitle">
+          <div class="eyebrow">REQUEST WORKBENCH</div>
+          <div class="page-heading"><div><h1 id="studioTitle">Estudio HTTP</h1><p>Construye y depura solicitudes, sin renunciar al control de cada parámetro.</p></div><span class="pill success">Editor avanzado</span></div>
+          <div class="layout-2">
+            <div class="stack">
+              <article class="panel">
+                <div class="panel-heading"><h2>Nueva petición</h2><span class="panel-hint">Control de origen</span></div>
+                <div class="field"><label for="url">URL completa o plantilla</label><input id="url" type="text" spellcheck="false" autocomplete="off" placeholder="https://api.example.com/v1/users"></div>
+                <div class="field-grid">
+                  <div class="field"><label for="method">Método HTTP</label><select id="method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option><option>CUSTOM</option></select></div>
+                  <div class="field" id="customMethodField" hidden><label for="customMethod">Método personalizado</label><input id="customMethod" type="text" spellcheck="false" value="PROPFIND"></div>
+                </div>
+                <div class="field"><label for="query">Parámetros Query <small>nombre=valor por línea</small></label><textarea id="query" rows="3" spellcheck="false" placeholder="page=1&#10;filter={{filtro}}"></textarea></div>
+                <div class="field"><label for="headers">Headers</label><textarea id="headers" rows="4" spellcheck="false" placeholder="Accept: application/json&#10;Authorization: Bearer {{token}}"></textarea></div>
+                <div class="field"><label for="cookies">Cookies manuales <small>requieren gateway local</small></label><textarea id="cookies" rows="2" spellcheck="false" placeholder="session=valor"></textarea></div>
+                <div class="field-grid">
+                  <div class="field"><label for="bodyMode">Tipo de cuerpo</label><select id="bodyMode">
+                    <option value="NONE">Sin cuerpo</option><option value="RAW">Texto / Raw</option><option value="JSON">JSON</option><option value="HTML">HTML</option><option value="XML">XML</option><option value="FORM_URLENCODED">Form URL-encoded</option><option value="GRAPHQL">GraphQL</option><option value="BASE64_BINARY">Binario Base64</option>
+                  </select></div>
+                  <div class="field"><label for="contentType">Content-Type</label><input id="contentType" spellcheck="false" placeholder="application/json"></div>
+                </div>
+                <div class="field"><label for="body">Body</label><textarea id="body" rows="7" spellcheck="false" placeholder='{"message":"Hola"}'></textarea></div>
+                <div class="options">
+                  <label class="check"><input id="followRedirects" type="checkbox"> Seguir redirecciones</label>
+                  <label class="check"><input id="allowCleartext" type="checkbox"> Autorizar HTTP sin cifrar (laboratorio)</label>
+                  <label class="check"><input id="forceHttp1" type="checkbox"> Preferir HTTP/1.1 <small>(solo Android)</small></label>
+                </div>
+                <div class="field-grid">
+                  <div class="field"><label for="timeout">Tiempo máximo (segundos)</label><input id="timeout" type="number" min="1" max="120" value="30"></div>
+                  <div class="field"><label for="transportMode">Motor de red</label><select id="transportMode"><option value="browser">Navegador / CORS</option><option value="gateway">Gateway local autorizado</option></select></div>
+                </div>
+                <p class="help">El navegador impone CORS y restringe headers. El gateway local opcional requiere configurar una lista de orígenes autorizados.</p>
+                <div class="actions">
+                  <button id="send" class="button primary">➤ Enviar petición</button>
+                  <button id="cancel" class="button outline" disabled>Cancelar</button>
+                  <button id="formatJson" class="button ghost">Formatear JSON</button>
+                </div>
+              </article>
+              <article class="panel">
+                <div class="panel-heading"><h2>Herramientas cURL</h2></div>
+                <label for="curlInput">Importar comando (sin ejecutar shell)</label>
+                <textarea id="curlInput" rows="3" spellcheck="false" placeholder="curl --request GET --url https://example.com"></textarea>
+                <div class="actions"><button id="importCurl" class="button outline">Importar cURL</button><button id="exportCurl" class="button ghost">Copiar cURL redactado</button></div>
+              </article>
+            </div>
+            <div class="stack">
+              <article class="panel response-panel">
+                <div class="panel-heading"><h2>Respuesta reciente</h2><span class="status-dot"></span></div>
+                <div id="studioResponse" class="response-placeholder"><strong>Esperando una petición</strong><p>El estado, la latencia y la vista resumida aparecerán aquí.</p></div>
+                <button data-section="inspector" class="button ghost full">Abrir inspector completo</button>
+              </article>
+              <article class="panel subtle"><div class="panel-heading"><h2>Variables dinámicas</h2><span class="pill info" id="activeEnvTag">Local</span></div><p class="help">Ejemplo: <code>{{baseUrl}}/users?token={{token}}</code>. Define las variables en Colecciones → Entornos. Se sustituyen al ejecutar y no aparecen en el historial.</p><button data-section="collections" class="button outline full">Gestionar entornos</button></article>
+            </div>
+          </div>
+        </section>
+        <section id="collections" class="page" aria-labelledby="collectionsTitle">
+          <div class="eyebrow">WORKSPACE</div><h1 id="collectionsTitle">Colecciones y entornos</h1><p class="lead">Solicitudes reutilizables y secretos cifrados en este navegador.</p>
+          <div class="layout-2">
+            <div class="stack">
+              <article class="panel"><h2>Almacenamiento cifrado</h2><p class="help">AES-GCM y una clave derivada de tu contraseña. Sin sincronización automática con Android.</p>
+                <div class="field"><label for="vaultPassword">Contraseña del espacio local</label><input type="password" id="vaultPassword" autocomplete="new-password" placeholder="Mínimo 10 caracteres"></div>
+                <div class="actions"><button id="vaultCreate" class="button primary">Crear espacio cifrado</button><button id="vaultUnlock" class="button outline">Desbloquear</button><button id="vaultLock" class="button ghost">Bloquear</button></div>
+                <div class="actions"><button id="vaultExport" class="button ghost">Descargar respaldo cifrado</button><label class="button ghost file-button" for="vaultImportFile">Importar respaldo cifrado</label><input id="vaultImportFile" type="file" accept=".json,application/json" hidden></div>
+                <p class="help warning-text">Sin la contraseña, el contenido cifrado no se puede recuperar. El modo temporal no persiste después de recargar.</p>
+              </article>
+              <article class="panel"><h2>Guardar petición</h2>
+                <div class="field"><label for="requestName">Nombre</label><input id="requestName" maxlength="80" placeholder="Consultar perfil"></div>
+                <div class="field"><label for="collectionName">Colección</label><input id="collectionName" maxlength="60" value="General"></div>
+                <button id="saveRequest" class="button primary full">Guardar petición actual</button>
+              </article>
+              <article class="panel"><h2>Importar OpenAPI 3.x JSON</h2><div class="field"><label for="openapiJson">Especificación</label><textarea id="openapiJson" rows="5" spellcheck="false" placeholder='{"openapi":"3.0.0","servers":[{"url":"https://api.example.com"}],"paths":{...}}'></textarea></div><button id="importOpenApi" class="button outline">Importar operaciones</button></article>
+            </div>
+            <div class="stack">
+              <article class="panel"><h2>Entornos y variables</h2>
+                <div class="field"><label for="environmentSelect">Entorno activo</label><select id="environmentSelect"></select></div>
+                <div class="field-grid"><div class="field"><label for="environmentName">Nuevo entorno</label><input id="environmentName" maxlength="40" placeholder="Laboratorio"></div><div class="field field-button"><button id="createEnvironment" class="button outline">Crear</button></div></div>
+                <div class="field"><label for="variableName">Variable</label><input id="variableName" placeholder="baseUrl" maxlength="64"></div>
+                <div class="field"><label for="variableValue">Valor privado</label><input type="password" id="variableValue" autocomplete="off" maxlength="4096" placeholder="No se mostrará después de guardar"></div>
+                <button id="saveVariable" class="button outline">Guardar variable</button>
+                <div id="variablesList" class="list-container" aria-live="polite"></div>
+              </article>
+              <article class="panel"><div class="panel-heading"><h2>Solicitudes guardadas</h2><span id="savedCount" class="pill">0</span></div><div id="savedRequests" class="list-container"></div></article>
+            </div>
+          </div>
+        </section>
+        <section id="tests" class="page" aria-labelledby="testsTitle">
+          <div class="eyebrow">AUTOMATION</div><h1 id="testsTitle">Pruebas de colecciones</h1><p class="lead">Hasta 20 solicitudes secuenciales con un segundo entre cada una.</p>
+          <article class="panel narrow">
+            <div class="field"><label for="testCollection">Colección</label><select id="testCollection"></select></div>
+            <div class="field-grid"><div class="field"><label for="expectedStatus">Código HTTP esperado</label><input id="expectedStatus" type="number" min="100" max="599" value="200"></div><div class="field"><label for="maxLatency">Latencia máxima (ms)</label><input id="maxLatency" type="number" min="1" max="120000" value="2000"></div></div>
+            <p class="help warning-text">Algunos métodos pueden modificar datos reales. Comprueba los permisos y el alcance antes de ejecutar.</p>
+            <div class="actions"><button id="runTests" class="button primary">Ejecutar colección</button><button id="cancelTests" class="button outline" disabled>Cancelar</button></div>
+            <output id="testProgress" class="help" aria-live="polite"></output>
+          </article><div id="testResults" class="results-grid"></div>
+        </section>
+        <section id="discovery" class="page" aria-labelledby="discoveryTitle">
+          <div class="eyebrow">DISCOVERY LAB</div><h1 id="discoveryTitle">Explorar API</h1><p class="lead">Descubrimiento acotado sobre el mismo origen, con confirmación de autorización.</p>
+          <div class="layout-2">
+            <article class="panel"><h2>Rutas y parámetros candidatos</h2>
+              <p class="help">El origen será la URL actual del Estudio. Máximo 8 rutas y 8 parámetros; no se siguen redirecciones.</p>
+              <div class="field"><label for="routes">Rutas absolutas · una por línea</label><textarea id="routes" rows="5" placeholder="/health&#10;/api/v1" spellcheck="false"></textarea></div>
+              <button id="addHints" class="button ghost">Añadir rutas de respuesta anterior</button>
+              <div class="field"><label for="parameterCandidates">Posibles parámetros · uno por línea</label><textarea id="parameterCandidates" rows="5" placeholder="include&#10;page&#10;filter" spellcheck="false"></textarea></div>
+              <p class="help">Las diferencias detectadas no confirman que un parámetro sea oculto o vulnerable.</p>
+            </article>
+            <article class="panel"><h2>Métodos HTTP</h2>
+              <div class="option-grid">
+                <label class="check"><input type="checkbox" class="probe-method" value="GET" checked> GET</label>
+                <label class="check"><input type="checkbox" class="probe-method" value="HEAD" checked> HEAD</label>
+                <label class="check"><input type="checkbox" class="probe-method" value="OPTIONS" checked> OPTIONS</label>
+              </div>
+              <label class="check"><input id="enableMutating" type="checkbox"> Habilitar métodos que pueden modificar datos</label>
+              <div id="mutatingMethods" class="option-grid" hidden>
+                <label class="check"><input type="checkbox" class="probe-method" value="POST"> POST</label>
+                <label class="check"><input type="checkbox" class="probe-method" value="PUT"> PUT</label>
+                <label class="check"><input type="checkbox" class="probe-method" value="PATCH"> PATCH</label>
+                <label class="check"><input type="checkbox" class="probe-method" value="DELETE"> DELETE</label>
+              </div>
+              <label class="check important"><input id="confirmAuthorization" type="checkbox"> Confirmo que estoy autorizado a probar el origen seleccionado.</label>
+              <p class="help warning-text">Límite de 24 peticiones · 1/segundo · sin seguimiento de redirecciones. POST/PUT/PATCH/DELETE pueden modificar o eliminar datos.</p>
+              <div class="actions"><button id="runDiscovery" class="button primary">Ejecutar exploración</button><button id="cancelDiscovery" class="button outline" disabled>Cancelar</button></div>
+              <output id="discoveryProgress" class="help" aria-live="polite"></output>
+            </article>
+          </div><div id="discoveryResults" class="results-grid"></div>
+        </section>
+        <section id="history" class="page" aria-labelledby="historyTitle"><div class="eyebrow">ACTIVIDAD</div><h1 id="historyTitle">Historial local</h1><p class="lead">Solo método, URL redactada, código HTTP y latencia (hasta 50).</p><button id="clearHistory" class="button outline">Borrar historial</button><div id="historyList" class="results-grid"></div></section>
+        <section id="inspector" class="page" aria-labelledby="inspectorTitle"><div class="eyebrow">DIAGNÓSTICO</div><h1 id="inspectorTitle">Inspector completo</h1><p class="lead">Solicitud redactada, cabeceras disponibles y respuesta HTTP.</p><div class="layout-2"><article class="panel"><h2>Solicitud enviada</h2><pre id="inspectorRequest" class="code-block">Sin petición.</pre></article><article class="panel"><h2>Respuesta recibida</h2><pre id="inspectorMeta" class="code-block">Sin respuesta.</pre></article></div><article class="panel"><h2>Cuerpo de respuesta <span class="panel-hint">máximo 4 MiB</span></h2><pre id="inspectorBody" class="code-block multiline">Sin respuesta.</pre><button id="copyResponse" class="button ghost">Copiar cuerpo de respuesta</button></article></section>
+        <section id="preview" class="page" aria-labelledby="previewTitle"><div class="eyebrow">PREVISUALIZACIÓN</div><h1 id="previewTitle">Vista previa del cuerpo</h1><p class="lead">HTML con sandbox y política de contenido restrictiva; los demás formatos se muestran como texto.</p><article class="panel"><iframe id="htmlPreview" class="html-preview" title="Vista previa HTML aislada" sandbox="" hidden></iframe><pre id="textPreview" class="code-block multiline">Sin contenido.</pre></article></section>
+        <section id="session" class="page" aria-labelledby="sessionTitle"><div class="eyebrow">SEGURIDAD</div><h1 id="sessionTitle">Sesiones</h1><p class="lead">Headers por origen y uso opcional de cookies administradas por el navegador.</p>
+          <article class="panel narrow"><p class="help">Origen actual: <strong id="sessionOrigin">—</strong></p>
+            <div class="field"><label for="sessionMode">Modo</label><select id="sessionMode"><option value="NONE">Sin sesión</option><option value="MEMORY">Memoria</option><option value="PERSISTENT">Persistente cifrada (headers)</option></select></div>
+            <div class="field"><label for="sessionHeaders">Headers del origen</label><textarea id="sessionHeaders" rows="6" spellcheck="false" placeholder="Authorization: Bearer {{token}}"></textarea></div>
+            <div class="actions"><button id="saveSession" class="button primary">Guardar headers</button><button id="clearSession" class="button outline">Limpiar headers</button></div>
+            <p class="help">Las cookies HttpOnly y sus detalles no son accesibles mediante JavaScript. Al seleccionar sesiones, el navegador puede incluir cookies de acuerdo con sus propias políticas; Reqestra no puede eliminarlas.</p>
+          </article>
+        </section>
+        <section id="plugins" class="page" aria-labelledby="pluginsTitle"><div class="eyebrow">ECOSISTEMA</div><h1 id="pluginsTitle">Extensiones y capacidades</h1><p class="lead">Funciones integradas y limitaciones del cliente web.</p><div id="pluginsList" class="results-grid"></div></section>
+        <section id="support" class="page" aria-labelledby="supportTitle"><div class="eyebrow">APOYA EL PROYECTO</div><h1 id="supportTitle">Donaciones voluntarias</h1><p class="lead">Reqestra permanece funcional sin donar; ninguna función requiere contribuciones.</p>
+          <article class="panel narrow"><div class="heart">♥</div><h2>Ayuda a mejorar Reqestra</h2>
+            <p>Si decides donar, la operación se completa exclusivamente en la página oficial de PayPal. Reqestra no recoge datos de tarjetas, identificadores de pago ni información financiera.</p>
+            <a id="donateLink" class="button primary full" href="https://www.paypal.com/donate/buttons" target="_blank" rel="noopener noreferrer" aria-disabled="true">Donar con PayPal ↗</a>
+            <p id="donateHelp" class="help">El propietario debe configurar el identificador público del botón PayPal antes de activar donaciones.</p>
+            <p class="help">La donación no desbloquea contenido, privilegios, insignias ni beneficios digitales.</p>
+          </article>
+        </section>
+      </main>
+      <footer class="footer"><span>Reqestra Studio · 3.3.0</span><span>Cliente local · Uso autorizado exclusivamente · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Código fuente</a></span></footer>
+    </div>
+  </div>
+  <nav class="mobile-nav" aria-label="Secciones principales"><button data-section="studio">Estudio</button><button data-section="collections">Colecciones</button><button data-section="tests">Pruebas</button><button data-section="discovery">Explorar</button><button id="moreNav" aria-label="Más herramientas">Más</button></nav>
+</body>
+</html>

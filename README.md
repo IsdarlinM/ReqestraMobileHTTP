@@ -1,14 +1,54 @@
-# Reqestra 3.2
+# Reqestra 3.3 — Android y Web
 
-**Reqestra** es un banco de trabajo HTTP nativo para Android orientado a desarrollo, depuración de APIs y pruebas de seguridad autorizadas. Permite construir, modificar, enviar e inspeccionar peticiones completas sin limitar el editor al HTML.
+**Reqestra** es un banco de trabajo HTTP para **Android nativo y navegadores web** orientado a desarrollo, depuración de APIs y pruebas de seguridad autorizadas. Permite construir, modificar, enviar e inspeccionar peticiones completas sin limitar el editor al HTML.
 
 ```text
 Reqestra
 Mobile HTTP Workbench
-imr :: v3.0.0
+imr :: v3.3.0
 ```
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
+
+## Nuevos clientes y donaciones — 3.3
+
+**Android:** Kotlin, Jetpack Compose, OkHttp, sesiones por origen y colecciones cifradas con Android Keystore.
+
+**Web:** aplicación responsive y PWA instalable en la carpeta web/, con Estudio, variables, Query, colecciones y entornos cifrados, pruebas de colecciones, exploración acotada, historial, inspector, vista previa aislada, importaciones cURL/OpenAPI y sesiones. No requiere framework ni servicios externos para funcionar en modo navegador.
+
+**Donaciones PayPal opcionales:** pantalla Apoyar proyecto en Android y Donar/Ayuda en Web. Se configura un identificador público de botón PayPal alojado; **no hay cuenta receptora preconfigurada**, ni pagos dentro de Reqestra, ni beneficios digitales por donar.
+
+### Ejecutar la web
+
+    cd web
+    npm run check
+    npm test
+    npm start
+
+Abre http://127.0.0.1:5173. Requiere Node.js 20+. También puedes publicar la carpeta web/ como sitio estático HTTPS.
+
+**Limitación real de paridad:** Fetch del navegador está sujeto a CORS, certificados TLS, cookies HttpOnly y restricciones de headers (Cookie, Host, etc.). Para APIs propias o entornos autorizados puedes iniciar el **gateway local restringido**, desactivado por defecto:
+
+    cd web
+    REQESTRA_ALLOWED_ORIGINS=https://api.example.com node server.mjs
+
+Selecciona Gateway en Estudio. El gateway no se debe exponer en Internet: usa loopback, allowlist exacta de orígenes, DNS filtrado e IP fijada, límite de tasa y no sigue redirecciones.
+
+### Donaciones PayPal
+
+Crea tu propio botón desde https://www.paypal.com/donate/buttons. Configura el valor público hosted_button_id en web/config.js. Para Android configura paypalHostedButtonId en ~/.gradle/gradle.properties antes de compilar. Sin ID, el botón permanece desactivado.
+
+### Documentación completa
+
+- [Manual de funcionalidades y 20 casos de uso](docs/FEATURES_AND_USE_CASES.md)
+- [Instalación de Web, PWA y gateway local](docs/WEB_SETUP.md)
+- [Configuración PayPal y requisitos](docs/PAYPAL_DONATIONS.md)
+- [Arquitectura, amenazas, límites y protección de secretos](docs/ARCHITECTURE_AND_SECURITY.md)
+- [Plan de pruebas y checklist de publicación](docs/TEST_PLAN.md)
+- [Sistema de diseño Material 3](docs/DESIGN_SYSTEM.md)
+- [Descubrimiento y parametrización Android 3.2](docs/API_DISCOVERY_3_2.md)
+
+**La web no se encuentra alojada automáticamente** al crear estos archivos: debes ejecutarla localmente o configurar tu hosting. GitHub Actions Android ha tenido fallos de ejecución antes de arrancar su runner; compila el APK en un entorno con SDK Android 36.
 
 ## Novedades 3.2 — API Discovery Lab
 

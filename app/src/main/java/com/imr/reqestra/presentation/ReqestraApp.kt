@@ -56,6 +56,7 @@ import com.imr.reqestra.presentation.preview.PreviewScreen
 import com.imr.reqestra.presentation.response.ResponseScreen
 import com.imr.reqestra.presentation.session.SessionScreen
 import com.imr.reqestra.presentation.workspace.WorkspaceScreen
+import com.imr.reqestra.presentation.support.SupportScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +86,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                         }
                         Column {
                             Text("Reqestra", style = MaterialTheme.typography.titleMedium)
-                            Text("HTTP STUDIO  •  3.2", style = MaterialTheme.typography.labelSmall,
+                            Text("HTTP STUDIO  •  3.3", style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
@@ -102,6 +103,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                                 AppSection.PREVIEW to "Vista previa",
                                 AppSection.SESSION to "Sesiones",
                                 AppSection.PLUGINS to "Extensiones",
+                                AppSection.SUPPORT to "Apoyar proyecto · PayPal",
                             ).forEach { (section, label) ->
                                 DropdownMenuItem(text = { Text(label) }, onClick = {
                                     openMenu = false
@@ -216,6 +218,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                 AppSection.RESPONSE -> ResponseScreen(state.response, state.message, state.isErrorMessage,
                     viewModel::clearMessage, Modifier.fillMaxSize())
                 AppSection.PLUGINS -> PluginsScreen()
+                AppSection.SUPPORT -> SupportScreen()
                 AppSection.SESSION -> SessionScreen(
                     mode = state.draft.sessionMode,
                     origin = state.sessionOrigin,

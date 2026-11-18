@@ -1,5 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+// Public PayPal hosted button ID; configure in ~/.gradle/gradle.properties.
+// Do not put API credentials, private keys or OAuth secrets in the APK.
+val paypalHostedButtonId = providers.gradleProperty("paypalHostedButtonId").orNull.orEmpty().trim()
+require(paypalHostedButtonId.matches(Regex("[A-Za-z0-9]{0,64}"))) {
+    "paypalHostedButtonId contiene caracteres no permitidos."
+}
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -14,8 +21,9 @@ android {
         applicationId = "com.imr.reqestra"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "3.2.0"
+        versionCode = 6
+        versionName = "3.3.0"
+        buildConfigField("String", "PAYPAL_HOSTED_BUTTON_ID", "\"$paypalHostedButtonId\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

@@ -1,0 +1,12 @@
+{
+  "name": "reqestra-web",
+  "version": "3.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Reqestra HTTP Studio browser client and opt-in local gateway",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check app.mjs && node --check lib/core.mjs && node --check lib/vault.mjs && node --check lib/transport.mjs && node --check lib/ui.mjs && node --check server.mjs"
+  }
+}
