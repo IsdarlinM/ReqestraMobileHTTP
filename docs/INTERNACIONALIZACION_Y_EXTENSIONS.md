@@ -133,9 +133,10 @@ La actualización a GitHub no demuestra por sí sola que el APK esté compilado.
 
 ### Android
 
-La barra superior utiliza un encabezado alineado a la izquierda con el icono
-corporativo. A su derecha, y **antes** del selector de idioma 🌐 y del botón
-de menú ⋮, se ubica el acceso directo a donaciones.
+La barra superior muestra el logotipo PNG junto al nombre de Reqestra. A la
+derecha aparecen el selector 🌐, el botón **Donate/Donar** y un nuevo control
+☀️/🌙 para cambiar entre tema claro y oscuro. Ya no hay un botón superior
+de menú duplicado.
 
 - En teléfonos estrechos, el acceso se representa como un botón táctil de
   **corazón** con descripción accesible localizada.
@@ -148,9 +149,9 @@ de menú ⋮, se ubica el acceso directo a donaciones.
 La barra inferior tiene **cinco** destinos: Estudio, Colecciones, Pruebas,
 Explorar y Más. Los cuatro primeros abren funciones principales y Más
 despliega una hoja inferior con filas de iconos, títulos y descripciones
-para Historial, Inspector, Vista previa, Sesiones, Extensiones y Apoyar
-proyecto. El icono ⋮ de la cabecera abre la **misma hoja**: ambos accesos
-comparten un solo menú y no hay opciones desconectadas.
+para Historial, Inspector, Vista previa, Sesiones y Extensiones. **Más es el
+único botón que abre esta hoja**. El apoyo al proyecto ya dispone de un
+acceso permanente en la cabecera, por lo que no aparece duplicado en la hoja.
 
 La etiqueta y la función semántica seleccionada de cada pestaña se
 actualizan con el destino activo. Las etiquetas largas pueden usar
@@ -185,9 +186,65 @@ iconos a las acciones de navegación móvil.
 1. Abre Android y Web en inglés y español; revisa el texto del botón.
 2. Comprueba teléfonos de 320, 360 y 420 dp/px para detectar
    desbordamientos de cabecera y navegación.
-3. En Android pulsa ⋮ y Más: ambos deben mostrar la misma hoja.
-4. Abre cada una de las seis herramientas secundarias y confirma
+3. En Android pulsa Más en la barra inferior; comprueba que la cabecera no
+   contiene un segundo botón para abrir el mismo menú.
+4. Abre cada una de las cinco herramientas secundarias y confirma
    que la pantalla correspondiente se presenta.
 5. Pulsa Donate/Donar: debe abrir la pantalla de apoyo sin lanzar
    un pago automáticamente.
 6. Comprueba PayPal solo tras verificar el destinatario.
+
+## 7. Apariencia clara y oscura y respuesta táctil — Android 3.4.1
+
+La paleta Reqestra utiliza azules marinos y superficies de azul petróleo en
+oscuro, y un fondo azul grisáceo muy claro con tarjetas blancas en modo claro.
+El menú **Más** presenta una hoja inferior con fondo del tema,
+tarjetas individuales, iconos sobre superficies turquesa y separadores discretos.
+Se evita mezclar diferentes paletas de Material3 que reduzcan la coherencia.
+
+### Selector ☀️ / 🌙
+
+- El nuevo botón de la cabecera muestra la acción **Light mode/Modo claro**
+  cuando el tema activo es oscuro y **Dark mode/Modo oscuro** cuando es claro.
+- Al iniciarse por primera vez, la aplicación sigue el tema del sistema.
+- Tras cambiarlo manualmente, la elección se conserva en
+  `SharedPreferences("reqestra_ui")` bajo la clave `theme_mode`,
+  sin alterar las preferencias de idioma ni de trabajo.
+- Las barras de estado y navegación del dispositivo también actualizan
+  el contraste de sus iconos.
+- Los nombres accesibles del botón se ofrecen en los seis idiomas de interfaz.
+- La web conserva su control de apariencia independiente.
+
+### Respuesta táctil
+
+La barra inferior y los elementos de la hoja Más evitan el efecto expansivo
+de ripple al tocar: muestran en su lugar una variación **discreta del
+color de fondo mientras el botón está presionado**. Siguen siendo
+elementos accionables, con etiquetas, áreas táctiles amplias y
+semántica accesible. Los controles generales y los campos de formulario
+siguen los comportamientos estándar de Material3.
+
+### Logotipo PNG
+
+Se comprobó que `app/src/main/res/drawable-nodpi/reqestra_brand.png`
+y `web/icon.png` contienen **los mismos bytes PNG**. El manifiesto
+Android utiliza `@drawable/reqestra_brand` y la web lo carga tanto
+en la cabecera y favicon como en su manifiesto PWA. No se sustituye
+la identidad de marca ni se genera un segundo logotipo distinto.
+
+### Matriz de pruebas adicionales
+
+| Acción | Resultado esperado |
+| --- | --- |
+| Abrir con sistema oscuro, sin preferencia | Aparece el tema oscuro |
+| Abrir con sistema claro, sin preferencia | Aparece el tema claro |
+| Pulsar ☀️ en oscuro | Cambia a claro y conserva la elección |
+| Pulsar 🌙 en claro | Cambia a oscuro y conserva la elección |
+| Rotar o reiniciar Android | Tema manual persiste |
+| Cambiar de idioma | Cambia el texto accesible de apariencia |
+| Pulsar Más | Abre un único menú inferior |
+| Pulsar una fila del menú | Navega sin ripple amplio |
+| Pulsar un tab inferior | Marca el tab activo, sin efecto de puntero |
+| Pulsar Donar | Abre la pantalla de apoyo, sin pagar automáticamente |
+| Abrir Web y Android | Mantienen exactamente el mismo PNG |
+

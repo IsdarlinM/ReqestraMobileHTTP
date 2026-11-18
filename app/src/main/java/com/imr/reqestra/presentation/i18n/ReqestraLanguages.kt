@@ -23,6 +23,12 @@ object ReqestraLanguages {
 
     // Record: [English fallback, Russian, Mandarin Chinese, Portuguese, French].
     private val catalog: Map<String, Array<String>> = mapOf(
+        "Modo claro" to arrayOf(
+            "Light mode", "Светлая тема", "浅色模式", "Modo claro", "Mode clair",
+        ),
+        "Modo oscuro" to arrayOf(
+            "Dark mode", "Тёмная тема", "深色模式", "Modo escuro", "Mode sombre",
+        ),
 
         "Donar" to arrayOf("Donate", "Поддержать", "捐赠", "Doar", "Faire un don"),
         "Acceso rápido a herramientas y resultados." to arrayOf(

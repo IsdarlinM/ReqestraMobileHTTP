@@ -31,13 +31,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -48,6 +48,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -62,6 +65,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
@@ -81,7 +85,11 @@ import com.imr.reqestra.presentation.support.SupportScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
+fun ReqestraApp(
+    darkTheme: Boolean,
+    onToggleTheme: () -> Unit,
+    viewModel: MainViewModel = viewModel(),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var openMenu by remember { mutableStateOf(false) }
     var openLanguageMenu by remember { mutableStateOf(false) }
@@ -179,8 +187,15 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                             Text(tr("Donar"), style = MaterialTheme.typography.labelLarge, maxLines = 1)
                         }
                     }
-                    IconButton(onClick = { openMenu = true }) {
-                        Icon(Icons.Outlined.MoreVert, contentDescription = tr("Más herramientas"))
+                    IconButton(
+                        onClick = onToggleTheme,
+                        modifier = Modifier.size(48.dp),
+                    ) {
+                        Icon(
+                            imageVector = if (darkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
+                            contentDescription = if (darkTheme) tr("Modo claro") else tr("Modo oscuro"),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -341,31 +356,58 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
 }
 
 @Composable
-private fun RowScope.SectionItem(selected: Boolean, label: String, icon: @Composable () -> Unit, onClick: () -> Unit) {
-    TextButton(
-        onClick = onClick,
-        modifier = Modifier.weight(1f).heightIn(min = 64.dp).semantics { this.selected = selected },
-        colors = ButtonDefaults.textButtonColors(
-            contentColor = if (selected) MaterialTheme.colorScheme.onPrimaryContainer
-                else MaterialTheme.colorScheme.onSurfaceVariant,
-        ),
-        contentPadding = PaddingValues(horizontal = 1.dp, vertical = 5.dp),
+private fun RowScope.SectionItem(
+    selected: Boolean,
+    label: String,
+    icon: @Composable () -> Unit,
+    onClick: () -> Unit,
+) {
+    // No oversized ripple/pointer highlight: a subtle background responds to touch.
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val palette = MaterialTheme.colorScheme
+    val touchBackground = if (pressed) palette.surfaceVariant.copy(alpha = 0.55f)
+        else Color.Transparent
+
+    Column(
+        modifier = Modifier.weight(1f)
+            .heightIn(min = 64.dp)
+            .padding(horizontal = 2.dp, vertical = 3.dp)
+            .clip(RoundedCornerShape(14.dp))
+            .background(touchBackground)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                role = Role.Tab,
+                onClick = onClick,
+            )
+            .semantics { this.selected = selected }
+            .padding(vertical = 5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(3.dp),
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(5.dp),
+        Box(
+            modifier = Modifier
+                .background(
+                    if (selected) palette.primaryContainer else Color.Transparent,
+                    RoundedCornerShape(12.dp),
+                )
+                .padding(horizontal = 15.dp, vertical = 6.dp),
+            contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier.background(
-                    if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-                    RoundedCornerShape(13.dp),
-                ).padding(horizontal = 15.dp, vertical = 5.dp),
-                contentAlignment = Alignment.Center,
+            CompositionLocalProvider(
+                androidx.compose.material3.LocalContentColor provides
+                    if (selected) palette.onPrimaryContainer else palette.onSurfaceVariant,
             ) {
                 icon()
             }
-            Text(label, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = if (selected) palette.onSurface else palette.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }

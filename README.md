@@ -5,10 +5,24 @@
 ```text
 Reqestra
 Mobile HTTP Workbench
-imr :: v3.3.0
+imr :: v3.4.1
 ```
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
+
+## Navegación y apariencia móvil — 3.4.1
+
+La cabecera de Android muestra los accesos **🌐 Idioma**, **♥ Donate**
+y **☀️/🌙 Apariencia**. Se eliminó el botón de menú superior repetido:
+el menú **Más** de la barra inferior es el único acceso a las herramientas
+secundarias (Historial, Inspector, Vista previa, Sesiones y Extensiones).
+
+El menú Más adapta los colores de fondo al tema oscuro/claro, usa tarjetas
+con contraste claro y una respuesta de pulsación discreta sin ripple
+expansivo. El tema sigue al sistema hasta una selección manual, que se
+guarda en el dispositivo. El logotipo sigue siendo el **mismo PNG** en
+Android y Web. Consulta las secciones 6 y 7 de
+[la guía de interfaz](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
 
 ## Identidad visual e idiomas — 3.4
 

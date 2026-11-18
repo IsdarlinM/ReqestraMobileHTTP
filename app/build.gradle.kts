@@ -22,8 +22,8 @@ android {
         applicationId = "com.imr.reqestra"
         minSdk = 26
         targetSdk = 36
-        versionCode = 7
-        versionName = "3.4.0"
+        versionCode = 8
+        versionName = "3.4.1"
         buildConfigField("String", "PAYPAL_HOSTED_BUTTON_ID", "\"$paypalHostedButtonId\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
