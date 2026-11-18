@@ -6,9 +6,10 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-// Public PayPal hosted button ID; configure in ~/.gradle/gradle.properties.
+// Owner-supplied public PayPal Donate button ID. Override via ~/.gradle/gradle.properties.
 // Do not put API credentials, private keys or OAuth secrets in the APK.
-val paypalHostedButtonId = providers.gradleProperty("paypalHostedButtonId").orNull.orEmpty().trim()
+val paypalHostedButtonId = providers.gradleProperty("paypalHostedButtonId").orNull
+    ?.trim()?.takeIf { it.isNotEmpty() } ?: "DZW75X5SML2RJ"
 require(paypalHostedButtonId.matches(Regex("[A-Za-z0-9]{0,64}"))) {
     "paypalHostedButtonId contiene caracteres no permitidos."
 }

@@ -1,5 +1,5 @@
 // Public PayPal hosted donate button ID only; never add credentials or API secrets.
-// Generate it in https://www.paypal.com/donate/buttons
+// Owner-supplied ID from PayPal button management; verify the public donation page before deploying.
 window.REQESTRA_CONFIG = Object.freeze({
-  paypalHostedButtonId: "",
+  paypalHostedButtonId: "DZW75X5SML2RJ",
 });

@@ -2,6 +2,25 @@
 
 **Versión:** Reqestra 3.3 (Android y Web). La app **no procesa pagos ni verifica transacciones**: abre una página de donación alojada directamente en paypal.com.
 
+## Configuración del botón aportado por el propietario
+
+El propietario facilitó el enlace de administración `https://www.paypal.com/donate/buttons/manage/DZW75X5SML2RJ`.
+El segmento final `DZW75X5SML2RJ` se ha configurado como candidato a `hosted_button_id`
+en el cliente Web y como valor público predeterminado para Android, de acuerdo con
+el formato de botones alojados por PayPal. Una propiedad Gradle local
+`paypalHostedButtonId` no vacía prevalece sobre ese valor predeterminado.
+
+**Verificación pendiente:** el enlace administrativo NO es para los donantes y no prueba
+que el identificador de administración sea igual a la ID pública del botón. El
+propietario debe abrir `https://www.paypal.com/donate/?hosted_button_id=DZW75X5SML2RJ`
+en sesión privada, confirmar que aparece una página activa de donaciones de Reqestra
+y comprobar que el beneficiario es su cuenta antes de publicar o distribuir.
+
+Si PayPal muestra una ID distinta dentro del código generado de **Compartir / Integrar**,
+hay que reemplazar el valor en `web/config.js` y el predeterminado de
+`app/build.gradle.kts`, o ejecutar `scripts/configure-paypal.sh` para
+actualizar localmente Android y Web antes de compilar.
+
 ## 1. Qué está integrado
 
 - Android: opción **Apoyar proyecto · PayPal** en el menú de herramientas; pantalla explicativa y botón externo.
