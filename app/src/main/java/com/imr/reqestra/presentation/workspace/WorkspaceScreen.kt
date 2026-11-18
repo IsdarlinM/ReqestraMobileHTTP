@@ -33,7 +33,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,6 +51,7 @@ import com.imr.reqestra.domain.model.BodyMode
 import com.imr.reqestra.domain.model.BodyPolicy
 import com.imr.reqestra.domain.model.HttpMethodOption
 import com.imr.reqestra.domain.model.RequestDraft
+import com.imr.reqestra.domain.model.ResponseSnapshot
 import com.imr.reqestra.presentation.components.CodeEditor
 import com.imr.reqestra.presentation.components.StatusBanner
 
@@ -62,6 +63,7 @@ private enum class EditorTab(val label: String) {
 @Composable
 fun WorkspaceScreen(
     draft: RequestDraft,
+    response: ResponseSnapshot?,
     isLoading: Boolean,
     message: String?,
     isErrorMessage: Boolean,
@@ -81,6 +83,8 @@ fun WorkspaceScreen(
     onSend: () -> Unit,
     onCancel: () -> Unit,
     onImportDraft: (RequestDraft) -> Unit,
+    onOpenResponse: () -> Unit,
+    onFormatJson: () -> Unit,
     onDismissMessage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -147,11 +151,8 @@ fun WorkspaceScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    AssistChip(
-                        onClick = {},
-                        leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
-                        label = { Text(draft.sessionMode.label) },
-                    )
+                    Text(draft.sessionMode.label, style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 OutlinedTextField(
                     value = draft.url,
@@ -209,7 +210,7 @@ fun WorkspaceScreen(
 
         Card {
             Column {
-                TabRow(selectedTabIndex = tabIndex) {
+                ScrollableTabRow(selectedTabIndex = tabIndex, edgePadding = 8.dp) {
                     tabs.forEachIndexed { index, tab ->
                         Tab(selected = tabIndex == index, onClick = { tabIndex = index }, text = { Text(tab.label) })
                     }
@@ -242,6 +243,7 @@ fun WorkspaceScreen(
                             onModeChange = onBodyModeChange,
                             onContentTypeChange = onContentTypeChange,
                             onBodyChange = onBodyChange,
+                            onFormatJson = onFormatJson,
                         )
                         EditorTab.OPTIONS -> OptionsTab(
                             draft = draft,
@@ -251,6 +253,26 @@ fun WorkspaceScreen(
                             onTimeoutChange = onTimeoutChange,
                         )
                     }
+                }
+            }
+        }
+
+        if (response != null) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text("HTTP ${response.statusCode} · ${response.durationMs} ms",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (response.statusCode in 200..299) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.error)
+                        OutlinedButton(onClick = onOpenResponse) { Text("Ver inspector") }
+                    }
+                    Text("Respuesta · ${response.protocol}", style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(response.body.take(500).ifBlank { "(sin contenido)" },
+                        style = MaterialTheme.typography.bodySmall.copy(fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace),
+                        maxLines = 8)
                 }
             }
         }
@@ -284,9 +306,13 @@ private fun BodyTab(
     onModeChange: (BodyMode) -> Unit,
     onContentTypeChange: (String) -> Unit,
     onBodyChange: (String) -> Unit,
+    onFormatJson: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         BodyModeSelector(draft.bodyMode, onModeChange)
+        if (draft.bodyMode == BodyMode.JSON) {
+            OutlinedButton(onClick = onFormatJson) { Text("Formatear JSON") }
+        }
         if (draft.bodyMode != BodyMode.NONE) {
             OutlinedTextField(
                 value = draft.contentType,

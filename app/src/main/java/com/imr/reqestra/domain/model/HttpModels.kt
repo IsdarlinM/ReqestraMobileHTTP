@@ -43,13 +43,13 @@ data class ParsedHeader(
 
 data class RequestDraft(
     val url: String = "https://example.com",
-    val method: HttpMethodOption = HttpMethodOption.POST,
+    val method: HttpMethodOption = HttpMethodOption.GET,
     val customMethod: String = "PROPFIND",
     val headersText: String = "Accept: */*",
     val cookiesText: String = "",
-    val bodyMode: BodyMode = BodyMode.HTML,
-    val contentType: String = BodyMode.HTML.defaultContentType,
-    val body: String = DEFAULT_BODY,
+    val bodyMode: BodyMode = BodyMode.NONE,
+    val contentType: String = BodyMode.NONE.defaultContentType,
+    val body: String = "",
     val sessionMode: SessionMode = SessionMode.NONE,
     val sessionHeadersText: String = "",
     val followRedirects: Boolean = false,
@@ -126,7 +126,7 @@ const val DEFAULT_BODY = """<!doctype html>
   <main>
     <h1>Reqestra</h1>
     <p>Edita método, URL, query, headers, cookies, cuerpo y opciones de transporte.</p>
-    <code>imr :: v2.0.0</code>
+    <code>imr :: v3.0.0</code>
   </main>
 </body>
 </html>"""

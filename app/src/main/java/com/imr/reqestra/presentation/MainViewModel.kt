@@ -4,6 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.imr.reqestra.core.security.SensitiveDataRedactor
+import com.imr.reqestra.core.automation.CollectionRunner
+import com.imr.reqestra.core.automation.RunReport
+import com.imr.reqestra.core.testing.AssertionConfig
+import com.imr.reqestra.core.variables.VariableTemplate
+import com.imr.reqestra.data.workspace.ApiEnvironment
+import com.imr.reqestra.data.workspace.WorkspaceData
+import com.imr.reqestra.data.workspace.WorkspaceStore
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 import com.imr.reqestra.core.validation.RequestValidator
 import com.imr.reqestra.data.history.HistoryStore
 import com.imr.reqestra.data.network.HttpEngine
@@ -26,10 +35,13 @@ import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
-enum class AppSection { REQUEST, PREVIEW, RESPONSE, SESSION, HISTORY }
+enum class AppSection { REQUEST, COLLECTIONS, AUTOMATION, HISTORY, PREVIEW, RESPONSE, SESSION, PLUGINS }
 
 data class MainUiState(
     val draft: RequestDraft = RequestDraft(),
+    val workspace: WorkspaceData = WorkspaceData(),
+    val runReport: RunReport? = null,
+    val runProgress: String? = null,
     val response: ResponseSnapshot? = null,
     val history: List<HistoryEntry> = emptyList(),
     val sessionSummary: SessionSummary = SessionSummary(SessionMode.NONE, 0, 0, emptyList()),
@@ -44,6 +56,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val sessionRepository = AndroidSessionRepository(application)
     private val httpEngine = HttpEngine(sessionRepository)
     private val historyStore = HistoryStore(application)
+    private val workspaceStore = WorkspaceStore(application)
+    private val collectionRunner = CollectionRunner(httpEngine)
+    private var automationJob: Job? = null
     private val initialMode = sessionRepository.preferredMode()
     private val initialUrl = RequestDraft().url.toHttpUrlOrNull()
         ?: error("La URL inicial de Reqestra no es válida.")
@@ -56,6 +71,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 sessionHeadersText = initialHeaders.joinToString("\n") { "${it.name}: ${it.value}" },
             ),
             history = historyStore.load(),
+            workspace = workspaceStore.load(),
             sessionSummary = sessionRepository.summary(initialUrl, initialMode),
             sessionOrigin = originLabel(initialUrl),
         ),
@@ -175,6 +191,172 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+
+
+    fun importOpenApiDocument(document: String) {
+        runCatching {
+            val imports = com.imr.reqestra.core.openapi.OpenApiImporter.importJson(document)
+            val data = _uiState.value.workspace
+            require(data.requests.size + imports.size <= 120) { "La importación supera el límite de 120 peticiones." }
+            val next = data.copy(requests = data.requests + imports.map {
+                workspaceStore.createRequest(it.name, "OpenAPI", it.draft)
+            })
+            workspaceStore.save(next)
+            _uiState.update { it.copy(
+                workspace = next,
+                message = "Importadas ${imports.size} operaciones OpenAPI JSON.",
+                isErrorMessage = false,
+            ) }
+        }.onFailure(::showWorkspaceError)
+    }
+
+    fun formatJsonBody() {
+        runCatching {
+            val draft = _uiState.value.draft
+            require(draft.bodyMode == BodyMode.JSON) { "Selecciona el modo JSON." }
+            require(draft.body.length <= 5 * 1024 * 1024) { "JSON demasiado grande." }
+            val value = draft.body.trim()
+            val pretty = if (value.startsWith("[")) org.json.JSONArray(value).toString(2)
+                else org.json.JSONObject(value).toString(2)
+            _uiState.update { it.copy(draft = it.draft.copy(body = pretty), message = "JSON formateado.", isErrorMessage = false) }
+        }.onFailure(::showWorkspaceError)
+    }
+
+    fun saveCurrentRequest(name: String, collection: String) {
+        runCatching {
+            val current = _uiState.value
+            val entry = workspaceStore.createRequest(name, collection, current.draft)
+            val updated = current.workspace.copy(requests = current.workspace.requests + entry)
+            workspaceStore.save(updated)
+            _uiState.update { it.copy(workspace = updated, message = "Petición guardada en ${entry.collection}.", isErrorMessage = false) }
+        }.onFailure { showWorkspaceError(it) }
+    }
+
+    fun loadSavedRequest(id: String) {
+        val entry = _uiState.value.workspace.requests.find { it.id == id } ?: return
+        val currentMode = _uiState.value.draft.sessionMode
+        _uiState.update {
+            it.copy(
+                draft = entry.draft.copy(sessionMode = currentMode, sessionHeadersText = ""),
+                selectedSection = AppSection.REQUEST,
+                message = "Petición cargada desde ${entry.collection}.",
+                isErrorMessage = false,
+            )
+        }
+    }
+
+    fun deleteSavedRequest(id: String) {
+        mutateWorkspace { data -> data.copy(requests = data.requests.filterNot { it.id == id }) }
+    }
+
+    fun addEnvironment(name: String) {
+        val trimmed = name.trim()
+        if (trimmed.isBlank() || trimmed.length > 40) {
+            _uiState.update { it.copy(message = "Nombre de entorno inválido (1-40 caracteres).", isErrorMessage = true) }
+            return
+        }
+        mutateWorkspace { data ->
+            require(data.environments.none { it.name == trimmed }) { "El entorno ya existe." }
+            data.copy(
+                environments = data.environments + ApiEnvironment(trimmed),
+                activeEnvironment = trimmed,
+            )
+        }
+    }
+
+    fun selectEnvironment(name: String) {
+        mutateWorkspace { data ->
+            require(data.environments.any { it.name == name }) { "Entorno desconocido." }
+            data.copy(activeEnvironment = name)
+        }
+    }
+
+    fun setVariable(name: String, value: String) {
+        runCatching { VariableTemplate.requireName(name.trim()) }
+            .onFailure { showWorkspaceError(it); return }
+        if (value.length > 4096) {
+            _uiState.update { it.copy(message = "Variable demasiado larga.", isErrorMessage = true) }
+            return
+        }
+        mutateWorkspace { data ->
+            data.copy(environments = data.environments.map { env ->
+                if (env.name == data.activeEnvironment) env.copy(
+                    variables = env.variables + (name.trim() to value),
+                ) else env
+            })
+        }
+    }
+
+    fun removeVariable(name: String) {
+        mutateWorkspace { data ->
+            data.copy(environments = data.environments.map { env ->
+                if (env.name == data.activeEnvironment) env.copy(
+                    variables = env.variables - name,
+                ) else env
+            })
+        }
+    }
+
+    fun runCollection(collection: String, expectedStatus: Int, maxDurationMs: Long) {
+        if (_uiState.value.isLoading) return
+        if (expectedStatus !in 100..599 || maxDurationMs < 1L || maxDurationMs > 120_000L) {
+            _uiState.update { it.copy(message = "Assertion HTTP o tiempo inválidos.", isErrorMessage = true) }
+            return
+        }
+        val data = _uiState.value.workspace
+        val requests = data.requests.filter { it.collection == collection }
+        if (requests.isEmpty() || requests.size > 20) {
+            _uiState.update { it.copy(message = "La colección debe contener entre 1 y 20 peticiones.", isErrorMessage = true) }
+            return
+        }
+        val variables = activeVariables()
+        _uiState.update { it.copy(isLoading = true, runProgress = "0 / ${requests.size}", runReport = null, message = null) }
+        automationJob = viewModelScope.launch {
+            try {
+                val report = withContext(Dispatchers.IO) {
+                    collectionRunner.run(requests, variables, AssertionConfig(expectedStatus, maxDurationMs)) { done, total ->
+                        _uiState.update { it.copy(runProgress = "$done / $total") }
+                    }
+                }
+                _uiState.update { it.copy(runReport = report, message = "Pruebas completadas: ${report.passed} correctas, ${report.failed} fallidas.", isErrorMessage = report.failed > 0) }
+            } catch (cancelled: CancellationException) {
+                _uiState.update { it.copy(message = "Ejecución cancelada.", isErrorMessage = false) }
+                throw cancelled
+            } catch (error: Exception) {
+                showWorkspaceError(error)
+            } finally {
+                _uiState.update { it.copy(isLoading = false, runProgress = null) }
+            }
+        }
+    }
+
+    private fun activeVariables(): Map<String, String> {
+        val workspace = _uiState.value.workspace
+        return workspace.environments.firstOrNull { it.name == workspace.activeEnvironment }?.variables.orEmpty()
+    }
+
+    private fun resolveDraft(draft: RequestDraft): RequestDraft {
+        val variables = activeVariables()
+        return draft.copy(
+            url = VariableTemplate.resolve(draft.url, variables),
+            headersText = VariableTemplate.resolve(draft.headersText, variables),
+            cookiesText = VariableTemplate.resolve(draft.cookiesText, variables),
+            body = VariableTemplate.resolve(draft.body, variables),
+        )
+    }
+
+    private fun showWorkspaceError(error: Throwable) {
+        _uiState.update { it.copy(message = error.message ?: "Operación no disponible.", isErrorMessage = true) }
+    }
+
+    private fun mutateWorkspace(action: (WorkspaceData) -> WorkspaceData) {
+        runCatching {
+            val next = action(_uiState.value.workspace)
+            workspaceStore.save(next)
+            _uiState.update { it.copy(workspace = next, message = "Espacio de trabajo actualizado.", isErrorMessage = false) }
+        }.onFailure(::showWorkspaceError)
+    }
+
     fun loadResponseBody() {
         val source = _uiState.value.draft.copy(
             method = HttpMethodOption.GET,
@@ -187,7 +369,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun sendRequest() = runRequest(_uiState.value.draft, loadIntoBody = false)
 
-    fun cancelRequest() = httpEngine.cancelActive()
+    fun cancelRequest() {
+        automationJob?.cancel()
+        httpEngine.cancelActive()
+    }
 
     fun clearHistory() {
         historyStore.clear()
@@ -218,7 +403,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (_uiState.value.isLoading) return
         _uiState.update { it.copy(isLoading = true, message = null, isErrorMessage = false) }
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) { httpEngine.execute(draft) }
+            val prepared = runCatching { resolveDraft(draft) }
+            val result = prepared.fold(
+                onSuccess = { preparedDraft -> withContext(Dispatchers.IO) { httpEngine.execute(preparedDraft) } },
+                onFailure = { OperationResult.Failure(it.message ?: "Variables no válidas.") },
+            )
             when (result) {
                 is OperationResult.Failure -> _uiState.update {
                     it.copy(isLoading = false, message = result.message, isErrorMessage = true)
@@ -243,7 +432,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                             } ?: current.sessionSummary,
                             sessionOrigin = current.draft.url.toHttpUrlOrNull()?.let(::originLabel)
                                 ?: current.sessionOrigin,
-                            selectedSection = if (loadIntoBody) AppSection.REQUEST else AppSection.RESPONSE,
+                            selectedSection = AppSection.REQUEST,
                             isLoading = false,
                             message = if (loadIntoBody) "Respuesta cargada en el editor de cuerpo. ${result.notice.orEmpty()}".trim() else result.notice ?: "Petición completada.",
                             isErrorMessage = false,
@@ -299,6 +488,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     override fun onCleared() {
+        automationJob?.cancel()
         httpEngine.cancelActive()
         super.onCleared()
     }

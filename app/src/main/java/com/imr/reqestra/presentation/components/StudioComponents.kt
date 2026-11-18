@@ -80,9 +80,9 @@ fun CodeEditor(
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = (minLines * 24).dp),
+                .heightIn(min = (minLines.coerceIn(4, 8) * 22).dp),
             textStyle = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace),
-            minLines = minLines,
+            minLines = minLines.coerceIn(4, 8),
             shape = RoundedCornerShape(16.dp),
             supportingText = {
                 Text("${value.toByteArray(Charsets.UTF_8).size} bytes UTF-8")
