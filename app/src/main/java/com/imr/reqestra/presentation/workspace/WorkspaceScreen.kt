@@ -52,7 +52,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import com.imr.reqestra.core.curl.CurlCodec
 import com.imr.reqestra.domain.model.BodyMode
 import com.imr.reqestra.domain.model.BodyPolicy
 import com.imr.reqestra.domain.model.HttpMethodOption
@@ -62,7 +61,7 @@ import com.imr.reqestra.presentation.components.CodeEditor
 import com.imr.reqestra.presentation.components.StatusBanner
 
 private enum class EditorTab(val label: String) {
-    GENERAL("General"), HEADERS("Headers"), COOKIES("Cookies"), BODY("Body"), OPTIONS("Opciones")
+    GENERAL("General"), PARAMS("Query"), HEADERS("Headers"), COOKIES("Cookies"), BODY("Body"), OPTIONS("Opciones")
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
@@ -74,6 +73,7 @@ fun WorkspaceScreen(
     message: String?,
     isErrorMessage: Boolean,
     onUrlChange: (String) -> Unit,
+    onQueryParamsChange: (String) -> Unit,
     onMethodChange: (HttpMethodOption) -> Unit,
     onCustomMethodChange: (String) -> Unit,
     onHeadersChange: (String) -> Unit,
@@ -88,6 +88,7 @@ fun WorkspaceScreen(
     onLoadBody: () -> Unit,
     onSend: () -> Unit,
     onCancel: () -> Unit,
+    onExportCurl: () -> Result<String>,
     onImportDraft: (RequestDraft) -> Unit,
     onOpenResponse: () -> Unit,
     onFormatJson: () -> Unit,
@@ -195,7 +196,7 @@ fun WorkspaceScreen(
                         Text(" Cargar respuesta")
                     }
                     OutlinedButton(onClick = {
-                        CurlCodec.exportSanitized(draft)
+                        onExportCurl()
                             .onSuccess {
                                 clipboard.setText(AnnotatedString(it))
                                 curlNotice = null
@@ -238,6 +239,25 @@ fun WorkspaceScreen(
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                     when (tabs[tabIndex]) {
                         EditorTab.GENERAL -> GeneralTab(draft)
+                        EditorTab.PARAMS -> Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text("Parámetros de consulta", style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                "Una línea por parámetro: nombre=valor. Usa {{variable}} en los valores. Los parámetros de la URL original se conservan y los nuevos se codifican automáticamente.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            CodeEditor(
+                                value = draft.queryParamsText,
+                                onValueChange = onQueryParamsChange,
+                                label = "Query params · nombre=valor",
+                                minLines = 7,
+                            )
+                            Text(
+                                "Los headers, las cookies, la URL y el cuerpo también admiten {{variables}} del entorno activo.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                         EditorTab.HEADERS -> CodeEditor(
                             value = draft.headersText,
                             onValueChange = onHeadersChange,

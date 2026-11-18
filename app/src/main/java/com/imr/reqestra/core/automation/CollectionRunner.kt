@@ -3,7 +3,7 @@ package com.imr.reqestra.core.automation
 import com.imr.reqestra.core.testing.AssertionConfig
 import com.imr.reqestra.core.testing.AssertionResult
 import com.imr.reqestra.core.testing.ResponseAssertions
-import com.imr.reqestra.core.variables.VariableTemplate
+import com.imr.reqestra.core.variables.RequestParameterizer
 import com.imr.reqestra.data.network.HttpEngine
 import com.imr.reqestra.data.workspace.SavedRequest
 import com.imr.reqestra.domain.model.OperationResult
@@ -53,12 +53,8 @@ class CollectionRunner(private val httpEngine: HttpEngine) {
         return RunReport(results)
     }
 
-    private fun resolveDraft(draft: RequestDraft, variables: Map<String, String>) = draft.copy(
-        url = VariableTemplate.resolve(draft.url, variables),
-        headersText = VariableTemplate.resolve(draft.headersText, variables),
-        cookiesText = VariableTemplate.resolve(draft.cookiesText, variables),
-        body = VariableTemplate.resolve(draft.body, variables),
-    )
+    private fun resolveDraft(draft: RequestDraft, variables: Map<String, String>) =
+        RequestParameterizer.resolve(draft, variables)
 
     private fun checkResult(name: String, response: ResponseSnapshot, config: AssertionConfig): RequestCheck {
         val checks = ResponseAssertions.evaluate(response, config)

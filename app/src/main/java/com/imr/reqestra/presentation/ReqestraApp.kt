@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ButtonDefaults
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.imr.reqestra.presentation.discovery.DiscoveryScreen
 import com.imr.reqestra.presentation.automation.AutomationScreen
 import com.imr.reqestra.presentation.collections.CollectionsScreen
 import com.imr.reqestra.presentation.history.HistoryScreen
@@ -83,7 +85,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                         }
                         Column {
                             Text("Reqestra", style = MaterialTheme.typography.titleMedium)
-                            Text("HTTP STUDIO  •  3.1", style = MaterialTheme.typography.labelSmall,
+                            Text("HTTP STUDIO  •  3.2", style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
@@ -95,6 +97,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                         }
                         DropdownMenu(expanded = openMenu, onDismissRequest = { openMenu = false }) {
                             listOf(
+                                AppSection.HISTORY to "Historial de peticiones",
                                 AppSection.RESPONSE to "Inspector completo",
                                 AppSection.PREVIEW to "Vista previa",
                                 AppSection.SESSION to "Sesiones",
@@ -133,9 +136,9 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                     { Icon(Icons.Outlined.PlayArrow, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.AUTOMATION)
                 }
-                SectionItem(state.selectedSection == AppSection.HISTORY, "Historial",
-                    { Icon(Icons.Outlined.History, contentDescription = null) }) {
-                    viewModel.selectSection(AppSection.HISTORY)
+                SectionItem(state.selectedSection == AppSection.DISCOVERY, "Explorar",
+                    { Icon(Icons.Outlined.Search, contentDescription = null) }) {
+                    viewModel.selectSection(AppSection.DISCOVERY)
                 }
                 }
             }
@@ -150,6 +153,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                     message = state.message,
                     isErrorMessage = state.isErrorMessage,
                     onUrlChange = viewModel::updateUrl,
+                    onQueryParamsChange = viewModel::updateQueryParams,
                     onMethodChange = viewModel::updateMethod,
                     onCustomMethodChange = viewModel::updateCustomMethod,
                     onHeadersChange = viewModel::updateHeaders,
@@ -164,11 +168,24 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                     onLoadBody = viewModel::loadResponseBody,
                     onSend = viewModel::sendRequest,
                     onCancel = viewModel::cancelRequest,
+                    onExportCurl = viewModel::exportCurlSanitized,
                     onImportDraft = viewModel::importCurlDraft,
                     onOpenResponse = { viewModel.selectSection(AppSection.RESPONSE) },
                     onFormatJson = viewModel::formatJsonBody,
                     onDismissMessage = viewModel::clearMessage,
                     modifier = Modifier.fillMaxSize(),
+                )
+                AppSection.DISCOVERY -> DiscoveryScreen(
+                    draftUrl = state.draft.url,
+                    response = state.response,
+                    report = state.discoveryReport,
+                    progress = state.discoveryProgress,
+                    isLoading = state.isLoading,
+                    message = state.message,
+                    isErrorMessage = state.isErrorMessage,
+                    onDismissMessage = viewModel::clearMessage,
+                    onRun = viewModel::runDiscovery,
+                    onCancel = viewModel::cancelRequest,
                 )
                 AppSection.COLLECTIONS -> CollectionsScreen(
                     workspace = state.workspace,

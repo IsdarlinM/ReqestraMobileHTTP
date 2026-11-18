@@ -3,11 +3,16 @@ package com.imr.reqestra.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.imr.reqestra.core.curl.CurlCodec
 import com.imr.reqestra.core.security.SensitiveDataRedactor
 import com.imr.reqestra.core.automation.CollectionRunner
 import com.imr.reqestra.core.automation.RunReport
 import com.imr.reqestra.core.testing.AssertionConfig
+import com.imr.reqestra.core.variables.RequestParameterizer
 import com.imr.reqestra.core.variables.VariableTemplate
+import com.imr.reqestra.core.discovery.DiscoveryPlanner
+import com.imr.reqestra.core.discovery.DiscoveryReport
+import com.imr.reqestra.core.discovery.EndpointExplorer
 import com.imr.reqestra.data.workspace.ApiEnvironment
 import com.imr.reqestra.data.workspace.WorkspaceData
 import com.imr.reqestra.data.workspace.WorkspaceStore
@@ -35,12 +40,14 @@ import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
-enum class AppSection { REQUEST, COLLECTIONS, AUTOMATION, HISTORY, PREVIEW, RESPONSE, SESSION, PLUGINS }
+enum class AppSection { REQUEST, DISCOVERY, COLLECTIONS, AUTOMATION, HISTORY, PREVIEW, RESPONSE, SESSION, PLUGINS }
 
 data class MainUiState(
     val draft: RequestDraft = RequestDraft(),
     val workspace: WorkspaceData = WorkspaceData(),
     val runReport: RunReport? = null,
+    val discoveryReport: DiscoveryReport? = null,
+    val discoveryProgress: String? = null,
     val runProgress: String? = null,
     val response: ResponseSnapshot? = null,
     val history: List<HistoryEntry> = emptyList(),
@@ -58,6 +65,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val historyStore = HistoryStore(application)
     private val workspaceStore = WorkspaceStore(application)
     private val collectionRunner = CollectionRunner(httpEngine)
+    private val endpointExplorer = EndpointExplorer(httpEngine)
+    private var discoveryJob: Job? = null
     private var automationJob: Job? = null
     private val initialMode = sessionRepository.preferredMode()
     private val initialUrl = RequestDraft().url.toHttpUrlOrNull()
@@ -78,7 +87,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     )
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
+    fun exportCurlSanitized(): Result<String> = runCatching {
+        CurlCodec.exportSanitized(resolveDraft(_uiState.value.draft)).getOrThrow()
+    }
+
     fun updateUrl(value: String) = updateDraft { copy(url = value) }
+    fun updateQueryParams(value: String) = updateDraft { copy(queryParamsText = value) }
     fun importCurlDraft(imported: RequestDraft) {
         _uiState.update { current ->
             val target = imported.url.toHttpUrlOrNull()
@@ -330,20 +344,69 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun runDiscovery(
+        routes: String,
+        parameters: String,
+        methods: Set<HttpMethodOption>,
+        allowModifying: Boolean,
+    ) {
+        if (_uiState.value.isLoading) return
+        val prepared = runCatching {
+            val request = resolveDraft(_uiState.value.draft)
+            val targets = DiscoveryPlanner.plan(
+                request.url,
+                VariableTemplate.resolve(routes, activeVariables()),
+                VariableTemplate.resolve(parameters, activeVariables()),
+                methods,
+                allowModifying,
+            )
+            val safe = request.copy(method = HttpMethodOption.GET,
+                bodyMode = BodyMode.NONE, body = "", contentType = "",
+                followRedirects = false)
+            com.imr.reqestra.core.validation.RequestValidator.validate(safe).getOrThrow()
+            request to targets
+        }
+        if (prepared.isFailure) {
+            showWorkspaceError(prepared.exceptionOrNull() ?: IllegalArgumentException("Plan inválido"))
+            return
+        }
+        val (request, targets) = prepared.getOrThrow()
+        _uiState.update {
+            it.copy(isLoading = true, discoveryReport = null,
+                discoveryProgress = "0 / ${targets.size}", message = null)
+        }
+        discoveryJob = viewModelScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    endpointExplorer.run(request, targets) { current, total ->
+                        _uiState.update { it.copy(discoveryProgress = "$current / $total") }
+                    }
+                }
+                _uiState.update {
+                    it.copy(
+                        discoveryReport = result,
+                        message = "Exploración terminada: ${result.successCount} respuestas de ${result.findings.size} intentos.",
+                        isErrorMessage = false,
+                    )
+                }
+            } catch (cancelled: CancellationException) {
+                _uiState.update { it.copy(message = "Exploración cancelada.", isErrorMessage = false) }
+                throw cancelled
+            } catch (error: Exception) {
+                showWorkspaceError(error)
+            } finally {
+                _uiState.update { it.copy(isLoading = false, discoveryProgress = null) }
+            }
+        }
+    }
+
     private fun activeVariables(): Map<String, String> {
         val workspace = _uiState.value.workspace
         return workspace.environments.firstOrNull { it.name == workspace.activeEnvironment }?.variables.orEmpty()
     }
 
-    private fun resolveDraft(draft: RequestDraft): RequestDraft {
-        val variables = activeVariables()
-        return draft.copy(
-            url = VariableTemplate.resolve(draft.url, variables),
-            headersText = VariableTemplate.resolve(draft.headersText, variables),
-            cookiesText = VariableTemplate.resolve(draft.cookiesText, variables),
-            body = VariableTemplate.resolve(draft.body, variables),
-        )
-    }
+    private fun resolveDraft(draft: RequestDraft): RequestDraft =
+        RequestParameterizer.resolve(draft, activeVariables())
 
     private fun showWorkspaceError(error: Throwable) {
         _uiState.update { it.copy(message = error.message ?: "Operación no disponible.", isErrorMessage = true) }
@@ -370,6 +433,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun sendRequest() = runRequest(_uiState.value.draft, loadIntoBody = false)
 
     fun cancelRequest() {
+        discoveryJob?.cancel()
         automationJob?.cancel()
         httpEngine.cancelActive()
     }
@@ -488,6 +552,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     override fun onCleared() {
+        discoveryJob?.cancel()
         automationJob?.cancel()
         httpEngine.cancelActive()
         super.onCleared()

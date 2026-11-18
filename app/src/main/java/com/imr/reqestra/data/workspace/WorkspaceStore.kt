@@ -45,6 +45,7 @@ class WorkspaceStore(context: Context) {
                             name = entry.getString("name"),
                             draft = RequestDraft(
                                 url = value.getString("url"),
+                                queryParamsText = value.optString("queryParams", ""),
                                 method = HttpMethodOption.valueOf(value.getString("method")),
                                 customMethod = value.optString("customMethod", "PROPFIND"),
                                 headersText = value.optString("headers", ""),
@@ -97,6 +98,7 @@ class WorkspaceStore(context: Context) {
                     put("draft", JSONObject().apply {
                         val d = entry.draft
                         put("url", d.url)
+                        put("queryParams", d.queryParamsText)
                         put("method", d.method.name)
                         put("customMethod", d.customMethod)
                         put("headers", d.headersText)

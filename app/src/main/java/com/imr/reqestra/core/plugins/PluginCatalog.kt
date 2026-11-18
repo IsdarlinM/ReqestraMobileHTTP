@@ -19,6 +19,8 @@ object PluginCatalog {
         ExtensionDescriptor("assertions", "Test Assertions", "Comprobaciones de estado, latencia y contenido", setOf("response.read"), true),
         ExtensionDescriptor("curl", "cURL Toolkit", "Importar y compartir peticiones redactadas", setOf("request.read", "request.write"), true),
         ExtensionDescriptor("openapi", "OpenAPI Importer", "Importador JSON de contratos OpenAPI", setOf("workspace.write"), true),
+        ExtensionDescriptor("query", "Query Parameterizer", "Parámetros de URL codificados y variables por entorno", setOf("request.write", "workspace.read"), true),
+        ExtensionDescriptor("discovery", "Endpoint Explorer", "Rutas y parámetros candidatos con exploración autorizada y acotada", setOf("network", "request.read"), true),
         ExtensionDescriptor("graphql", "GraphQL Studio", "Explorador de esquemas", setOf("network"), false),
         ExtensionDescriptor("proxy", "Proxy Connector", "Proxy configurable por usuario", setOf("network"), false),
         ExtensionDescriptor("ai", "AI Assistant", "Análisis privado opt-in", setOf("response.read", "network"), false),

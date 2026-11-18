@@ -56,6 +56,7 @@ data class RequestDraft(
     val allowCleartext: Boolean = false,
     val forceHttp1: Boolean = false,
     val timeoutSeconds: Int = 30,
+    val queryParamsText: String = "",
 )
 
 data class RequestSnapshot(
@@ -126,7 +127,7 @@ const val DEFAULT_BODY = """<!doctype html>
   <main>
     <h1>Reqestra</h1>
     <p>Edita método, URL, query, headers, cookies, cuerpo y opciones de transporte.</p>
-    <code>imr :: v3.0.0</code>
+    <code>imr :: v3.2.0</code>
   </main>
 </body>
 </html>"""

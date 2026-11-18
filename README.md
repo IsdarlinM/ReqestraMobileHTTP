@@ -1,4 +1,4 @@
-# Reqestra 3.1
+# Reqestra 3.2
 
 **Reqestra** es un banco de trabajo HTTP nativo para Android orientado a desarrollo, depuración de APIs y pruebas de seguridad autorizadas. Permite construir, modificar, enviar e inspeccionar peticiones completas sin limitar el editor al HTML.
 
@@ -9,6 +9,18 @@ imr :: v3.0.0
 ```
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
+
+## Novedades 3.2 — API Discovery Lab
+
+- Pestaña **Query** en Estudio: agrega parámetros estructurados `nombre=valor`, conservando la query existente y codificando los valores.
+- Variables de entorno `{{baseUrl}}` y `{{token}}` en URL, query, headers, cookies y cuerpo, también en colecciones guardadas.
+- **Explorar** desde la navegación principal para analizar rutas que introduzcas y candidatos a parámetros mediante comparaciones con una petición de referencia.
+- Sugerencias pasivas de rutas del último response: JSON `href/url/path/endpoint`, HTML `href` y cabecera `Link`. No inician solicitudes por sí solas.
+- Pruebas de **GET, HEAD y OPTIONS**; POST, PUT, PATCH y DELETE requieren activación adicional y confirmación explícita.
+- Cada exploración está limitada a un mismo origen, **hasta 24 peticiones secuenciales, a 1 por segundo**, sin redirecciones automáticas. No se ejecuta enumeración masiva.
+- Resultados con código HTTP, tamaño, duración, `Allow` y diferencias observadas para parámetros candidatos (heurística; no es evidencia de vulnerabilidad).
+
+Consulta [Uso de parametrización y exploración](docs/API_DISCOVERY_3_2.md) antes de probar endpoints.
 
 ## Diseño visual 3.1 — Studio palette
 
