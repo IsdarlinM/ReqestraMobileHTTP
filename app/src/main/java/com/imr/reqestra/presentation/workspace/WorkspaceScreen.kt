@@ -15,7 +15,9 @@ import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Send
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,7 +43,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.imr.reqestra.core.curl.CurlCodec
 import com.imr.reqestra.domain.model.BodyMode
 import com.imr.reqestra.domain.model.BodyPolicy
 import com.imr.reqestra.domain.model.HttpMethodOption
@@ -75,11 +80,49 @@ fun WorkspaceScreen(
     onLoadBody: () -> Unit,
     onSend: () -> Unit,
     onCancel: () -> Unit,
+    onImportDraft: (RequestDraft) -> Unit,
     onDismissMessage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
     val tabs = EditorTab.entries
+    val clipboard = LocalClipboardManager.current
+    var curlDialogOpen by remember { mutableStateOf(false) }
+    var curlInput by remember { mutableStateOf("") }
+    var curlNotice by remember { mutableStateOf<String?>(null) }
+    if (curlDialogOpen) {
+        AlertDialog(
+            onDismissRequest = { curlDialogOpen = false },
+            title = { Text("Importar comando cURL") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Pega un comando cURL. No se ejecuta ningún shell ni se leen archivos locales.")
+                    OutlinedTextField(
+                        value = curlInput,
+                        onValueChange = { curlInput = it },
+                        label = { Text("Comando cURL") },
+                        minLines = 4,
+                        maxLines = 8,
+                    )
+                    curlNotice?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    CurlCodec.importCommand(curlInput)
+                        .onSuccess { imported ->
+                            onImportDraft(imported)
+                            curlDialogOpen = false
+                            curlNotice = null
+                        }
+                        .onFailure { error -> curlNotice = error.message ?: "Comando no válido." }
+                }) { Text("Importar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { curlDialogOpen = false }) { Text("Cancelar") }
+            },
+        )
+    }
 
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()).padding(16.dp),
@@ -137,6 +180,22 @@ fun WorkspaceScreen(
                     OutlinedButton(onClick = onLoadBody, enabled = !isLoading) {
                         Icon(Icons.Outlined.CloudDownload, contentDescription = null)
                         Text(" Cargar respuesta")
+                    }
+                    OutlinedButton(onClick = {
+                        CurlCodec.exportSanitized(draft)
+                            .onSuccess {
+                                clipboard.setText(AnnotatedString(it))
+                                curlNotice = null
+                            }
+                            .onFailure { curlNotice = it.message ?: "No se pudo exportar." }
+                    }, enabled = !isLoading) { Text("Copiar cURL redactado") }
+                    OutlinedButton(onClick = {
+                        curlInput = ""
+                        curlNotice = null
+                        curlDialogOpen = true
+                    }, enabled = !isLoading) { Text("Importar cURL") }
+                    if (curlNotice != null && !curlDialogOpen) {
+                        Text(curlNotice.orEmpty(), color = MaterialTheme.colorScheme.error)
                     }
                     if (isLoading) {
                         OutlinedButton(onClick = onCancel) {

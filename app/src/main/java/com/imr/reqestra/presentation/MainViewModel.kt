@@ -63,6 +63,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
     fun updateUrl(value: String) = updateDraft { copy(url = value) }
+    fun importCurlDraft(imported: RequestDraft) {
+        _uiState.update { current ->
+            val target = imported.url.toHttpUrlOrNull()
+            val mode = current.draft.sessionMode
+            val targetHeaders = target?.let { sessionRepository.headers(it, mode) }.orEmpty()
+            current.copy(
+                draft = imported.copy(
+                    sessionMode = mode,
+                    sessionHeadersText = targetHeaders.joinToString("\n") { "${it.name}: ${it.value}" },
+                ),
+                sessionOrigin = target?.let(::originLabel) ?: "URL no válida",
+                sessionSummary = target?.let { sessionRepository.summary(it, mode) }
+                    ?: SessionSummary(mode, 0, 0, emptyList()),
+                selectedSection = AppSection.REQUEST,
+                message = "Comando cURL importado. Revisa la petición antes de enviarla.",
+                isErrorMessage = false,
+            )
+        }
+    }
     fun updateMethod(value: HttpMethodOption) = updateDraft {
         val mode = if (value.bodyPolicy == com.imr.reqestra.domain.model.BodyPolicy.FORBIDDEN) BodyMode.NONE else bodyMode
         copy(method = value, bodyMode = mode, contentType = if (mode == BodyMode.NONE) "" else contentType)

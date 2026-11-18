@@ -60,6 +60,7 @@ class HttpEngine(
 
         val clientBuilder = baseClient.newBuilder()
             .cookieJar(cookieJar)
+            .addNetworkInterceptor(OriginBoundRedirectGuard(url))
             .followRedirects(draft.followRedirects)
             .followSslRedirects(draft.followRedirects)
             .callTimeout(draft.timeoutSeconds.toLong(), TimeUnit.SECONDS)

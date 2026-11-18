@@ -85,6 +85,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                     onLoadBody = viewModel::loadResponseBody,
                     onSend = viewModel::sendRequest,
                     onCancel = viewModel::cancelRequest,
+                    onImportDraft = viewModel::importCurlDraft,
                     onDismissMessage = viewModel::clearMessage,
                     modifier = Modifier.fillMaxSize(),
                 )
