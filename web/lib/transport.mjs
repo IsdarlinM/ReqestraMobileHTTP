@@ -11,7 +11,7 @@ function cookies(text) {
   if(entries.length>100)throw Error("Demasiadas cookies manuales.");
   for(const entry of entries)
     if(!/^[A-Za-z0-9_!#$%&'*+.^~-]+=[^\r\n;]*$/.test(entry))
-      throw Error("Cookie manual inválida.");
+      throw Error("Invalid manual cookie.");
   return entries.join("; ");
 }
 function base64(bytes){
@@ -42,7 +42,7 @@ function withAbort(signal,seconds) {
   const abort=()=>controller.abort(signal?.reason||new DOMException("Cancelado","AbortError"));
   signal?.addEventListener("abort",abort,{once:true});
   if(signal?.aborted)abort();
-  const timeout=setTimeout(()=>controller.abort(new Error("Timeout de la petición.")),seconds*1000);
+  const timeout=setTimeout(()=>controller.abort(new Error("Request timed out.")),seconds*1000);
   return {signal:controller.signal,close(){clearTimeout(timeout);signal?.removeEventListener("abort",abort);}};
 }
 export async function execute(draft,{variables={},sessionHeadersText="",mode="NONE",gateway=false,signal}={}) {
@@ -108,7 +108,7 @@ export async function execute(draft,{variables={},sessionHeadersText="",mode="NO
       headers:safeHeaders(data.headers),
     };
   }catch(error){
-    if(error.name==="AbortError")throw Error("Petición cancelada o tiempo agotado.");
+    if(error.name==="AbortError")throw Error("Request cancelled or timed out.");
     if(error instanceof TypeError && !gateway)
       throw Error("La solicitud no pudo completarse: comprueba CORS, TLS, conectividad y los headers permitidos por el navegador.");
     throw error;
@@ -119,13 +119,13 @@ function parseSessionHeaders(text,opts) {
   if(!text)return [];
   const headerName=/^[!#$%&'*+.^_\u0060|~0-9A-Za-z-]+$/;
   const items=text.split("\n").filter(x=>x.trim());
-  if(items.length>100)throw Error("Máximo 100 headers de sesión.");
+  if(items.length>100)throw Error("Maximum 100 session headers.");
   return items.map(line=>{
     const i=line.indexOf(":");if(i<=0)throw Error("Header de sesión: Nombre: valor.");
     const name=line.slice(0,i).trim(),value=line.slice(i+1).trim();
-    if(!headerName.test(name)||/[\r\n]/.test(value)||value.length>16384)throw Error("Header de sesión inválido.");
+    if(!headerName.test(name)||/[\r\n]/.test(value)||value.length>16384)throw Error("Invalid session header.");
     if(!opts.gateway&&["cookie","host","origin","content-length","connection","referer","accept-encoding","user-agent"].includes(name.toLowerCase()))
-      throw Error("El navegador no permite el header de sesión "+name);
+      throw Error("Browser does not allow session header "+name);
     return [name,value];
   });
 }

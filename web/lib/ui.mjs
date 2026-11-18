@@ -1,4 +1,5 @@
 import {redactUrl,statusTone,passiveRoutes} from "./core.mjs";
+import {t,translateDom,getLocale} from "./i18n.mjs";
 const $=id=>document.getElementById(id);
 function node(tag,text,cls){
   const result=document.createElement(tag);
@@ -17,6 +18,7 @@ function card(title){
 export function notice(message,isError=false) {
   const box=$("notice");box.textContent=message;box.hidden=!message;
   box.className="notice"+(isError?" error":"");box.setAttribute("role",isError?"alert":"status");
+  translateDom(box);
 }
 export function nav(section) {
   for(const page of document.querySelectorAll(".page"))page.classList.toggle("active",page.id===section);
@@ -39,9 +41,9 @@ export function responseSummary(response) {
 }
 export function inspector(response) {
   if(!response){
-    $("inspectorRequest").textContent="Sin petición.";
-    $("inspectorMeta").textContent="Sin respuesta.";
-    $("inspectorBody").textContent="Sin respuesta.";return;
+    $("inspectorRequest").textContent="No request yet.";
+    $("inspectorMeta").textContent="No response yet.";
+    $("inspectorBody").textContent="No response yet.";return;
   }
   const request=response.request;
   $("inspectorRequest").textContent=[
@@ -53,7 +55,7 @@ export function inspector(response) {
   $("inspectorMeta").textContent=[
     "HTTP "+response.status+" "+response.statusText,
     "Protocolo: "+response.protocol,
-    "Duración: "+response.durationMs+" ms",
+    "Duration: "+response.durationMs+" ms",
     "Bytes: "+response.size+(response.bodyTruncated?" (truncado)":""),
     ...response.headers.map(([name,value])=>name+": "+value),
   ].join("\n");
@@ -95,11 +97,11 @@ export function collections(workspace,callbacks){
 }
 export function history(entries,callbacks){
   const container=$("historyList");container.replaceChildren();
-  if(!entries.length){container.append(node("p","El historial aún está vacío.","help"));return;}
+  if(!entries.length){container.append(node("p","History is empty.","help"));return;}
   for(const entry of [...entries].reverse()){
     const element=card(entry.method+" · HTTP "+entry.status);
     element.append(tag(entry.durationMs+" ms"),node("p",entry.url),
-      node("p",new Date(entry.at).toLocaleString("es-DO")));
+      node("p",new Date(entry.at).toLocaleString(getLocale()==="zh"?"zh-CN":getLocale())));
     element.append(action("Reutilizar URL redactada",()=>callbacks.reuse(entry)));
     container.append(element);
   }
@@ -129,25 +131,35 @@ export function reportDiscovery(findings) {
     el.append(c);
   }
 }
-export function renderPlugins(){
+export function renderPlugins(onOpen=()=>{}) {
+  // Integrated modules are real navigation actions, not downloadable plug-ins.
+  // Unsupported capabilities are explicitly disabled.
   const plugins=[
-    ["Estudio HTTP","Métodos, URL, headers y cuerpos." ,true],
-    ["Variables y Query","Entornos, sustituciones, parámetros URL.",true],
-    ["Colecciones cifradas","AES-GCM bajo contraseña local.",true],
-    ["Pruebas de colecciones","20 solicitudes secuenciales, assertions.",true],
-    ["Descubrimiento","Rutas, parámetros candidatos y métodos.",true],
-    ["cURL y OpenAPI","Importación cURL simple, OpenAPI 3 JSON.",true],
-    ["Sesiones web","Headers por origen y cookies gestionadas por navegador.",true],
-    ["Gateway privado","Headers restringidos y CORS, si lo configura el usuario.",true],
-    ["Interceptor de otras apps","No disponible en navegador.",false],
-    ["Edición de bytes TCP / request smuggling","No implementado.",false],
-    ["SDK de plugins de terceros","No se descarga ni ejecuta código remoto.",false],
+    ["HTTP Studio", "Create HTTP requests, set headers and edit bodies.", "studio"],
+    ["Environment variables", "Manage local environments and query templates.", "collections"],
+    ["Encrypted collections", "Save and restore requests inside an encrypted vault.", "collections"],
+    ["Test assertions", "Run saved collections with status and latency checks.", "tests"],
+    ["Endpoint explorer", "Explore authorized routes and candidate parameters.", "discovery"],
+    ["cURL tools", "Import and export redacted requests.", "studio"],
+    ["OpenAPI importer", "Import OpenAPI 3.x JSON operations.", "collections"],
+    ["Sessions", "Manage origin-specific headers and browser cookies.", "session"],
+    ["Private gateway", "Opt-in local gateway for authorized origins.", "studio"],
+    ["GraphQL schema explorer", "Planned; no implementation yet.", null],
+    ["External proxy connector", "Planned; no implementation yet.", null],
+    ["Third-party plug-ins", "Not supported; no remote code runs.", null],
   ];
   const el=$("pluginsList");el.replaceChildren();
-  for(const [name,description,available] of plugins){
-    const c=card(name);c.append(tag(available?"Integrado / opcional":"No disponible",available?"success":"warning"),
-      node("p",description));el.append(c);
+  for(const [name,description,section] of plugins){
+    const c=card(name);
+    c.append(tag(section?t("Integrado / opcional"):t("No disponible"),
+      section?"success":"warning"),node("p",description));
+    if(section){
+      const open=action(t("Abrir extensión"),()=>onOpen(section));
+      open.setAttribute("aria-label",t("Abrir")+" "+name);c.append(open);
+    }
+    el.append(c);
   }
+  translateDom(el);
 }
 export function preview(draft) {
   const frame=$("htmlPreview"),code=$("textPreview");
@@ -165,7 +177,7 @@ export function support(config){
   if(/^[A-Za-z0-9]{6,64}$/.test(id)){
     button.href="https://www.paypal.com/donate/?hosted_button_id="+encodeURIComponent(id);
     button.removeAttribute("aria-disabled");
-    help.textContent="Serás redirigido al sitio oficial de PayPal. No se procesan pagos dentro de Reqestra.";
+    help.textContent="You will be taken to PayPal's official site. No payments are processed within Reqestra.";
   }else{
     button.setAttribute("aria-disabled","true");
     button.removeAttribute("href");

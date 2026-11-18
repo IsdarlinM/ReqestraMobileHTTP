@@ -1,7 +1,7 @@
 {
   "name": "Reqestra Studio",
   "short_name": "Reqestra",
-  "description": "Cliente HTTP con pruebas y colecciones",
+  "description": "Multilingual HTTP workbench with collections, testing and authorized API exploration.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,9 +9,9 @@
   "background_color": "#07131F",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "icon.png",
+      "sizes": "128x128",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

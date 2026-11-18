@@ -1,10 +1,17 @@
 package com.imr.reqestra.presentation
 
+import com.imr.reqestra.R
+import com.imr.reqestra.presentation.i18n.LocalReqestraLanguage
+import com.imr.reqestra.presentation.i18n.ReqestraLanguages
+import com.imr.reqestra.presentation.i18n.tr
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -23,6 +30,7 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
@@ -38,10 +46,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
@@ -63,7 +75,22 @@ import com.imr.reqestra.presentation.support.SupportScreen
 fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var openMenu by remember { mutableStateOf(false) }
+    var openLanguageMenu by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val preferences = remember(context) {
+        context.getSharedPreferences("reqestra_ui", android.content.Context.MODE_PRIVATE)
+    }
+    val deviceLanguage = ReqestraLanguages.normalize(
+        context.resources.configuration.locales.get(0)?.language
+    )
+    var language by rememberSaveable {
+        mutableStateOf(
+            preferences.getString("language", null)?.let(ReqestraLanguages::normalize)
+                ?: deviceLanguage
+        )
+    }
 
+    CompositionLocalProvider(LocalReqestraLanguage provides language) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -74,36 +101,54 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Box(
-                            modifier = Modifier.size(36.dp).background(
-                                MaterialTheme.colorScheme.primaryContainer,
-                                RoundedCornerShape(12.dp),
-                            ),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(Icons.Outlined.Code, contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer)
-                        }
+                        Image(
+                            painter = painterResource(id = R.drawable.reqestra_brand),
+                            contentDescription = "Reqestra logo",
+                            modifier = Modifier.size(36.dp).clip(RoundedCornerShape(11.dp)),
+                        )
                         Column {
-                            Text("Reqestra", style = MaterialTheme.typography.titleMedium)
-                            Text("HTTP STUDIO  •  3.3", style = MaterialTheme.typography.labelSmall,
+                            Text(tr("Reqestra"), style = MaterialTheme.typography.titleMedium)
+                            Text(tr("HTTP STUDIO  •  3.4"), style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 },
                 actions = {
                     Box {
+                        IconButton(onClick = { openLanguageMenu = true }) {
+                            Icon(
+                                Icons.Outlined.Language,
+                                contentDescription = tr("Idioma"),
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = openLanguageMenu,
+                            onDismissRequest = { openLanguageMenu = false },
+                        ) {
+                            ReqestraLanguages.supported.forEach { choice ->
+                                DropdownMenuItem(
+                                    text = { Text(choice.name) },
+                                    onClick = {
+                                        language = choice.code
+                                        preferences.edit().putString("language", choice.code).apply()
+                                        openLanguageMenu = false
+                                    },
+                                )
+                            }
+                        }
+                    }
+                    Box {
                         IconButton(onClick = { openMenu = true }) {
-                            Icon(Icons.Outlined.MoreVert, contentDescription = "Más herramientas")
+                            Icon(Icons.Outlined.MoreVert, contentDescription = tr("Más herramientas"))
                         }
                         DropdownMenu(expanded = openMenu, onDismissRequest = { openMenu = false }) {
                             listOf(
-                                AppSection.HISTORY to "Historial de peticiones",
-                                AppSection.RESPONSE to "Inspector completo",
-                                AppSection.PREVIEW to "Vista previa",
-                                AppSection.SESSION to "Sesiones",
-                                AppSection.PLUGINS to "Extensiones",
-                                AppSection.SUPPORT to "Apoyar proyecto · PayPal",
+                                AppSection.HISTORY to tr("Historial de peticiones"),
+                                AppSection.RESPONSE to tr("Inspector completo"),
+                                AppSection.PREVIEW to tr("Vista previa"),
+                                AppSection.SESSION to tr("Sesiones"),
+                                AppSection.PLUGINS to tr("Extensiones"),
+                                AppSection.SUPPORT to tr("Apoyar proyecto · PayPal"),
                             ).forEach { (section, label) ->
                                 DropdownMenuItem(text = { Text(label) }, onClick = {
                                     openMenu = false
@@ -126,19 +171,19 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                     containerColor = MaterialTheme.colorScheme.surface,
                     tonalElevation = 0.dp,
                 ) {
-                SectionItem(state.selectedSection == AppSection.REQUEST, "Estudio",
+                SectionItem(state.selectedSection == AppSection.REQUEST, tr("Estudio"),
                     { Icon(Icons.Outlined.Code, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.REQUEST)
                 }
-                SectionItem(state.selectedSection == AppSection.COLLECTIONS, "Colecciones",
+                SectionItem(state.selectedSection == AppSection.COLLECTIONS, tr("Colecciones"),
                     { Icon(Icons.Outlined.Folder, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.COLLECTIONS)
                 }
-                SectionItem(state.selectedSection == AppSection.AUTOMATION, "Pruebas",
+                SectionItem(state.selectedSection == AppSection.AUTOMATION, tr("Pruebas"),
                     { Icon(Icons.Outlined.PlayArrow, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.AUTOMATION)
                 }
-                SectionItem(state.selectedSection == AppSection.DISCOVERY, "Explorar",
+                SectionItem(state.selectedSection == AppSection.DISCOVERY, tr("Explorar"),
                     { Icon(Icons.Outlined.Search, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.DISCOVERY)
                 }
@@ -217,7 +262,18 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                 AppSection.PREVIEW -> PreviewScreen(state.draft.body, state.draft.bodyMode, Modifier.fillMaxSize())
                 AppSection.RESPONSE -> ResponseScreen(state.response, state.message, state.isErrorMessage,
                     viewModel::clearMessage, Modifier.fillMaxSize())
-                AppSection.PLUGINS -> PluginsScreen()
+                AppSection.PLUGINS -> PluginsScreen(
+                    onOpen = { id ->
+                        val destination = when (id) {
+                            "collections", "variables", "openapi" -> AppSection.COLLECTIONS
+                            "assertions" -> AppSection.AUTOMATION
+                            "curl", "query" -> AppSection.REQUEST
+                            "discovery" -> AppSection.DISCOVERY
+                            else -> AppSection.PLUGINS
+                        }
+                        viewModel.selectSection(destination)
+                    },
+                )
                 AppSection.SUPPORT -> SupportScreen()
                 AppSection.SESSION -> SessionScreen(
                     mode = state.draft.sessionMode,
@@ -237,6 +293,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                     viewModel::clearHistory, Modifier.fillMaxSize())
             }
         }
+    }
     }
 }
 

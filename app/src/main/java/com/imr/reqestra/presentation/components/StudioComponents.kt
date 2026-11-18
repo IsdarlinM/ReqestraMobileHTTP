@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.components
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -72,7 +74,7 @@ fun StatusBanner(
             style = MaterialTheme.typography.bodyMedium,
         )
         IconButton(onClick = onDismiss) {
-            Icon(Icons.Outlined.Close, contentDescription = "Cerrar aviso", tint = foreground)
+            Icon(Icons.Outlined.Close, contentDescription = tr("Cerrar aviso"), tint = foreground)
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.support
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,17 +35,17 @@ fun SupportScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         StudioScreenHeader(
-            title = "Apoya Reqestra",
+            title = tr("Apoya Reqestra"),
             eyebrow = "DONACIONES",
-            subtitle = "Tu apoyo es opcional y no desbloquea funciones de la aplicación.",
+            subtitle = tr("Tu apoyo es opcional y no desbloquea funciones de la aplicación."),
         )
         StudioSurfaceCard {
             Column(modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                StudioTag("100 % voluntario", StudioTone.INFORMATION)
-                Text("Invítanos a seguir mejorando Reqestra",
+                StudioTag(tr("100 % voluntario"), StudioTone.INFORMATION)
+                Text(tr("Invítanos a seguir mejorando Reqestra"),
                     style = MaterialTheme.typography.titleLarge)
-                Text("Si decides contribuir, el pago se realiza en una página segura de PayPal, fuera de Reqestra. No capturamos datos de tarjeta ni credenciales de PayPal.",
+                Text(tr("Si decides contribuir, el pago se realiza en una página segura de PayPal, fuera de Reqestra. No capturamos datos de tarjeta ni credenciales de PayPal."),
                     style = MaterialTheme.typography.bodyMedium)
                 Button(
                     onClick = { paypalUrl?.let(uriHandler::openUri) },
@@ -51,16 +53,16 @@ fun SupportScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Outlined.FavoriteBorder, contentDescription = null)
-                    Text(" Donar con PayPal")
+                    Text(tr(" Donar con PayPal"))
                 }
                 if (paypalUrl == null) {
-                    Text("El botón de donaciones aún no está configurado. El administrador debe establecer paypalHostedButtonId en Gradle y recompilar.",
+                    Text(tr("El botón de donaciones aún no está configurado. El administrador debe establecer paypalHostedButtonId en Gradle y recompilar."),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
-        Text("Las donaciones no se validan en la app, no afectan a tu acceso y no sustituyen pagos por bienes o servicios digitales.",
+        Text(tr("Las donaciones no se validan en la app, no afectan a tu acceso y no sustituyen pagos por bienes o servicios digitales."),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.bodySmall)
     }

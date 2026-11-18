@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.history
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import com.imr.reqestra.presentation.components.StudioScreenHeader
 import com.imr.reqestra.presentation.components.StudioSurfaceCard
 import com.imr.reqestra.presentation.components.StudioMethodTag
@@ -42,21 +44,21 @@ fun HistoryScreen(
     Column(modifier = modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             StudioScreenHeader(
-                title = "Historial local",
-                subtitle = "Método, URL redactada, estado y duración.",
-                eyebrow = "ACTIVIDAD",
+                title = tr("Historial local"),
+                subtitle = tr("Método, URL redactada, estado y duración."),
+                eyebrow = tr("ACTIVIDAD"),
                 modifier = Modifier.weight(1f),
             )
             OutlinedButton(onClick = onClear, enabled = entries.isNotEmpty()) {
                 Icon(Icons.Outlined.DeleteSweep, contentDescription = null)
-                Text(" Limpiar")
+                Text(tr(" Limpiar"))
             }
         }
         if (entries.isEmpty()) {
             StudioSurfaceCard {
                 Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Icon(Icons.Outlined.History, contentDescription = null)
-                    Text("No hay peticiones registradas", style = MaterialTheme.typography.titleMedium)
+                    Text(tr("No hay peticiones registradas"), style = MaterialTheme.typography.titleMedium)
                 }
             }
         } else {

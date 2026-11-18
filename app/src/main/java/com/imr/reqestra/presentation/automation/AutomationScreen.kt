@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.automation
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import com.imr.reqestra.presentation.components.StudioScreenHeader
 import com.imr.reqestra.presentation.components.StudioSurfaceCard
 import com.imr.reqestra.presentation.components.StudioTag
@@ -61,16 +63,16 @@ fun AutomationScreen(
         if (message != null) item { StatusBanner(message, isErrorMessage, onDismissMessage) }
         item {
             StudioScreenHeader(
-                title = "Automatización",
-                subtitle = "Pruebas secuenciales, medibles y controladas.",
+                title = tr("Automatización"),
+                subtitle = tr("Pruebas secuenciales, medibles y controladas."),
                 eyebrow = "TEST RUNNER",
             )
-            StudioTag("Hasta 20 peticiones · 1 petición/segundo", StudioTone.INFORMATION)
+            StudioTag(tr("Hasta 20 peticiones · 1 petición/segundo"), StudioTone.INFORMATION)
         }
         item {
             StudioSurfaceCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Ejecutor de colecciones", style = MaterialTheme.typography.titleMedium)
+                    Text(tr("Ejecutor de colecciones"), style = MaterialTheme.typography.titleMedium)
                     Box {
                         OutlinedButton(onClick = { menuOpen = true }, enabled = collections.isNotEmpty() && !isLoading) {
                             Text(if (chosen.isEmpty()) "Crear una colección primero" else "Colección: $chosen ▾")
@@ -84,35 +86,35 @@ fun AutomationScreen(
                             }
                         }
                     }
-                    Text("$count peticiones · Entorno activo: ${workspace.activeEnvironment}")
+                    Text("$count ${tr("Pruebas")} · ${tr("Entorno activo")}: ${workspace.activeEnvironment}")
                     OutlinedTextField(
                         value = expected, onValueChange = { expected = it.filter(Char::isDigit).take(3) },
-                        label = { Text("Código HTTP esperado") },
+                        label = { Text(tr("Código HTTP esperado")) },
                         singleLine = true, modifier = Modifier.fillMaxWidth(),
                     )
                     OutlinedTextField(
                         value = maximum, onValueChange = { maximum = it.filter(Char::isDigit).take(6) },
-                        label = { Text("Latencia máxima (ms)") },
+                        label = { Text(tr("Latencia máxima (ms)")) },
                         singleLine = true, modifier = Modifier.fillMaxWidth(),
                     )
-                    Text("La ejecución envía las peticiones reales de la colección y podría modificar datos del servidor.",
+                    Text(tr("La ejecución envía las peticiones reales de la colección y podría modificar datos del servidor."),
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !isLoading && count in 1..20 && parsedExpected in 100..599 && (maximum.toLongOrNull() ?: 0) in 1..120000,
                         onClick = { onRun(chosen, expected.toInt(), maximum.toLong()) },
-                    ) { Text("Ejecutar pruebas ahora") }
+                    ) { Text(tr("Ejecutar pruebas ahora")) }
                     if (isLoading) {
                         LinearProgressIndicator(Modifier.fillMaxWidth())
-                        Text("Progreso: ${progress ?: "Iniciando"}")
-                        OutlinedButton(onClick = onCancel) { Text("Cancelar ejecución") }
+                        Text("${tr("Progreso")}: ${progress ?: "..."}")
+                        OutlinedButton(onClick = onCancel) { Text(tr("Cancelar ejecución")) }
                     }
                 }
             }
         }
         report?.let { result ->
             item {
-                Text("Resultados · ${result.passed} PASS / ${result.failed} FAIL",
+                Text("${tr("Resultados")} · ${result.passed} PASS / ${result.failed} FAIL",
                     style = MaterialTheme.typography.titleMedium)
             }
             items(result.results.size) { index ->

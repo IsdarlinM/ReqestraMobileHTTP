@@ -1,8 +1,8 @@
 // Cache the app shell only; never cache HTTP requests, responses, gateway data or credentials.
-const NAME="reqestra-shell-3.3";
+const NAME="reqestra-shell-3.4";
 const SHELL=["./","./index.html","./styles.css","./config.js","./app.mjs",
   "./lib/core.mjs","./lib/ui.mjs","./lib/vault.mjs","./lib/transport.mjs",
-  "./icon.svg","./manifest.webmanifest"];
+  "./icon.png","./lib/i18n.mjs","./manifest.webmanifest"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(NAME).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });

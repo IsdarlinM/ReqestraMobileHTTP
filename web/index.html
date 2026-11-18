@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Reqestra Studio: cliente HTTP web para inspección, colecciones, variables, pruebas y exploración autorizada.">
   <meta name="theme-color" content="#07131F">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="icon" href="./icon.png" type="image/png">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
   <title>Reqestra Studio — Web</title>
@@ -17,7 +17,7 @@
   <a class="skip" href="#content">Saltar al contenido</a>
   <div class="shell">
     <aside class="sidebar" aria-label="Navegación">
-      <div class="brand"><span class="brand-icon" aria-hidden="true">R/</span><div><strong>Reqestra</strong><small>HTTP STUDIO · WEB 3.3</small></div></div>
+      <div class="brand"><img class="brand-image" src="./icon.png" alt="Reqestra logo"><div><strong>Reqestra</strong><small>HTTP STUDIO · WEB 3.4</small></div></div>
       <div class="side-caption">ESPACIO DE TRABAJO</div>
       <nav class="side-nav" aria-label="Secciones">
         <button data-section="studio" class="active">⌘ &nbsp; Estudio</button>
@@ -37,10 +37,14 @@
     </aside>
     <div class="main-area">
       <header class="topbar">
-        <div class="topbar-brand"><span class="brand-icon small">R/</span><span>Reqestra <small>WEB</small></span></div>
+        <div class="topbar-brand"><img class="brand-image small" src="./icon.png" alt=""><span>Reqestra <small>WEB</small></span></div>
         <div class="topbar-right">
           <span id="vaultStatus" class="pill muted">Modo temporal</span>
           <span id="engineStatus" class="pill muted">Motor navegador</span>
+          <label class="language-control" for="languageSelect" title="Interface language">
+            <span aria-hidden="true">🌐</span>
+            <select id="languageSelect" aria-label="Interface language"></select>
+          </label>
           <button id="themeToggle" class="icon-button" aria-label="Alternar apariencia">◐</button>
         </div>
       </header>
@@ -192,7 +196,7 @@
           </article>
         </section>
       </main>
-      <footer class="footer"><span>Reqestra Studio · 3.3.0</span><span>Cliente local · Uso autorizado exclusivamente · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Código fuente</a></span></footer>
+      <footer class="footer"><span>Reqestra Studio · 3.4.0</span><span>Cliente local · Uso autorizado exclusivamente · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Código fuente</a></span></footer>
     </div>
   </div>
   <nav class="mobile-nav" aria-label="Secciones principales"><button data-section="studio">Estudio</button><button data-section="collections">Colecciones</button><button data-section="tests">Pruebas</button><button data-section="discovery">Explorar</button><button id="moreNav" aria-label="Más herramientas">Más</button></nav>

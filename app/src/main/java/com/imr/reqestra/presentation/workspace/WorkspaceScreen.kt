@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.workspace
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -105,14 +107,14 @@ fun WorkspaceScreen(
     if (curlDialogOpen) {
         AlertDialog(
             onDismissRequest = { curlDialogOpen = false },
-            title = { Text("Importar comando cURL") },
+            title = { Text(tr("Importar comando cURL")) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Pega un comando cURL. No se ejecuta ningún shell ni se leen archivos locales.")
+                    Text(tr("Pega un comando cURL. No se ejecuta ningún shell ni se leen archivos locales."))
                     OutlinedTextField(
                         value = curlInput,
                         onValueChange = { curlInput = it },
-                        label = { Text("Comando cURL") },
+                        label = { Text(tr("Comando cURL")) },
                         minLines = 4,
                         maxLines = 8,
                     )
@@ -128,10 +130,10 @@ fun WorkspaceScreen(
                             curlNotice = null
                         }
                         .onFailure { error -> curlNotice = error.message ?: "Comando no válido." }
-                }) { Text("Importar") }
+                }) { Text(tr("Importar")) }
             },
             dismissButton = {
-                TextButton(onClick = { curlDialogOpen = false }) { Text("Cancelar") }
+                TextButton(onClick = { curlDialogOpen = false }) { Text(tr("Cancelar")) }
             },
         )
     }
@@ -156,21 +158,21 @@ fun WorkspaceScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                        Text("REQUEST WORKBENCH", style = MaterialTheme.typography.labelMedium,
+                        Text(tr("REQUEST WORKBENCH"), style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.primary)
-                        Text("Nueva petición", style = MaterialTheme.typography.titleLarge)
-                        Text("Construye y envía solicitudes HTTP.",
+                        Text(tr("Nueva petición"), style = MaterialTheme.typography.titleLarge)
+                        Text(tr("Construye y envía solicitudes HTTP."),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    StudioTag(draft.sessionMode.label, StudioTone.INFORMATION)
+                    StudioTag(tr(draft.sessionMode.label), StudioTone.INFORMATION)
                 }
                 OutlinedTextField(
                     value = draft.url,
                     onValueChange = onUrlChange,
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("URL completa") },
-                    placeholder = { Text("https://api.example.com/path?query=value") },
+                    label = { Text(tr("URL completa")) },
+                    placeholder = { Text(tr("https://api.example.com/path?query=value")) },
                     singleLine = true,
                 )
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -179,7 +181,7 @@ fun WorkspaceScreen(
                         OutlinedTextField(
                             value = draft.customMethod,
                             onValueChange = onCustomMethodChange,
-                            label = { Text("Método personalizado") },
+                            label = { Text(tr("Método personalizado")) },
                             singleLine = true,
                         )
                     }
@@ -190,11 +192,11 @@ fun WorkspaceScreen(
                         modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                     ) {
                         Icon(Icons.Outlined.Send, contentDescription = null)
-                        Text(" Enviar petición")
+                        Text(tr(" Enviar petición"))
                     }
                     OutlinedButton(onClick = onLoadBody, enabled = !isLoading) {
                         Icon(Icons.Outlined.CloudDownload, contentDescription = null)
-                        Text(" Cargar respuesta")
+                        Text(tr(" Cargar respuesta"))
                     }
                     OutlinedButton(onClick = {
                         onExportCurl()
@@ -203,19 +205,19 @@ fun WorkspaceScreen(
                                 curlNotice = null
                             }
                             .onFailure { curlNotice = it.message ?: "No se pudo exportar." }
-                    }, enabled = !isLoading) { Text("Copiar cURL redactado") }
+                    }, enabled = !isLoading) { Text(tr("Copiar cURL redactado")) }
                     OutlinedButton(onClick = {
                         curlInput = ""
                         curlNotice = null
                         curlDialogOpen = true
-                    }, enabled = !isLoading) { Text("Importar cURL") }
+                    }, enabled = !isLoading) { Text(tr("Importar cURL")) }
                     if (curlNotice != null && !curlDialogOpen) {
                         Text(curlNotice.orEmpty(), color = MaterialTheme.colorScheme.error)
                     }
                     if (isLoading) {
                         OutlinedButton(onClick = onCancel) {
                             Icon(Icons.Outlined.Cancel, contentDescription = null)
-                            Text(" Cancelar")
+                            Text(tr(" Cancelar"))
                         }
                     }
                 }
@@ -234,16 +236,16 @@ fun WorkspaceScreen(
                     contentColor = MaterialTheme.colorScheme.primary,
                 ) {
                     tabs.forEachIndexed { index, tab ->
-                        Tab(selected = tabIndex == index, onClick = { tabIndex = index }, text = { Text(tab.label) })
+                        Tab(selected = tabIndex == index, onClick = { tabIndex = index }, text = { Text(tr(tab.label)) })
                     }
                 }
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                     when (tabs[tabIndex]) {
                         EditorTab.GENERAL -> GeneralTab(draft)
                         EditorTab.PARAMS -> Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text("Parámetros de consulta", style = MaterialTheme.typography.titleMedium)
+                            Text(tr("Parámetros de consulta"), style = MaterialTheme.typography.titleMedium)
                             Text(
-                                "Una línea por parámetro: nombre=valor. Usa {{variable}} en los valores. Los parámetros de la URL original se conservan y los nuevos se codifican automáticamente.",
+                                tr("Una línea por parámetro: nombre=valor. Usa {{variable}} en los valores. Los parámetros de la URL original se conservan y los nuevos se codifican automáticamente."),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -254,7 +256,7 @@ fun WorkspaceScreen(
                                 minLines = 7,
                             )
                             Text(
-                                "Los headers, las cookies, la URL y el cuerpo también admiten {{variables}} del entorno activo.",
+                                tr("Los headers, las cookies, la URL y el cuerpo también admiten {{variables}} del entorno activo."),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -262,13 +264,13 @@ fun WorkspaceScreen(
                         EditorTab.HEADERS -> CodeEditor(
                             value = draft.headersText,
                             onValueChange = onHeadersChange,
-                            label = "Headers específicos",
+                            label = tr("Headers específicos"),
                             minLines = 10,
                         )
                         EditorTab.COOKIES -> {
-                            Text("Cookies manuales", style = MaterialTheme.typography.titleMedium)
+                            Text(tr("Cookies manuales"), style = MaterialTheme.typography.titleMedium)
                             Text(
-                                "Una por línea o separadas por punto y coma. Sobrescriben cookies de la sesión con el mismo nombre.",
+                                tr("Una por línea o separadas por punto y coma. Sobrescriben cookies de la sesión con el mismo nombre."),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -306,7 +308,7 @@ fun WorkspaceScreen(
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
             ) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
-                    Text("ÚLTIMA RESPUESTA", style = MaterialTheme.typography.labelMedium,
+                    Text(tr("ÚLTIMA RESPUESTA"), style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically) {
@@ -318,9 +320,9 @@ fun WorkspaceScreen(
                                 else -> StudioTone.ERROR
                             },
                         )
-                        OutlinedButton(onClick = onOpenResponse) { Text("Ver inspector") }
+                        OutlinedButton(onClick = onOpenResponse) { Text(tr("Ver inspector")) }
                     }
-                    Text("Respuesta · ${response.protocol}", style = MaterialTheme.typography.bodySmall,
+                    Text("${tr("Respuesta recibida")} · ${response.protocol}", style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(response.body.take(500).ifBlank { "(sin contenido)" },
                         style = MaterialTheme.typography.bodySmall.copy(fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace),
@@ -334,7 +336,7 @@ fun WorkspaceScreen(
 @Composable
 private fun GeneralTab(draft: RequestDraft) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text("Línea de petición", style = MaterialTheme.typography.titleMedium)
+        Text(tr("Línea de petición"), style = MaterialTheme.typography.titleMedium)
         StudioMethodTag(if (draft.method == HttpMethodOption.CUSTOM) draft.customMethod else draft.method.wireName)
         Text(
             "${if (draft.method == HttpMethodOption.CUSTOM) draft.customMethod else draft.method.wireName} ${draft.url}",
@@ -342,10 +344,10 @@ private fun GeneralTab(draft: RequestDraft) {
             color = MaterialTheme.colorScheme.primary,
         )
         HorizontalDivider()
-        Text("Partes editables", style = MaterialTheme.typography.titleMedium)
-        Text("Método, esquema, host, puerto, path, query string, headers, Host, cookies, tipo de contenido, cuerpo y opciones de transporte.")
+        Text(tr("Partes editables"), style = MaterialTheme.typography.titleMedium)
+        Text(tr("Método, esquema, host, puerto, path, query string, headers, Host, cookies, tipo de contenido, cuerpo y opciones de transporte."))
         Text(
-            "Content-Length, Transfer-Encoding y otros headers de framing quedan bajo control de OkHttp para evitar requests incoherentes.",
+            tr("Content-Length, Transfer-Encoding y otros headers de framing quedan bajo control de OkHttp para evitar requests incoherentes."),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -364,14 +366,14 @@ private fun BodyTab(
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         BodyModeSelector(draft.bodyMode, onModeChange)
         if (draft.bodyMode == BodyMode.JSON) {
-            OutlinedButton(onClick = onFormatJson) { Text("Formatear JSON") }
+            OutlinedButton(onClick = onFormatJson) { Text(tr("Formatear JSON")) }
         }
         if (draft.bodyMode != BodyMode.NONE) {
             OutlinedTextField(
                 value = draft.contentType,
                 onValueChange = onContentTypeChange,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Content-Type") },
+                label = { Text(tr("Content-Type")) },
                 singleLine = true,
             )
             CodeEditor(
@@ -381,7 +383,7 @@ private fun BodyTab(
                 minLines = 14,
             )
         } else {
-            Text("Esta petición se enviará sin cuerpo.")
+            Text(tr("Esta petición se enviará sin cuerpo."))
         }
     }
 }
@@ -402,7 +404,7 @@ private fun OptionsTab(
             value = draft.timeoutSeconds.takeIf { it > 0 }?.toString().orEmpty(),
             onValueChange = onTimeoutChange,
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("Timeout total (1-120 segundos)") },
+            label = { Text(tr("Timeout total (1-120 segundos)")) },
             singleLine = true,
         )
     }
@@ -432,7 +434,7 @@ private fun MethodSelector(selected: HttpMethodOption, onSelected: (HttpMethodOp
             value = selected.wireName,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Método") },
+            label = { Text(tr("Método")) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
         )
@@ -469,12 +471,12 @@ private fun BodyModeSelector(selected: BodyMode, onSelected: (BodyMode) -> Unit)
             onValueChange = {},
             readOnly = true,
             modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-            label = { Text("Tipo de cuerpo") },
+            label = { Text(tr("Tipo de cuerpo")) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             BodyMode.entries.forEach { mode ->
-                DropdownMenuItem(text = { Text(mode.label) }, onClick = { onSelected(mode); expanded = false })
+                DropdownMenuItem(text = { Text(tr(mode.label)) }, onClick = { onSelected(mode); expanded = false })
             }
         }
     }

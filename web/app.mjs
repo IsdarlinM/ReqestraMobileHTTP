@@ -9,6 +9,7 @@ import {
   importEncryptedBackup,deleteVault,
 } from "./lib/vault.mjs";
 import * as ui from "./lib/ui.mjs";
+import {initI18n,translateDom,t,getLocale} from "./lib/i18n.mjs";
 
 const $=id=>document.getElementById(id);
 const sleep=(ms,signal)=>new Promise((resolve,reject)=>{
@@ -73,8 +74,9 @@ function renderDraft(){
 function renderAll(){
   renderDraft();ui.responseSummary(state.response);ui.inspector(state.response);
   ui.environments(state.workspace,{removeVariable});ui.collections(state.workspace,{load:loadSaved,delete:deleteSaved});
-  ui.history(state.history,{reuse:reuseHistory});ui.renderPlugins();ui.support(window.REQESTRA_CONFIG||{});
+  ui.history(state.history,{reuse:reuseHistory});ui.renderPlugins(go);ui.support(window.REQESTRA_CONFIG||{});
   updateVaultLabel();
+  translateDom();
 }
 function syncDraft(id){
   const field=$(id),key=fields[id];
@@ -125,7 +127,7 @@ function sessionHeadersForOrigin(draft=state.draft){
   return saved||"";
 }
 function renderSession(){
-  const origin=origins();$("sessionOrigin").textContent=origin||"URL inválida";
+  const origin=origins();$("sessionOrigin").textContent=origin||"Invalid URL";
   $("sessionMode").value=state.draft.sessionMode;
   $("sessionHeaders").value=sessionHeadersForOrigin();
 }
@@ -134,12 +136,12 @@ $("sessionMode").addEventListener("change",()=>{
 });
 $("saveSession").addEventListener("click",()=>{
   try{
-    const origin=origins();if(!origin)throw Error("Configura una URL válida en Estudio.");
+    const origin=origins();if(!origin)throw Error("Enter a valid URL in Studio.");
     const value=$("sessionHeaders").value.trim();
     parseHeaders(value,{gateway:$("transportMode").value==="gateway"});
-    if(state.draft.sessionMode==="NONE")throw Error("Selecciona un modo de sesión.");
+    if(state.draft.sessionMode==="NONE")throw Error("Select a session mode.");
     if(state.draft.sessionMode==="PERSISTENT"){
-      if(!vaultKey)throw Error("Para persistir headers, primero crea o desbloquea el almacén cifrado.");
+      if(!vaultKey)throw Error("To persist headers, first create or unlock an encrypted vault.");
       state.workspace.sessions??={};state.workspace.sessions[origin]=value;
     }else memorySessions[origin]=value;
     persist();info("Headers guardados exclusivamente para "+origin);
@@ -159,10 +161,10 @@ function appendHistory(response){
 }
 function reuseHistory(entry){
   state.draft.url=entry.url;renderDraft();go("studio");
-  info("Se cargó la URL redactada; revisa la query antes de enviar.");persist();
+  info("Redacted URL loaded; review query parameters before sending.");persist();
 }
 function startJob(buttonIds){
-  if(jobActive)throw Error("Ya hay otra operación activa.");
+  if(jobActive)throw Error("Another operation is already running.");
   jobActive=true;activeController=new AbortController();
   for(const id of buttonIds)$(id).disabled=true;
   return activeController.signal;
@@ -183,7 +185,7 @@ async function send(){
       mode:state.draft.sessionMode,gateway:$("transportMode").value==="gateway",signal,
     });
     state.response=result;ui.responseSummary(result);ui.inspector(result);appendHistory(result);
-    info("Petición completada. HTTP "+result.status+" · "+result.durationMs+" ms");
+    info("Request completed. HTTP "+result.status+" · "+result.durationMs+" ms");
   }catch(e){fail(e);}
   finally{$("cancel").disabled=true;endJob(controls);}
 }
@@ -220,7 +222,7 @@ function mutateWorkspace(fn){
   ui.collections(state.workspace,{load:loadSaved,delete:deleteSaved});persist();
 }
 function removeVariable(name){
-  if(!confirm("¿Eliminar la variable "+name+"?"))return;
+  if(!confirm("Delete variable "+name+"?"))return;
   mutateWorkspace(()=>{
     const env=state.workspace.environments.find(x=>x.name===state.workspace.activeEnvironment);
     delete env.variables[name];
@@ -234,7 +236,7 @@ $("createEnvironment").addEventListener("click",()=>{
   try{
     const name=$("environmentName").value.trim();
     if(!name||name.length>40)throw Error("El entorno necesita nombre de 1 a 40 caracteres.");
-    if(state.workspace.environments.length>=12)throw Error("Máximo 12 entornos.");
+    if(state.workspace.environments.length>=12)throw Error("Maximum 12 environments.");
     if(state.workspace.environments.some(x=>x.name===name))throw Error("El entorno ya existe.");
     mutateWorkspace(()=>{
       state.workspace.environments.push({name,variables:{}});state.workspace.activeEnvironment=name;
@@ -245,7 +247,7 @@ $("createEnvironment").addEventListener("click",()=>{
 $("saveVariable").addEventListener("click",()=>{
   try{
     const name=$("variableName").value.trim(),value=$("variableValue").value;
-    if(!/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(name))throw Error("Nombre de variable inválido.");
+    if(!/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(name))throw Error("Invalid variable name.");
     if(value.length>4096)throw Error("Variable demasiado larga.");
     mutateWorkspace(()=>{
       const env=state.workspace.environments.find(x=>x.name===state.workspace.activeEnvironment);
@@ -257,8 +259,8 @@ $("saveVariable").addEventListener("click",()=>{
 $("saveRequest").addEventListener("click",()=>{
   try{
     const name=$("requestName").value.trim(),collection=$("collectionName").value.trim();
-    if(!name||name.length>80||!collection||collection.length>60)throw Error("Nombre o colección no válidos.");
-    if(state.workspace.requests.length>=120)throw Error("Máximo 120 solicitudes guardadas.");
+    if(!name||name.length>80||!collection||collection.length>60)throw Error("Invalid request or collection name.");
+    if(state.workspace.requests.length>=120)throw Error("Maximum 120 saved requests.");
     mutateWorkspace(()=>state.workspace.requests.push({
       id:crypto.randomUUID(),name,collection,draft:structuredClone(state.draft),
     }));
@@ -269,22 +271,22 @@ function loadSaved(id){
   const entry=state.workspace.requests.find(x=>x.id===id);if(!entry)return;
   const mode=state.draft.sessionMode;
   state.draft={...blankDraft(),...structuredClone(entry.draft),sessionMode:mode};
-  renderDraft();go("studio");persist();info("Petición cargada desde "+entry.collection);
+  renderDraft();go("studio");persist();info("Request loaded from "+entry.collection);
 }
 function deleteSaved(id){
-  if(!confirm("¿Borrar la petición guardada?"))return;
+  if(!confirm("Delete the saved request?"))return;
   mutateWorkspace(()=>state.workspace.requests=state.workspace.requests.filter(x=>x.id!==id));
 }
 $("importOpenApi").addEventListener("click",()=>{
   try{
     const items=parseOpenApi($("openapiJson").value);
-    if(state.workspace.requests.length+items.length>120)throw Error("Importación supera 120 solicitudes.");
+    if(state.workspace.requests.length+items.length>120)throw Error("Import would exceed 120 requests.");
     mutateWorkspace(()=>state.workspace.requests.push(...items));
     $("openapiJson").value="";info("Importadas "+items.length+" operaciones OpenAPI.");
   }catch(e){fail(e);}
 });
 $("clearHistory").addEventListener("click",()=>{
-  if(!confirm("¿Eliminar el historial local?"))return;
+  if(!confirm("Clear local history?"))return;
   state.history=[];ui.history(state.history,{reuse:reuseHistory});persist();info("Historial eliminado.");
 });
 async function runTests(){
@@ -292,11 +294,11 @@ async function runTests(){
   try{
     const collection=$("testCollection").value;
     const items=state.workspace.requests.filter(x=>x.collection===collection);
-    if(items.length<1||items.length>20)throw Error("Selecciona una colección de 1 a 20 solicitudes.");
+    if(items.length<1||items.length>20)throw Error("Choose a collection with 1 to 20 requests.");
     const status=Number($("expectedStatus").value),limit=Number($("maxLatency").value);
     if(!Number.isInteger(status)||status<100||status>599||!Number.isInteger(limit)||limit<1||limit>120000)
-      throw Error("Assertions de estado o latencia inválidas.");
-    if(!confirm("Se enviarán "+items.length+" peticiones reales que podrían modificar datos. ¿Continuar?"))return;
+      throw Error("Invalid status or latency assertions.");
+    if(!confirm("This will send "+items.length+" real requests that may modify data. Continue?"))return;
     const signal=startJob(controls);$("cancelTests").disabled=false;
     const checks=[];
     for(let i=0;i<items.length;i++){
@@ -332,24 +334,24 @@ $("enableMutating").addEventListener("change",()=>{
 });
 $("addHints").addEventListener("click",()=>{
   try{
-    if(!state.response)throw Error("Primero ejecuta una petición en Estudio.");
+    if(!state.response)throw Error("Run a request in Studio first.");
     const base=state.response.request.url;
     const hints=passiveRoutes(state.response,base);
     if(!hints.length)throw Error("No se encontraron rutas sugeridas del mismo origen.");
     $("routes").value=[...new Set([...$("routes").value.split(/\r?\n/).filter(Boolean),...hints])].slice(0,8).join("\n");
-    info("Se agregaron "+hints.length+" rutas pasivas para revisión.");
+    info("Se agregaron "+hints.length+" passive paths for review.");
   }catch(e){fail(e);}
 });
 async function runDiscovery(){
   const controls=["send","runTests","runDiscovery"];
   try{
-    if(!$("confirmAuthorization").checked)throw Error("Confirma autorización para este origen.");
+    if(!$("confirmAuthorization").checked)throw Error("Confirm you are authorized to test this origin.");
     const methods=[...document.querySelectorAll(".probe-method:checked")].map(x=>x.value);
     const resolved=parametrizeDraft(state.draft,activeVariables());
     const targets=planDiscovery(resolved.url,
       expand($("routes").value,activeVariables()),expand($("parameterCandidates").value,activeVariables()),
       methods,$("enableMutating").checked);
-    if(!confirm("¿Enviar "+targets.length+" peticiones al mismo origen, una por segundo? Los métodos mutantes pueden cambiar datos."))
+    if(!confirm("Send "+targets.length+" requests to the same origin, one per second? Mutating methods may change data."))
       return;
     const signal=startJob(controls);$("cancelDiscovery").disabled=false;
     const findings=[];let baseline=null;
@@ -357,7 +359,7 @@ async function runDiscovery(){
       body:"",contentType:"",cookiesText:"",sessionMode:"NONE",
       followRedirects:false,timeoutSeconds:Math.min(15,Number(state.draft.timeoutSeconds)||15)};
     for(let i=0;i<targets.length;i++){
-      if(signal.aborted)throw Error("Exploración cancelada.");
+      if(signal.aborted)throw Error("Exploration cancelled.");
       if(i>0)await sleep(1000,signal);
       const target=targets[i];
       try{
@@ -377,7 +379,7 @@ async function runDiscovery(){
       $("discoveryProgress").textContent=(i+1)+" / "+targets.length;
       ui.reportDiscovery(findings);
     }
-    info("Exploración terminada. Los cambios de respuesta son indicios, no vulnerabilidades confirmadas.");
+    info("Exploration completed. Response changes are clues, not confirmed vulnerabilities.");
   }catch(e){fail(e);}
   finally{$("cancelDiscovery").disabled=true;endJob(controls);}
 }
@@ -404,7 +406,7 @@ $("vaultLock").addEventListener("click",async()=>{
     await pendingSave;
     vaultKey=null;
     state={draft:blankDraft(),workspace:defaultWorkspace(),history:[],response:null};
-    renderAll();info("Espacio bloqueado. La memoria temporal se reinició.");
+    renderAll();info("Vault locked. Temporary memory cleared.");
   }catch(e){fail(e);}
 });
 $("vaultExport").addEventListener("click",()=>{
@@ -420,11 +422,11 @@ $("vaultExport").addEventListener("click",()=>{
 $("vaultImportFile").addEventListener("change",async()=>{
   try{
     const file=$("vaultImportFile").files?.[0];if(!file)return;
-    if(hasVault()&&!confirm("Importar reemplazará el espacio cifrado de este navegador. ¿Continuar?"))return;
+    if(hasVault()&&!confirm("Importing will replace this browser's encrypted vault. Continue?"))return;
     const raw=await file.text();
     importEncryptedBackup(raw);
     vaultKey=null;state={draft:blankDraft(),workspace:defaultWorkspace(),history:[],response:null};
-    renderAll();info("Respaldo importado. Desbloquéalo con su contraseña original.");
+    renderAll();info("Backup imported. Unlock it with the original passphrase.");
   }catch(e){fail(e);}
   finally{$("vaultImportFile").value="";}
 });
@@ -441,8 +443,14 @@ async function checkGateway(){
     $("engineStatus").textContent=gatewayAvailable?"Gateway disponible":"Motor navegador";
   }catch{/* static deployments have no backend */}
 }
+initI18n(()=>{
+  renderAll();
+  // Changing the selected language updates visible and newly created sections.
+  translateDom();
+});
 renderAll();
 ui.nav("studio");
+translateDom();
 checkGateway();
 if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost"))
   navigator.serviceWorker.register("./sw.js").catch(()=>{});

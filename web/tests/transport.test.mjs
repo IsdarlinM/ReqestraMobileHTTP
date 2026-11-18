@@ -32,5 +32,5 @@ test("local HTTP transport constructs query/headers, redacts results and reads b
 test("browser transport rejects manual cookie before network access",async()=>{
   await assert.rejects(execute({
     ...blankDraft(),url:"https://example.com",cookiesText:"sid=secret",
-  }),/navegador no permite enviar Cookie manual/);
+  }),/Browser cannot send manual Cookie/);
 });

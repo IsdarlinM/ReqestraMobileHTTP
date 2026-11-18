@@ -22,7 +22,7 @@ async function derive(passphrase,salt) {
 }
 function validateVault(data) {
   if(!data || data.format!=="reqestra-vault-v1"||!data.salt||!data.iv||!data.ciphertext||
-    data.iterations!==ITERATIONS) throw Error("Archivo cifrado de Reqestra no válido.");
+    data.iterations!==ITERATIONS) throw Error("Invalid encrypted Reqestra vault.");
   return data;
 }
 export function hasVault() { return !!localStorage.getItem(KEY); }
@@ -40,8 +40,8 @@ export function importEncryptedBackup(raw) {
 export function deleteVault() { localStorage.removeItem(KEY); }
 export async function createVault(passphrase,workspaceData) {
   if(typeof passphrase!=="string"||passphrase.length<10)
-    throw Error("La contraseña de cifrado requiere al menos 10 caracteres.");
-  if(hasVault())throw Error("Ya existe un espacio cifrado; desbloquéalo o expórtalo antes de borrarlo.");
+    throw Error("Vault passphrase must be at least 10 characters.");
+  if(hasVault())throw Error("A vault already exists; unlock or export it before replacing it.");
   const salt=crypto.getRandomValues(new Uint8Array(16));
   const key=await derive(passphrase,salt);
   const wrapper={format:"reqestra-vault-v1",iterations:ITERATIONS,salt:toBase64(salt),iv:"",ciphertext:""};
@@ -70,7 +70,7 @@ export async function unlockVault(passphrase) {
   try {
     bytes=await crypto.subtle.decrypt({name:"AES-GCM",iv:fromBase64(wrapper.iv)},key,fromBase64(wrapper.ciphertext));
   } catch {
-    throw Error("Contraseña incorrecta o datos cifrados dañados.");
+    throw Error("Wrong passphrase or damaged encrypted data.");
   }
   const data=JSON.parse(decoder.decode(bytes));
   if(!data || typeof data!=="object" || !data.workspace)throw Error("Espacio de trabajo incompatible.");

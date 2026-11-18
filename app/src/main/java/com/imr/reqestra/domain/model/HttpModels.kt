@@ -112,7 +112,7 @@ sealed interface OperationResult<out T> {
 }
 
 const val DEFAULT_BODY = """<!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -126,8 +126,8 @@ const val DEFAULT_BODY = """<!doctype html>
 <body>
   <main>
     <h1>Reqestra</h1>
-    <p>Edita método, URL, query, headers, cookies, cuerpo y opciones de transporte.</p>
-    <code>imr :: v3.2.0</code>
+    <p>Edit method, URL, query, headers, cookies, body and transport options.</p>
+    <code>imr :: v3.4.0</code>
   </main>
 </body>
 </html>"""

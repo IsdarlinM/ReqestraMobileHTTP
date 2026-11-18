@@ -1,6 +1,6 @@
-# Reqestra Web 3.3
+# Reqestra Web 3.4
 
-Cliente web de Reqestra: Estudio HTTP, query/variables, colecciones cifradas, OpenAPI/cURL, sesiones por origen, pruebas, exploración acotada, historial, inspector, vista previa HTML aislada y donaciones PayPal configurables.
+Cliente web multilingüe de Reqestra: Estudio HTTP, query/variables, colecciones cifradas, OpenAPI/cURL, sesiones por origen, pruebas, exploración acotada, historial, inspector, vista previa HTML aislada y donaciones PayPal configurables.
 
 ## Iniciar
 
@@ -40,3 +40,15 @@ Crea tu botón de donación desde https://www.paypal.com/donate/buttons y escrib
 - [Matriz de pruebas](../docs/TEST_PLAN.md)
 
 No publiques el gateway en un dominio público ni confundas la ausencia de CORS con un problema del servidor de destino.
+
+## Idioma e identidad visual
+
+Los textos de la interfaz usan inglés de respaldo. Se detecta el idioma principal
+ del dispositivo (inglés, español, ruso, mandarín simplificado, portugués o francés);
+ el control 🌐 de la barra superior permite elegir manualmente uno de los seis.
+ La selección se guarda en localStorage, separada del almacén cifrado de solicitudes.
+
+La PWA, favicon y cabecera comparten el logo R con órbita turquesa mediante web/icon.png.
+Los datos de tus solicitudes y respuestas nunca se traducen automáticamente.
+Las descripciones extensas heredadas pueden conservar inglés de respaldo y requieren
+revisión lingüística antes de presentar el producto como totalmente traducido.

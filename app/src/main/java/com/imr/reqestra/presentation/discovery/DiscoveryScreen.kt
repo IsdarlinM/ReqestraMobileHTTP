@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.discovery
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,17 +66,17 @@ fun DiscoveryScreen(
     if (confirmOpen) {
         AlertDialog(
             onDismissRequest = { confirmOpen = false },
-            title = { Text("Confirmar exploración HTTP") },
+            title = { Text(tr("Confirmar exploración HTTP")) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Se enviarán peticiones reales únicamente al mismo origen de la URL del Estudio, a razón de una por segundo y sin seguir redirecciones.")
+                    Text(tr("Se enviarán peticiones reales únicamente al mismo origen de la URL del Estudio, a razón de una por segundo y sin seguir redirecciones."))
                     if (methods.any { it in DiscoveryPlanner.modifyingMethods }) {
-                        Text("Advertencia: POST, PUT, PATCH y DELETE pueden modificar o eliminar datos del servidor.",
+                        Text(tr("Advertencia: POST, PUT, PATCH y DELETE pueden modificar o eliminar datos del servidor."),
                             color = MaterialTheme.colorScheme.error)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(checked = ownsScope, onCheckedChange = { ownsScope = it })
-                        Text("Confirmo que tengo autorización para probar este origen.",
+                        Text(tr("Confirmo que tengo autorización para probar este origen."),
                             style = MaterialTheme.typography.bodySmall)
                     }
                 }
@@ -87,10 +89,10 @@ fun DiscoveryScreen(
                         ownsScope = false
                         onRun(routes, parameters, methods, allowModifying)
                     },
-                ) { Text("Ejecutar") }
+                ) { Text(tr("Ejecutar")) }
             },
             dismissButton = {
-                TextButton(onClick = { confirmOpen = false; ownsScope = false }) { Text("Cancelar") }
+                TextButton(onClick = { confirmOpen = false; ownsScope = false }) { Text(tr("Cancelar")) }
             },
         )
     }
@@ -103,19 +105,19 @@ fun DiscoveryScreen(
         if (message != null) item { StatusBanner(message, isErrorMessage, onDismissMessage) }
         item {
             StudioScreenHeader(
-                title = "Explorar API",
-                subtitle = "Revisa rutas, parámetros candidatos y métodos en un origen autorizado.",
+                title = tr("Explorar API"),
+                subtitle = tr("Revisa rutas, parámetros candidatos y métodos en un origen autorizado."),
                 eyebrow = "DISCOVERY LAB",
             )
         }
         item {
             StudioSurfaceCard {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Origen de la exploración", style = MaterialTheme.typography.titleMedium)
+                    Text(tr("Origen de la exploración"), style = MaterialTheme.typography.titleMedium)
                     Text(draftUrl, style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.secondary)
-                    StudioTag("Solo mismo origen · máximo 24 solicitudes", StudioTone.INFORMATION)
-                    Text("Las variables de la petición y sus headers se resuelven con el entorno activo. Los datos no se envían a ningún tercero.",
+                    StudioTag(tr("Solo mismo origen · máximo 24 solicitudes"), StudioTone.INFORMATION)
+                    Text(tr("Las variables de la petición y sus headers se resuelven con el entorno activo. Los datos no se envían a ningún tercero."),
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
@@ -123,11 +125,11 @@ fun DiscoveryScreen(
         item {
             StudioSurfaceCard {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Rutas candidatas", style = MaterialTheme.typography.titleMedium)
+                    Text(tr("Rutas candidatas"), style = MaterialTheme.typography.titleMedium)
                     OutlinedTextField(
                         value = routes, onValueChange = { routes = it.take(2400) },
-                        label = { Text("Rutas absolutas (una por línea)") },
-                        placeholder = { Text("/api/v1\n/health") },
+                        label = { Text(tr("Rutas absolutas (una por línea)")) },
+                        placeholder = { Text(tr("/api/v1\n/health")) },
                         minLines = 3, maxLines = 7, modifier = Modifier.fillMaxWidth(),
                     )
                     if (hints.isNotEmpty()) {
@@ -139,18 +141,18 @@ fun DiscoveryScreen(
                             },
                         ) { Text("Agregar ${hints.size} rutas de la última respuesta") }
                     }
-                    Text("Las rutas de una respuesta son pistas; no se analizan automáticamente.",
+                    Text(tr("Las rutas de una respuesta son pistas; no se analizan automáticamente."),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                     HorizontalDivider()
-                    Text("Parámetros candidatos", style = MaterialTheme.typography.titleMedium)
+                    Text(tr("Parámetros candidatos"), style = MaterialTheme.typography.titleMedium)
                     OutlinedTextField(
                         value = parameters, onValueChange = { parameters = it.take(1500) },
-                        label = { Text("Nombres de parámetros (uno por línea)") },
-                        placeholder = { Text("page\ninclude\nfilter") },
+                        label = { Text(tr("Nombres de parámetros (uno por línea)")) },
+                        placeholder = { Text(tr("page\ninclude\nfilter")) },
                         minLines = 3, maxLines = 7, modifier = Modifier.fillMaxWidth(),
                     )
-                    Text("Compara la respuesta normal con la que incluye cada parámetro. Las diferencias son indicios, no confirmación de un parámetro oculto.",
+                    Text(tr("Compara la respuesta normal con la que incluye cada parámetro. Las diferencias son indicios, no confirmación de un parámetro oculto."),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
@@ -159,8 +161,8 @@ fun DiscoveryScreen(
         item {
             StudioSurfaceCard {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Métodos HTTP", style = MaterialTheme.typography.titleMedium)
-                    Text("GET, HEAD y OPTIONS no deben modificar datos según su semántica HTTP, aunque los servidores pueden tener comportamientos incorrectos.",
+                    Text(tr("Métodos HTTP"), style = MaterialTheme.typography.titleMedium)
+                    Text(tr("GET, HEAD y OPTIONS no deben modificar datos según su semántica HTTP, aunque los servidores pueden tener comportamientos incorrectos."),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                     for (method in listOf(HttpMethodOption.GET, HttpMethodOption.HEAD, HttpMethodOption.OPTIONS)) {
@@ -178,7 +180,7 @@ fun DiscoveryScreen(
                                 if (!it) methods = methods - DiscoveryPlanner.modifyingMethods
                             },
                         )
-                        Text("Habilitar métodos que pueden modificar datos",
+                        Text(tr("Habilitar métodos que pueden modificar datos"),
                             style = MaterialTheme.typography.bodySmall)
                     }
                     if (allowModifying) {
@@ -190,17 +192,17 @@ fun DiscoveryScreen(
                                 methods = if (selected) methods + method else methods - method
                             }
                         }
-                        StudioTag("Riesgo de cambios en el servidor", StudioTone.WARNING)
+                        StudioTag(tr("Riesgo de cambios en el servidor"), StudioTone.WARNING)
                     }
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !isLoading && methods.isNotEmpty(),
                         onClick = { confirmOpen = true },
-                    ) { Text("Revisar y ejecutar exploración") }
+                    ) { Text(tr("Revisar y ejecutar exploración")) }
                     if (isLoading) {
                         LinearProgressIndicator(Modifier.fillMaxWidth())
                         Text("Progreso: ${progress ?: "iniciando"}")
-                        OutlinedButton(onClick = onCancel) { Text("Cancelar exploración") }
+                        OutlinedButton(onClick = onCancel) { Text(tr("Cancelar exploración")) }
                     }
                 }
             }
@@ -227,7 +229,7 @@ fun DiscoveryScreen(
                         Text("${finding.durationMs ?: "—"} ms · ${finding.bytes ?: "—"} bytes",
                             style = MaterialTheme.typography.bodySmall)
                         if (finding.kind == ProbeKind.PARAMETER && finding.changedFromBaseline) {
-                            StudioTag("Diferencia observada; revisar manualmente", StudioTone.INFORMATION)
+                            StudioTag(tr("Diferencia observada; revisar manualmente"), StudioTone.INFORMATION)
                         }
                         finding.allow?.let { Text("Allow: $it", style = MaterialTheme.typography.bodySmall) }
                         finding.error?.let { Text(it, color = MaterialTheme.colorScheme.error,

@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.preview
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import com.imr.reqestra.presentation.components.StudioScreenHeader
 import com.imr.reqestra.presentation.components.StudioSurfaceCard
 
@@ -33,12 +35,12 @@ fun PreviewScreen(
 ) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         StudioScreenHeader(
-            title = "Vista del cuerpo",
-            subtitle = "Previsualización segura del contenido de la petición.",
+            title = tr("Vista del cuerpo"),
+            subtitle = tr("Previsualización segura del contenido de la petición."),
             eyebrow = "PREVIEW",
         )
         Text(
-            if (bodyMode == BodyMode.HTML) "Renderizado HTML aislado, sin JavaScript ni acceso a red." else "Vista textual del cuerpo ${bodyMode.label}.",
+            if (bodyMode == BodyMode.HTML) tr("Renderizado HTML aislado, sin JavaScript ni acceso a red.") else "${tr("Vista del cuerpo")}: ${tr(bodyMode.label)}.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

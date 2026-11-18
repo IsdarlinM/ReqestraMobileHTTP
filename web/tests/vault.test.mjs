@@ -23,7 +23,7 @@ test("AES-GCM encrypted workspace survives unlocking; never stores tokens in pla
     assert.equal(hasVault(),true);
     const encrypted=getEncryptedBackup();
     assert(!encrypted.includes("PRIVATE_TOKEN_VALUE"));
-    await assert.rejects(unlockVault("not-the-password"),/Contraseña incorrecta/);
+    await assert.rejects(unlockVault("not-the-password"),/Wrong passphrase/);
     const opened=await unlockVault("test-passphrase-long-enough");
     assert.equal(opened.data.workspace.environments[0].variables.apiToken,"PRIVATE_TOKEN_VALUE");
     await saveVault(key,{workspace:{requests:[{name:"Guardada"}]},draft:{url:"https://example.com"},history:[]});

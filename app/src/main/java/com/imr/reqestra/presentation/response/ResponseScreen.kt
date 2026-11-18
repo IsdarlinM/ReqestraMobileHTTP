@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.response
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import com.imr.reqestra.presentation.components.StudioScreenHeader
 import com.imr.reqestra.presentation.components.StudioSurfaceCard
 import com.imr.reqestra.presentation.components.StudioTag
@@ -52,13 +54,13 @@ fun ResponseScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         if (message != null) StatusBanner(message, isErrorMessage, onDismissMessage)
-        StudioScreenHeader("Inspector HTTP", "Examina la petición, los headers y la respuesta.", "DIAGNÓSTICO")
+        StudioScreenHeader(tr("Inspector HTTP"), tr("Examina la petición, los headers y la respuesta."), tr("DIAGNÓSTICO"))
         if (response == null) {
             StudioSurfaceCard {
                 Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Icon(Icons.Outlined.Http, contentDescription = null)
-                    Text("Aún no hay respuesta", style = MaterialTheme.typography.titleMedium)
-                    Text("Envía una petición para inspeccionar request y response.")
+                    Text(tr("Aún no hay respuesta"), style = MaterialTheme.typography.titleMedium)
+                    Text(tr("Envía una petición para inspeccionar request y response."))
                 }
             }
             return@Column
@@ -68,7 +70,7 @@ fun ResponseScreen(
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Request enviado", style = MaterialTheme.typography.titleMedium)
+                        Text(tr("Request enviado"), style = MaterialTheme.typography.titleMedium)
                         Text("${response.request.method} ${response.request.url}", color = MaterialTheme.colorScheme.primary)
                     }
                     OutlinedButton(onClick = {
@@ -80,7 +82,7 @@ fun ResponseScreen(
                         clipboard.setText(AnnotatedString(text))
                     }) {
                         Icon(Icons.Outlined.ContentCopy, contentDescription = null)
-                        Text(" Copiar")
+                        Text(tr(" Copiar"))
                     }
                 }
                 HorizontalDivider()
@@ -124,12 +126,12 @@ fun ResponseScreen(
         StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("Headers de respuesta", style = MaterialTheme.typography.titleMedium)
+                    Text(tr("Headers de respuesta"), style = MaterialTheme.typography.titleMedium)
                     OutlinedButton(onClick = {
                         clipboard.setText(AnnotatedString(response.headers.joinToString("\n") { "${it.name}: ${it.value}" }))
                     }) {
                         Icon(Icons.Outlined.ContentCopy, contentDescription = null)
-                        Text(" Copiar")
+                        Text(tr(" Copiar"))
                     }
                 }
                 HorizontalDivider()
@@ -141,12 +143,12 @@ fun ResponseScreen(
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Column {
-                        Text("Cuerpo de respuesta", style = MaterialTheme.typography.titleMedium)
-                        if (response.bodyTruncated) Text("Contenido truncado a 4 MiB.", color = MaterialTheme.colorScheme.error)
+                        Text(tr("Cuerpo de respuesta"), style = MaterialTheme.typography.titleMedium)
+                        if (response.bodyTruncated) Text(tr("Contenido truncado a 4 MiB."), color = MaterialTheme.colorScheme.error)
                     }
                     OutlinedButton(onClick = { clipboard.setText(AnnotatedString(response.body)) }) {
                         Icon(Icons.Outlined.ContentCopy, contentDescription = null)
-                        Text(" Copiar")
+                        Text(tr(" Copiar"))
                     }
                 }
                 HorizontalDivider()
@@ -162,7 +164,7 @@ fun ResponseScreen(
 @Composable
 private fun HeaderList(headers: List<ParsedHeader>) {
     if (headers.isEmpty()) {
-        Text("Sin headers.")
+        Text(tr("Sin headers."))
     } else {
         headers.forEach { header ->
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {

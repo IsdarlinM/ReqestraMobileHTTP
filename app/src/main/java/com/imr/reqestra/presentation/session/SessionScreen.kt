@@ -1,5 +1,7 @@
 package com.imr.reqestra.presentation.session
 
+import com.imr.reqestra.presentation.i18n.tr
+
 import com.imr.reqestra.presentation.components.StudioScreenHeader
 import com.imr.reqestra.presentation.components.StudioSurfaceCard
 import com.imr.reqestra.presentation.components.StudioTag
@@ -65,11 +67,11 @@ fun SessionScreen(
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 StudioScreenHeader(
-                    title = "Gestor de sesión",
-                    subtitle = "Cookies y headers bajo tu control, guardados por origen.",
-                    eyebrow = "SEGURIDAD",
+                    title = tr("Gestor de sesión"),
+                    subtitle = tr("Cookies y headers bajo tu control, guardados por origen."),
+                    eyebrow = tr("SEGURIDAD"),
                 )
-                StudioTag("Origen: $origin", StudioTone.INFORMATION)
+                StudioTag("${tr("Origen actual:")} $origin", StudioTone.INFORMATION)
             }
         }
         if (message != null) item { StatusBanner(message, isErrorMessage, onDismissMessage) }
@@ -88,22 +90,22 @@ fun SessionScreen(
                     CodeEditor(
                         value = headersText,
                         onValueChange = onHeadersChange,
-                        label = "Headers predeterminados de sesión",
+                        label = tr("Headers predeterminados de sesión"),
                         minLines = 8,
                     )
                     Text(
-                        "Los headers se guardan por origen; los específicos del request los sobrescriben. Authorization y otros secretos se cifran en modo persistente.",
+                        tr("Los headers se guardan por origen; los específicos del request los sobrescriben. Authorization y otros secretos se cifran en modo persistente."),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         Button(onClick = onSave, enabled = mode != SessionMode.NONE) {
                             Icon(Icons.Outlined.Save, contentDescription = null)
-                            Text(" Guardar")
+                            Text(tr(" Guardar"))
                         }
                         OutlinedButton(onClick = onClear, enabled = mode != SessionMode.NONE) {
                             Icon(Icons.Outlined.DeleteForever, contentDescription = null)
-                            Text(" Limpiar sesión")
+                            Text(tr(" Limpiar sesión"))
                         }
                     }
                 }
@@ -117,7 +119,7 @@ fun SessionScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text("Estado", style = MaterialTheme.typography.titleMedium)
+                        Text(tr("Estado"), style = MaterialTheme.typography.titleMedium)
                         Icon(Icons.Outlined.Cookie, contentDescription = null)
                     }
                     Text("${summary.headerCount} header(s) · ${summary.cookieCount} cookie(s)")
@@ -125,7 +127,7 @@ fun SessionScreen(
             }
         }
         if (summary.cookies.isEmpty()) {
-            item { Text("Aún no hay cookies en esta sesión.", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            item { Text(tr("Aún no hay cookies en esta sesión."), color = MaterialTheme.colorScheme.onSurfaceVariant) }
         } else {
             items(summary.cookies, key = { "${it.domain}|${it.path}|${it.name}" }) { cookie ->
                 StudioSurfaceCard {
@@ -154,16 +156,16 @@ private fun SessionModeSelector(selected: SessionMode, onSelected: (SessionMode)
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
         OutlinedTextField(
-            value = selected.label,
+            value = tr(selected.label),
             onValueChange = {},
             readOnly = true,
             modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-            label = { Text("Persistencia") },
+            label = { Text(tr("Persistencia")) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             SessionMode.entries.forEach { mode ->
-                DropdownMenuItem(text = { Text(mode.label) }, onClick = { onSelected(mode); expanded = false })
+                DropdownMenuItem(text = { Text(tr(mode.label)) }, onClick = { onSelected(mode); expanded = false })
             }
         }
     }

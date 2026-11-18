@@ -11,3 +11,15 @@ main{width:100%;max-width:1420px;margin:0 auto;padding:31px clamp(18px,3.3vw,45p
 
 .mobile-more{position:fixed;right:10px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:30;display:grid;grid-template-columns:1fr 1fr;gap:7px;width:min(340px,calc(100vw - 20px));padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
 .mobile-more button{min-height:47px;border:1px solid var(--line);border-radius:10px;background:var(--surface-alt);color:var(--text);font-weight:650}
+
+/* Unified visual identity, language control and extension action cards. */
+.brand-image{width:44px;height:44px;object-fit:contain;border-radius:13px;flex-shrink:0}
+.brand-image.small{width:32px;height:32px;border-radius:9px}
+.language-control{display:flex;align-items:center;gap:7px;background:var(--surface-alt);
+  border:1px solid var(--line);padding:6px 9px;border-radius:12px;min-height:44px}
+.language-control select{appearance:auto;background:transparent;color:var(--text);
+  border:0;min-width:86px;max-width:124px;font-weight:650;font-size:12px;padding:2px 3px}
+.language-control option{background:var(--surface);color:var(--text)}
+.language-control:focus-within{outline:2px solid var(--info);outline-offset:2px}
+@media(max-width:750px){.language-control select{min-width:66px;max-width:95px}
+  .topbar-right{flex-wrap:nowrap}.topbar-right .pill{display:none}}

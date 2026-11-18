@@ -23,18 +23,18 @@ test("environment variables expand in URL, headers, body, query and Content-Type
   assert.equal(resolved.queryParamsText,"");
 });
 test("rejects missing variables and invalid query/header syntax",()=>{
-  assert.throws(()=>expand("{{missing}}",{}),/Falta la variable/);
-  assert.throws(()=>parseQueryRows("not-a-pair"),/nombre=valor/);
-  assert.throws(()=>parseHeaders("Content-Length: 7"),/administrado/);
-  assert.throws(()=>parseHeaders("Cookie: abc"),/navegador/);
+  assert.throws(()=>expand("{{missing}}",{}),/Missing variable/);
+  assert.throws(()=>parseQueryRows("not-a-pair"),/name=value/);
+  assert.throws(()=>parseHeaders("Content-Length: 7"),/controlled by/);
+  assert.throws(()=>parseHeaders("Cookie: abc"),/browser/i);
 });
 test("validates safe body and browser limitations",()=>{
   const get=blankDraft();
   assert.equal(validateDraft(get).method,"GET");
-  assert.throws(()=>validateDraft({...get,bodyMode:"JSON",body:"{}"}),/no admite body/);
-  assert.throws(()=>validateDraft({...get,url:"http://api.example.com"}),/HTTP necesita/);
-  assert.throws(()=>validateDraft({...get,url:"https://u:p@example.com"}),/URL HTTP/);
-  assert.throws(()=>validateDraft({...get,cookiesText:"x=y"}),/navegador/);
+  assert.throws(()=>validateDraft({...get,bodyMode:"JSON",body:"{}"}),/cannot have a body/);
+  assert.throws(()=>validateDraft({...get,url:"http://api.example.com"}),/requires explicit lab approval/);
+  assert.throws(()=>validateDraft({...get,url:"https://u:p@example.com"}),/Invalid HTTP/);
+  assert.throws(()=>validateDraft({...get,cookiesText:"x=y"}),/browser/i);
   assert.equal(validateDraft({...get,cookiesText:"x=y"},{gateway:true}).method,"GET");
 });
 test("OpenAPI JSON imports methods without remote references",()=>{
@@ -50,11 +50,11 @@ test("discovery limits and origin constraints",()=>{
   const plan=planDiscovery(base,"/health\n/api/v1","page\ninclude",["GET","HEAD","OPTIONS"]);
   assert.equal(plan.length,7);
   assert(plan.every(x=>new URL(x.url).origin===new URL(base).origin));
-  assert.throws(()=>planDiscovery(base,"/../admin","",["GET"]),/Ruta no válida/);
-  assert.throws(()=>planDiscovery(base,"https://other.example/","",["GET"]),/Ruta no válida/);
-  assert.throws(()=>planDiscovery(base,"","",["POST"]),/Métodos no autorizados/);
+  assert.throws(()=>planDiscovery(base,"/../admin","",["GET"]),/Invalid route/);
+  assert.throws(()=>planDiscovery(base,"https://other.example/","",["GET"]),/Invalid route/);
+  assert.throws(()=>planDiscovery(base,"","",["POST"]),/Unauthorized methods/);
   assert.equal(planDiscovery(base,"","",["POST"],true).length,2);
-  assert.throws(()=>planDiscovery(base,Array.from({length:9},(_,i)=>"/"+i).join("\n"),"",["GET"]),/Máximo 8/);
+  assert.throws(()=>planDiscovery(base,Array.from({length:9},(_,i)=>"/"+i).join("\n"),"",["GET"]),/Maximum 8/);
 });
 test("passive hint extraction refuses external routes",()=>{
   const result=passiveRoutes({
@@ -70,7 +70,7 @@ test("cURL import never executes shell and export redacts query and Authorizatio
   assert(exported.includes("REDACTED"));
   assert(!exported.includes("secret"));
   assert(!exported.includes("abc"));
-  assert.throws(()=>importCurl("curl -k https://example.com"),/TLS inseguro/);
+  assert.throws(()=>importCurl("curl -k https://example.com"),/Insecure TLS/);
 });
 test("assertion results are deterministic",()=>{
   assert.equal(evaluate({status:200,durationMs:50},200,100).passed,true);

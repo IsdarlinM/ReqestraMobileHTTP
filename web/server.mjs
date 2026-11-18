@@ -20,6 +20,7 @@ if(ALLOWED.size && !["127.0.0.1","::1","localhost"].includes(BIND)) {
 }
 const MIME={".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",
   ".js":"text/javascript; charset=utf-8",".mjs":"text/javascript; charset=utf-8",
+  ".png":"image/png",
   ".json":"application/json; charset=utf-8",".webmanifest":"application/manifest+json",".svg":"image/svg+xml"};
 const rate=new Map();let active=0;
 function json(res,status,object){
