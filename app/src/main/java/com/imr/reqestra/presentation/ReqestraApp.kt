@@ -1,6 +1,13 @@
 package com.imr.reqestra.presentation
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -60,10 +67,25 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Column {
-                        Text("Reqestra", style = MaterialTheme.typography.titleMedium)
-                        Text("HTTP STUDIO · v3.0", style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(
+                            modifier = Modifier.size(36.dp).background(
+                                MaterialTheme.colorScheme.primaryContainer,
+                                RoundedCornerShape(12.dp),
+                            ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(Icons.Outlined.Code, contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        }
+                        Column {
+                            Text("Reqestra", style = MaterialTheme.typography.titleMedium)
+                            Text("HTTP STUDIO  •  3.1", style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 },
                 actions = {
@@ -88,11 +110,17 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
             )
         },
         bottomBar = {
-            NavigationBar {
+            Column {
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.65f))
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 0.dp,
+                ) {
                 SectionItem(state.selectedSection == AppSection.REQUEST, "Estudio",
                     { Icon(Icons.Outlined.Code, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.REQUEST)
@@ -108,6 +136,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                 SectionItem(state.selectedSection == AppSection.HISTORY, "Historial",
                     { Icon(Icons.Outlined.History, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.HISTORY)
+                }
                 }
             }
         },
@@ -195,18 +224,26 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
 private fun RowScope.SectionItem(selected: Boolean, label: String, icon: @Composable () -> Unit, onClick: () -> Unit) {
     TextButton(
         onClick = onClick,
-        modifier = Modifier.weight(1f).heightIn(min = 56.dp),
+        modifier = Modifier.weight(1f).heightIn(min = 58.dp),
         colors = ButtonDefaults.textButtonColors(
-            contentColor = if (selected) MaterialTheme.colorScheme.primary
+            contentColor = if (selected) MaterialTheme.colorScheme.onPrimaryContainer
                 else MaterialTheme.colorScheme.onSurfaceVariant,
         ),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(3.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
-            icon()
+            Box(
+                modifier = Modifier.background(
+                    if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                    RoundedCornerShape(13.dp),
+                ).padding(horizontal = 15.dp, vertical = 5.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                icon()
+            }
             Text(label, style = MaterialTheme.typography.labelSmall, maxLines = 1)
         }
     }

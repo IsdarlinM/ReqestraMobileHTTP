@@ -1,5 +1,9 @@
 package com.imr.reqestra.presentation.collections
 
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioSurfaceCard
+import com.imr.reqestra.presentation.components.StudioMethodTag
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -114,14 +118,14 @@ fun CollectionsScreen(
     ) {
         if (message != null) item { StatusBanner(message, isErrorMessage, onDismissMessage) }
         item {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("Colecciones", style = MaterialTheme.typography.headlineSmall)
-                Text("Organiza peticiones y entornos. Los datos se guardan cifrados en este dispositivo.",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+            StudioScreenHeader(
+                "Colecciones",
+                "Agrupa peticiones y variables cifradas en este dispositivo.",
+                "TU ESPACIO DE TRABAJO",
+            )
         }
         item {
-            Card(modifier = Modifier.fillMaxWidth()) {
+            StudioSurfaceCard(modifier = Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Guardar petición abierta", style = MaterialTheme.typography.titleMedium)
                     OutlinedButton(onClick = { openApiDialog = true }) { Text("Importar OpenAPI JSON") }
@@ -142,7 +146,7 @@ fun CollectionsScreen(
             }
         }
         item {
-            Card(Modifier.fillMaxWidth()) {
+            StudioSurfaceCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Entornos y variables", style = MaterialTheme.typography.titleMedium)
                     Box {
@@ -202,7 +206,7 @@ fun CollectionsScreen(
         }
         if (workspace.requests.isEmpty()) {
             item {
-                Card(Modifier.fillMaxWidth()) {
+                StudioSurfaceCard(Modifier.fillMaxWidth()) {
                     Row(Modifier.padding(20.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Icon(Icons.Outlined.Folder, contentDescription = null)
                         Text("Todavía no hay peticiones guardadas.")
@@ -211,7 +215,7 @@ fun CollectionsScreen(
             }
         }
         items(workspace.requests, key = { it.id }) { saved ->
-            Card(Modifier.fillMaxWidth()) {
+            StudioSurfaceCard(Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier.padding(14.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -219,8 +223,12 @@ fun CollectionsScreen(
                 ) {
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(saved.name, style = MaterialTheme.typography.titleMedium)
-                        Text("${saved.collection} · ${saved.draft.method.wireName}",
-                            color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically) {
+                            StudioMethodTag(saved.draft.method.wireName)
+                            Text(saved.collection, style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                         Text(saved.draft.url, maxLines = 1, overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodySmall)
                     }

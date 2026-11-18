@@ -1,4 +1,4 @@
-# Reqestra 3.0
+# Reqestra 3.1
 
 **Reqestra** es un banco de trabajo HTTP nativo para Android orientado a desarrollo, depuración de APIs y pruebas de seguridad autorizadas. Permite construir, modificar, enviar e inspeccionar peticiones completas sin limitar el editor al HTML.
 
@@ -9,6 +9,12 @@ imr :: v3.0.0
 ```
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
+
+## Diseño visual 3.1 — Studio palette
+
+La interfaz utiliza una paleta Material 3 consistente para modos claro y oscuro: verde esmeralda para acciones y éxito, azul para información, ámbar para advertencias y rojo para errores. Las tarjetas, campos de código, avisos, indicadores HTTP y navegación comparten tokens de color, tipografía y formas.
+
+Consulta [la guía del sistema visual](docs/DESIGN_SYSTEM.md) para los códigos hexadecimales y los criterios de contraste y accesibilidad.
 
 ## Novedades 3.0
 

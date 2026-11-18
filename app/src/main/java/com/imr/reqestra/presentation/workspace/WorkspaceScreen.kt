@@ -1,5 +1,12 @@
 package com.imr.reqestra.presentation.workspace
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioTag
+import com.imr.reqestra.presentation.components.StudioTone
+import com.imr.reqestra.presentation.components.StudioMethodTag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -135,23 +142,26 @@ fun WorkspaceScreen(
             StatusBanner(message, isErrorMessage, onDismissMessage)
         }
 
-        Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
-            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Card(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = MaterialTheme.shapes.large,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+        ) {
+            Column(modifier = Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Column {
-                        Text("Constructor de petición", style = MaterialTheme.typography.headlineSmall)
-                        Text(
-                            "Control completo del request sobre un cliente HTTP seguro.",
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        Text("REQUEST WORKBENCH", style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary)
+                        Text("Nueva petición", style = MaterialTheme.typography.titleLarge)
+                        Text("Construye y envía solicitudes HTTP.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    Text(draft.sessionMode.label, style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    StudioTag(draft.sessionMode.label, StudioTone.INFORMATION)
                 }
                 OutlinedTextField(
                     value = draft.url,
@@ -173,7 +183,10 @@ fun WorkspaceScreen(
                     }
                 }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = onSend, enabled = !isLoading) {
+                    Button(
+                        onClick = onSend, enabled = !isLoading,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                    ) {
                         Icon(Icons.Outlined.Send, contentDescription = null)
                         Text(" Enviar petición")
                     }
@@ -207,9 +220,17 @@ fun WorkspaceScreen(
             }
         }
 
-        Card {
+        Card(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = MaterialTheme.shapes.large,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+        ) {
             Column {
-                ScrollableTabRow(selectedTabIndex = tabIndex, edgePadding = 8.dp) {
+                ScrollableTabRow(
+                    selectedTabIndex = tabIndex, edgePadding = 8.dp,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ) {
                     tabs.forEachIndexed { index, tab ->
                         Tab(selected = tabIndex == index, onClick = { tabIndex = index }, text = { Text(tab.label) })
                     }
@@ -257,14 +278,25 @@ fun WorkspaceScreen(
         }
 
         if (response != null) {
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = MaterialTheme.shapes.large,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+            ) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
+                    Text("ÚLTIMA RESPUESTA", style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically) {
-                        Text("HTTP ${response.statusCode} · ${response.durationMs} ms",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = if (response.statusCode in 200..299) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.error)
+                        StudioTag(
+                            "HTTP ${response.statusCode} · ${response.durationMs} ms",
+                            when (response.statusCode) {
+                                in 200..299 -> StudioTone.SUCCESS
+                                in 300..399 -> StudioTone.WARNING
+                                else -> StudioTone.ERROR
+                            },
+                        )
                         OutlinedButton(onClick = onOpenResponse) { Text("Ver inspector") }
                     }
                     Text("Respuesta · ${response.protocol}", style = MaterialTheme.typography.bodySmall,
@@ -281,7 +313,8 @@ fun WorkspaceScreen(
 @Composable
 private fun GeneralTab(draft: RequestDraft) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text("Request line", style = MaterialTheme.typography.titleMedium)
+        Text("Línea de petición", style = MaterialTheme.typography.titleMedium)
+        StudioMethodTag(if (draft.method == HttpMethodOption.CUSTOM) draft.customMethod else draft.method.wireName)
         Text(
             "${if (draft.method == HttpMethodOption.CUSTOM) draft.customMethod else draft.method.wireName} ${draft.url}",
             style = MaterialTheme.typography.bodyMedium,

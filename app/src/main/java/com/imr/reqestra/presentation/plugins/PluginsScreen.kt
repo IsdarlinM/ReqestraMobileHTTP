@@ -1,5 +1,10 @@
 package com.imr.reqestra.presentation.plugins
 
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioSurfaceCard
+import com.imr.reqestra.presentation.components.StudioTag
+import com.imr.reqestra.presentation.components.StudioTone
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,16 +28,18 @@ fun PluginsScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
-            Text("Extensiones", style = MaterialTheme.typography.headlineSmall)
-            Text("Módulos integrados y capacidades previstas. No se ejecuta código descargado de terceros.",
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            StudioScreenHeader(
+                title = "Extensiones",
+                subtitle = "Módulos integrados y capacidades previstas; sin código remoto.",
+                eyebrow = "ECOSISTEMA",
+            )
         }
         items(PluginCatalog.extensions, key = { it.id }) { extension ->
-            Card(Modifier.fillMaxWidth()) {
+            StudioSurfaceCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Text(extension.title, style = MaterialTheme.typography.titleMedium)
-                    Text(if (extension.available) "Integrado" else "Planeado",
-                        color = if (extension.available) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
+                    StudioTag(if (extension.available) "Integrado" else "Planeado",
+                        if (extension.available) StudioTone.SUCCESS else StudioTone.NEUTRAL)
                     Text(extension.description)
                     Text("Capacidades: ${extension.capabilities.joinToString()}",
                         color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)

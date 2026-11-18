@@ -1,5 +1,9 @@
 package com.imr.reqestra.presentation.history
 
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioSurfaceCard
+import com.imr.reqestra.presentation.components.StudioMethodTag
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,17 +41,19 @@ fun HistoryScreen(
 ) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Column {
-                Text("Historial local", style = MaterialTheme.typography.headlineSmall)
-                Text("Solo método, URL redactada, status y tiempo.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+            StudioScreenHeader(
+                title = "Historial local",
+                subtitle = "Método, URL redactada, estado y duración.",
+                eyebrow = "ACTIVIDAD",
+                modifier = Modifier.weight(1f),
+            )
             OutlinedButton(onClick = onClear, enabled = entries.isNotEmpty()) {
                 Icon(Icons.Outlined.DeleteSweep, contentDescription = null)
                 Text(" Limpiar")
             }
         }
         if (entries.isEmpty()) {
-            Card {
+            StudioSurfaceCard {
                 Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Icon(Icons.Outlined.History, contentDescription = null)
                     Text("No hay peticiones registradas", style = MaterialTheme.typography.titleMedium)
@@ -56,11 +62,11 @@ fun HistoryScreen(
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 items(entries, key = HistoryEntry::id) { entry ->
-                    Card(modifier = Modifier.fillMaxWidth().clickable { onReuse(entry) }) {
+                    StudioSurfaceCard(modifier = Modifier.fillMaxWidth().clickable { onReuse(entry) }) {
                         Row(modifier = Modifier.padding(14.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Text(entry.method, color = MaterialTheme.colorScheme.primary)
+                                    StudioMethodTag(entry.method)
                                     Text("HTTP ${entry.statusCode}")
                                     Text("${entry.durationMs} ms", color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }

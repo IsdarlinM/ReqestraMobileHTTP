@@ -1,5 +1,10 @@
 package com.imr.reqestra.presentation.session
 
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioSurfaceCard
+import com.imr.reqestra.presentation.components.StudioTag
+import com.imr.reqestra.presentation.components.StudioTone
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,21 +64,17 @@ fun SessionScreen(
     ) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Gestor de sesión", style = MaterialTheme.typography.headlineSmall)
-                Text(
-                    "Conserva cookies recibidas y headers comunes únicamente cuando tú seleccionas un modo de sesión.",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                StudioScreenHeader(
+                    title = "Gestor de sesión",
+                    subtitle = "Cookies y headers bajo tu control, guardados por origen.",
+                    eyebrow = "SEGURIDAD",
                 )
-                Text(
-                    "Origen activo: $origin",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
-                )
+                StudioTag("Origen: $origin", StudioTone.INFORMATION)
             }
         }
         if (message != null) item { StatusBanner(message, isErrorMessage, onDismissMessage) }
         item {
-            Card {
+            StudioSurfaceCard {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                     SessionModeSelector(mode, onModeChange)
                     Text(
@@ -109,7 +110,7 @@ fun SessionScreen(
             }
         }
         item {
-            Card {
+            StudioSurfaceCard {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -127,7 +128,7 @@ fun SessionScreen(
             item { Text("Aún no hay cookies en esta sesión.", color = MaterialTheme.colorScheme.onSurfaceVariant) }
         } else {
             items(summary.cookies, key = { "${it.domain}|${it.path}|${it.name}" }) { cookie ->
-                Card {
+                StudioSurfaceCard {
                     Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(cookie.name, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleMedium)
                         Text("${cookie.domain}${cookie.path}")

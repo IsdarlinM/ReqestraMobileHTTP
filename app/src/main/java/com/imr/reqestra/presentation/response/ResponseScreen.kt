@@ -1,5 +1,10 @@
 package com.imr.reqestra.presentation.response
 
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioSurfaceCard
+import com.imr.reqestra.presentation.components.StudioTag
+import com.imr.reqestra.presentation.components.StudioTone
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -47,9 +52,9 @@ fun ResponseScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         if (message != null) StatusBanner(message, isErrorMessage, onDismissMessage)
-        Text("Inspector", style = MaterialTheme.typography.headlineSmall)
+        StudioScreenHeader("Inspector HTTP", "Examina la petición, los headers y la respuesta.", "DIAGNÓSTICO")
         if (response == null) {
-            Card {
+            StudioSurfaceCard {
                 Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Icon(Icons.Outlined.Http, contentDescription = null)
                     Text("Aún no hay respuesta", style = MaterialTheme.typography.titleMedium)
@@ -59,7 +64,7 @@ fun ResponseScreen(
             return@Column
         }
 
-        Card {
+        StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Column(modifier = Modifier.weight(1f)) {
@@ -87,7 +92,7 @@ fun ResponseScreen(
             }
         }
 
-        Card {
+        StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -95,25 +100,28 @@ fun ResponseScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column {
-                        Text("HTTP ${response.statusCode}", style = MaterialTheme.typography.headlineSmall, color = statusColor(response.statusCode))
+                        StudioTag(
+                            "HTTP ${response.statusCode}",
+                            when (response.statusCode) {
+                                in 200..299 -> StudioTone.SUCCESS
+                                in 300..399 -> StudioTone.WARNING
+                                else -> StudioTone.ERROR
+                            },
+                        )
                         Text(response.statusMessage.ifBlank { "Respuesta del servidor" })
                     }
                     Icon(Icons.Outlined.Http, contentDescription = null)
                 }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AssistChip(onClick = {}, label = { Text(response.protocol) })
-                    AssistChip(
-                        onClick = {},
-                        leadingIcon = { Icon(Icons.Outlined.Schedule, contentDescription = null) },
-                        label = { Text("${response.durationMs} ms") },
-                    )
-                    response.contentType?.let { AssistChip(onClick = {}, label = { Text(it) }) }
-                    if (response.receivedCookies > 0) AssistChip(onClick = {}, label = { Text("${response.receivedCookies} cookie(s)") })
+                    StudioTag(response.protocol, StudioTone.INFORMATION)
+                    StudioTag("${response.durationMs} ms")
+                    response.contentType?.let { StudioTag(it) }
+                    if (response.receivedCookies > 0) StudioTag("${response.receivedCookies} cookie(s)", StudioTone.INFORMATION)
                 }
             }
         }
 
-        Card {
+        StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Text("Headers de respuesta", style = MaterialTheme.typography.titleMedium)
@@ -129,7 +137,7 @@ fun ResponseScreen(
             }
         }
 
-        Card {
+        StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Column {
@@ -158,7 +166,7 @@ private fun HeaderList(headers: List<ParsedHeader>) {
     } else {
         headers.forEach { header ->
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(header.name, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                Text(header.name, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.secondary)
                 Text(header.value, style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace))
             }
         }

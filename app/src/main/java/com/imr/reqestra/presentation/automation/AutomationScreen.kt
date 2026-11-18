@@ -1,5 +1,10 @@
 package com.imr.reqestra.presentation.automation
 
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioSurfaceCard
+import com.imr.reqestra.presentation.components.StudioTag
+import com.imr.reqestra.presentation.components.StudioTone
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,12 +60,15 @@ fun AutomationScreen(
     ) {
         if (message != null) item { StatusBanner(message, isErrorMessage, onDismissMessage) }
         item {
-            Text("Automatización", style = MaterialTheme.typography.headlineSmall)
-            Text("Pruebas secuenciales, con una petición como máximo por segundo y 20 peticiones por ejecución.",
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            StudioScreenHeader(
+                title = "Automatización",
+                subtitle = "Pruebas secuenciales, medibles y controladas.",
+                eyebrow = "TEST RUNNER",
+            )
+            StudioTag("Hasta 20 peticiones · 1 petición/segundo", StudioTone.INFORMATION)
         }
         item {
-            Card(Modifier.fillMaxWidth()) {
+            StudioSurfaceCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text("Ejecutor de colecciones", style = MaterialTheme.typography.titleMedium)
                     Box {
@@ -109,11 +117,11 @@ fun AutomationScreen(
             }
             items(result.results.size) { index ->
                 val check = result.results[index]
-                Card(Modifier.fillMaxWidth()) {
+                StudioSurfaceCard(Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Text(check.name, style = MaterialTheme.typography.titleMedium)
-                        Text(if (check.successful) "PASS" else "FAIL",
-                            color = if (check.successful) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error)
+                        StudioTag(if (check.successful) "PASS" else "FAIL",
+                            if (check.successful) StudioTone.SUCCESS else StudioTone.ERROR)
                         Text("HTTP ${check.statusCode ?: "—"} · ${check.durationMs ?: "—"} ms")
                         check.assertions.forEach { assertion ->
                             Text("${if (assertion.passed) "✓" else "✗"} ${assertion.label}: ${assertion.detail}",

@@ -1,5 +1,8 @@
 package com.imr.reqestra.presentation.preview
 
+import com.imr.reqestra.presentation.components.StudioScreenHeader
+import com.imr.reqestra.presentation.components.StudioSurfaceCard
+
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.webkit.WebResourceRequest
@@ -29,13 +32,17 @@ fun PreviewScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Vista del cuerpo", style = MaterialTheme.typography.headlineSmall)
+        StudioScreenHeader(
+            title = "Vista del cuerpo",
+            subtitle = "Previsualización segura del contenido de la petición.",
+            eyebrow = "PREVIEW",
+        )
         Text(
             if (bodyMode == BodyMode.HTML) "Renderizado HTML aislado, sin JavaScript ni acceso a red." else "Vista textual del cuerpo ${bodyMode.label}.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Card(modifier = Modifier.fillMaxSize()) {
+        StudioSurfaceCard(modifier = Modifier.fillMaxSize()) {
             if (bodyMode == BodyMode.HTML) {
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),
