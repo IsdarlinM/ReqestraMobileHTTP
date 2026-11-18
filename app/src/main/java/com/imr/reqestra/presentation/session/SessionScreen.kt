@@ -122,7 +122,7 @@ fun SessionScreen(
                         Text(tr("Estado"), style = MaterialTheme.typography.titleMedium)
                         Icon(Icons.Outlined.Cookie, contentDescription = null)
                     }
-                    Text("${summary.headerCount} header(s) · ${summary.cookieCount} cookie(s)")
+                    Text("${summary.headerCount} ${tr("headers")} · ${summary.cookieCount} ${tr("cookies")}")
                 }
             }
         }

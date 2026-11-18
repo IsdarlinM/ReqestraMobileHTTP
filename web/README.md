@@ -1,4 +1,4 @@
-# Reqestra Web 3.4
+# Reqestra Web 3.5
 
 Cliente web multilingüe de Reqestra: Estudio HTTP, query/variables, colecciones cifradas, OpenAPI/cURL, sesiones por origen, pruebas, exploración acotada, historial, inspector, vista previa HTML aislada y donaciones PayPal configurables.
 
@@ -52,3 +52,11 @@ La PWA, favicon y cabecera comparten el logo R con órbita turquesa mediante web
 Los datos de tus solicitudes y respuestas nunca se traducen automáticamente.
 Las descripciones extensas heredadas pueden conservar inglés de respaldo y requieren
 revisión lingüística antes de presentar el producto como totalmente traducido.
+
+## Auditoría de idiomas 3.5
+
+El HTML inicial está en inglés. El selector 🌐 muestra el idioma activo
+con un borde, fondo y ✓ en claro y oscuro, permite seleccionar por
+teclado y guarda la selección. Los catálogos locales cubren 328
+etiquetas web en los seis idiomas e incluyen plantillas para mensajes
+dinámicos. No se traducen URLs, secretos, ni cuerpos de peticiones.

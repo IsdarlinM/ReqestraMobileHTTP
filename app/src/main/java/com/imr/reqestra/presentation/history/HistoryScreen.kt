@@ -75,7 +75,7 @@ fun HistoryScreen(
                                 Text(entry.url, maxLines = 2, overflow = TextOverflow.Ellipsis)
                                 Text(formatTimestamp(entry.timestampEpochMs), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
-                            Icon(Icons.Outlined.Replay, contentDescription = "Reutilizar")
+                            Icon(Icons.Outlined.Replay, contentDescription = tr("Reutilizar"))
                         }
                     }
                 }

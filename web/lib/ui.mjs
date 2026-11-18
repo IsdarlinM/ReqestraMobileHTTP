@@ -41,9 +41,9 @@ export function responseSummary(response) {
 }
 export function inspector(response) {
   if(!response){
-    $("inspectorRequest").textContent="No request yet.";
-    $("inspectorMeta").textContent="No response yet.";
-    $("inspectorBody").textContent="No response yet.";return;
+    $("inspectorRequest").textContent=t("No request yet.");
+    $("inspectorMeta").textContent=t("No response yet.");
+    $("inspectorBody").textContent=t("No response yet.");return;
   }
   const request=response.request;
   $("inspectorRequest").textContent=[
@@ -54,9 +54,9 @@ export function inspector(response) {
   ].join("\n");
   $("inspectorMeta").textContent=[
     "HTTP "+response.status+" "+response.statusText,
-    "Protocolo: "+response.protocol,
-    "Duration: "+response.durationMs+" ms",
-    "Bytes: "+response.size+(response.bodyTruncated?" (truncado)":""),
+    t("Protocolo: ")+response.protocol,
+    t("Duration: ")+response.durationMs+" ms",
+    t("Bytes: ")+response.size+(response.bodyTruncated?t(" (truncado)"):""),
     ...response.headers.map(([name,value])=>name+": "+value),
   ].join("\n");
   $("inspectorBody").textContent=response.body||"(sin cuerpo)";
@@ -64,7 +64,7 @@ export function inspector(response) {
 export function environments(workspace,callbacks){
   const select=$("environmentSelect");select.replaceChildren();
   for(const env of workspace.environments){
-    const option=node("option",env.name);option.value=env.name;select.append(option);
+    const option=node("option",env.name);option.value=env.name;option.dataset.noTranslate="true";select.append(option);
   }
   select.value=workspace.activeEnvironment;
   $("activeEnvTag").textContent=workspace.activeEnvironment;
@@ -84,7 +84,8 @@ export function collections(workspace,callbacks){
   if(!workspace.requests.length){list.append(node("p","No hay peticiones guardadas.","help"));}
   for(const entry of workspace.requests){
     const line=node("div",null,"list-item"),desc=node("div"),actions=node("div",null,"list-actions");
-    desc.append(node("strong",entry.name),node("small",entry.collection+" · "+entry.draft.method),
+    const savedName=node("strong",entry.name);savedName.dataset.noTranslate="true";
+    desc.append(savedName,node("small",entry.collection+" · "+entry.draft.method),
       node("small",redactUrl(entry.draft.url)));
     actions.append(action("Abrir",()=>callbacks.load(entry.id)),
       action("Borrar",()=>callbacks.delete(entry.id),true));
@@ -150,9 +151,9 @@ export function renderPlugins(onOpen=()=>{}) {
   ];
   const el=$("pluginsList");el.replaceChildren();
   for(const [name,description,section] of plugins){
-    const c=card(name);
+    const c=card(t(name));
     c.append(tag(section?t("Integrado / opcional"):t("No disponible"),
-      section?"success":"warning"),node("p",description));
+      section?"success":"warning"),node("p",t(description)));
     if(section){
       const open=action(t("Abrir extensión"),()=>onOpen(section));
       open.setAttribute("aria-label",t("Abrir")+" "+name);c.append(open);
@@ -169,7 +170,7 @@ export function preview(draft) {
     frame.srcdoc="<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'unsafe-inline'; img-src data:; form-action 'none'\">"+draft.body;
   }else{
     frame.hidden=true;frame.removeAttribute("srcdoc");code.hidden=false;
-    code.textContent=draft.body||"(sin contenido)";
+    code.textContent=draft.body||t("(sin contenido)");
   }
 }
 export function support(config){

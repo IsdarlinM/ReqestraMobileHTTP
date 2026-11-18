@@ -1,14 +1,25 @@
-# Reqestra 3.4 — Android y Web
+# Reqestra 3.5 — Android y Web
 
 **Reqestra** es un banco de trabajo HTTP para **Android nativo y navegadores web** orientado a desarrollo, depuración de APIs y pruebas de seguridad autorizadas. Permite construir, modificar, enviar e inspeccionar peticiones completas sin limitar el editor al HTML.
 
 ```text
 Reqestra
 Mobile HTTP Workbench
-imr :: v3.4.1
+imr :: v3.5.0
 ```
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
+
+## Selector de idioma y traducciones — 3.5
+
+Android y Web incluyen un selector de idioma con la opción activa resaltada
+por colores de marca y una marca ✓ tanto en modo claro como oscuro.
+La web usa HTML inicial inglés y un menú accesible con navegación por
+teclado. Android localiza títulos, indicaciones, menús, errores
+y mensajes de resultado con catálogo local. Los seis idiomas
+conservan el contenido original de las peticiones HTTP.
+
+Ver [auditoría de localización](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
 
 ## Navegación y apariencia móvil — 3.4.1
 

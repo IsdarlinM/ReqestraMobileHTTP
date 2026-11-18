@@ -34,6 +34,8 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.PlayArrow
@@ -128,7 +130,7 @@ fun ReqestraApp(
                             Text("Reqestra", style = MaterialTheme.typography.titleMedium, maxLines = 1)
                             if (!compactLayout) {
                                 Text(
-                                    "HTTP STUDIO  •  3.4",
+                                    "HTTP STUDIO  •  3.5",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -138,16 +140,78 @@ fun ReqestraApp(
                 },
                 actions = {
                     Box {
-                        IconButton(onClick = { openLanguageMenu = true }) {
-                            Icon(Icons.Outlined.Language, contentDescription = tr("Idioma"))
+                        val currentName = ReqestraLanguages.supported
+                            .firstOrNull { it.code == language }?.name ?: "English"
+                        IconButton(
+                            onClick = { openLanguageMenu = true },
+                            modifier = Modifier
+                                .size(46.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.secondaryContainer),
+                        ) {
+                            Icon(
+                                Icons.Outlined.Language,
+                                contentDescription = "${tr("Idioma de la interfaz")}: $currentName",
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            )
                         }
                         DropdownMenu(
                             expanded = openLanguageMenu,
                             onDismissRequest = { openLanguageMenu = false },
+                            modifier = Modifier
+                                .widthIn(min = 228.dp)
+                                .background(MaterialTheme.colorScheme.surface),
+                            containerColor = MaterialTheme.colorScheme.surface,
                         ) {
+                            Text(
+                                tr("Idioma de la interfaz"),
+                                modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                modifier = Modifier.padding(bottom = 4.dp),
+                            )
                             ReqestraLanguages.supported.forEach { choice ->
+                                val selectedLanguage = language == choice.code
+                                val foreground = if (selectedLanguage)
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                else MaterialTheme.colorScheme.onSurface
                                 DropdownMenuItem(
-                                    text = { Text(choice.name) },
+                                    modifier = Modifier
+                                        .padding(horizontal = 7.dp, vertical = 2.dp)
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(
+                                            if (selectedLanguage)
+                                                MaterialTheme.colorScheme.primaryContainer
+                                            else Color.Transparent,
+                                        ),
+                                    text = {
+                                        Text(
+                                            choice.name,
+                                            color = foreground,
+                                            style = if (selectedLanguage)
+                                                MaterialTheme.typography.titleSmall
+                                            else MaterialTheme.typography.bodyMedium,
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Text(
+                                            choice.code.uppercase(java.util.Locale.ROOT),
+                                            color = foreground,
+                                            style = MaterialTheme.typography.labelSmall,
+                                        )
+                                    },
+                                    trailingIcon = {
+                                        if (selectedLanguage) {
+                                            Icon(
+                                                Icons.Outlined.Check,
+                                                contentDescription = tr("Seleccionado"),
+                                                tint = foreground,
+                                            )
+                                        }
+                                    },
                                     onClick = {
                                         language = choice.code
                                         preferences.edit().putString("language", choice.code).apply()

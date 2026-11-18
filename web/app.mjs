@@ -223,7 +223,7 @@ function mutateWorkspace(fn){
   ui.collections(state.workspace,{load:loadSaved,delete:deleteSaved});persist();
 }
 function removeVariable(name){
-  if(!confirm("Delete variable "+name+"?"))return;
+  if(!confirm(t("Delete variable "+name+"?")))return;
   mutateWorkspace(()=>{
     const env=state.workspace.environments.find(x=>x.name===state.workspace.activeEnvironment);
     delete env.variables[name];
@@ -275,7 +275,7 @@ function loadSaved(id){
   renderDraft();go("studio");persist();info("Request loaded from "+entry.collection);
 }
 function deleteSaved(id){
-  if(!confirm("Delete the saved request?"))return;
+  if(!confirm(t("Delete the saved request?")))return;
   mutateWorkspace(()=>state.workspace.requests=state.workspace.requests.filter(x=>x.id!==id));
 }
 $("importOpenApi").addEventListener("click",()=>{
@@ -287,7 +287,7 @@ $("importOpenApi").addEventListener("click",()=>{
   }catch(e){fail(e);}
 });
 $("clearHistory").addEventListener("click",()=>{
-  if(!confirm("Clear local history?"))return;
+  if(!confirm(t("Clear local history?")))return;
   state.history=[];ui.history(state.history,{reuse:reuseHistory});persist();info("Historial eliminado.");
 });
 async function runTests(){
@@ -299,7 +299,7 @@ async function runTests(){
     const status=Number($("expectedStatus").value),limit=Number($("maxLatency").value);
     if(!Number.isInteger(status)||status<100||status>599||!Number.isInteger(limit)||limit<1||limit>120000)
       throw Error("Invalid status or latency assertions.");
-    if(!confirm("This will send "+items.length+" real requests that may modify data. Continue?"))return;
+    if(!confirm(t("This will send "+items.length+" real requests that may modify data. Continue?")))return;
     const signal=startJob(controls);$("cancelTests").disabled=false;
     const checks=[];
     for(let i=0;i<items.length;i++){
@@ -352,7 +352,7 @@ async function runDiscovery(){
     const targets=planDiscovery(resolved.url,
       expand($("routes").value,activeVariables()),expand($("parameterCandidates").value,activeVariables()),
       methods,$("enableMutating").checked);
-    if(!confirm("Send "+targets.length+" requests to the same origin, one per second? Mutating methods may change data."))
+    if(!confirm(t("Send "+targets.length+" requests to the same origin, one per second? Mutating methods may change data.")))
       return;
     const signal=startJob(controls);$("cancelDiscovery").disabled=false;
     const findings=[];let baseline=null;
@@ -423,7 +423,7 @@ $("vaultExport").addEventListener("click",()=>{
 $("vaultImportFile").addEventListener("change",async()=>{
   try{
     const file=$("vaultImportFile").files?.[0];if(!file)return;
-    if(hasVault()&&!confirm("Importing will replace this browser's encrypted vault. Continue?"))return;
+    if(hasVault()&&!confirm(t("Importing will replace this browser's encrypted vault. Continue?")))return;
     const raw=await file.text();
     importEncryptedBackup(raw);
     vaultKey=null;state={draft:blankDraft(),workspace:defaultWorkspace(),history:[],response:null};

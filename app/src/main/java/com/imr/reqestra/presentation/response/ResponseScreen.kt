@@ -110,7 +110,7 @@ fun ResponseScreen(
                                 else -> StudioTone.ERROR
                             },
                         )
-                        Text(response.statusMessage.ifBlank { "Respuesta del servidor" })
+                        Text(if (response.statusMessage.isBlank()) tr("Respuesta del servidor") else response.statusMessage)
                     }
                     Icon(Icons.Outlined.Http, contentDescription = null)
                 }
@@ -153,7 +153,7 @@ fun ResponseScreen(
                 }
                 HorizontalDivider()
                 Text(
-                    response.body.ifBlank { "(respuesta sin cuerpo)" },
+                    if (response.body.isBlank()) tr("(respuesta sin cuerpo)") else response.body,
                     style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
                 )
             }

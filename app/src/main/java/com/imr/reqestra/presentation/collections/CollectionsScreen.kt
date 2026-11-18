@@ -121,8 +121,8 @@ fun CollectionsScreen(
         if (message != null) item { StatusBanner(message, isErrorMessage, onDismissMessage) }
         item {
             StudioScreenHeader(
-                "Colecciones",
-                "Agrupa peticiones y variables cifradas en este dispositivo.",
+                tr("Colecciones"),
+                tr("Agrupa peticiones y variables cifradas en este dispositivo."),
                 tr("TU ESPACIO DE TRABAJO"),
             )
         }
@@ -194,7 +194,7 @@ fun CollectionsScreen(
                         ) {
                             Text("{{${key}}}", modifier = Modifier.weight(1f))
                             IconButton(onClick = { onRemoveVariable(key) }) {
-                                Icon(Icons.Outlined.DeleteOutline, contentDescription = "Eliminar $key")
+                                Icon(Icons.Outlined.DeleteOutline, contentDescription = "${tr("Eliminar")} $key")
                             }
                         }
                     }
@@ -236,7 +236,7 @@ fun CollectionsScreen(
                     }
                     TextButton(onClick = { onLoad(saved.id) }) { Text(tr("Abrir")) }
                     IconButton(onClick = { deleteTarget = saved }) {
-                        Icon(Icons.Outlined.DeleteOutline, contentDescription = "Eliminar ${saved.name}")
+                        Icon(Icons.Outlined.DeleteOutline, contentDescription = "${tr("Eliminar")} ${saved.name}")
                     }
                 }
             }

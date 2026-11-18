@@ -68,3 +68,13 @@ test("The same PNG is included in Android and the Web manifest",()=>{
   assert.equal(JSON.parse(manifest).icons[0].src,"icon.png");
   assert.match(mobileManifest,/android:icon="@drawable\/reqestra_brand"/);
 });
+
+test("Android language dropdown highlights the selected locale in any theme",()=>{
+  const app=readFileSync(
+    new URL("../../app/src/main/java/com/imr/reqestra/presentation/ReqestraApp.kt",import.meta.url),"utf8");
+  assert.match(app,/selectedLanguage = language == choice\.code/);
+  assert.match(app,/MaterialTheme\.colorScheme\.primaryContainer/);
+  assert.match(app,/tr\("Seleccionado"\)/);
+  assert.match(app,/choice\.name/);
+  assert.match(app,/putString\("language", choice\.code\)/);
+});

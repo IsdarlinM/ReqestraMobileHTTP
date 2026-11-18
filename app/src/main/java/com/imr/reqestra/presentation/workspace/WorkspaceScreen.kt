@@ -118,7 +118,7 @@ fun WorkspaceScreen(
                         minLines = 4,
                         maxLines = 8,
                     )
-                    curlNotice?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    curlNotice?.let { Text(tr(it), color = MaterialTheme.colorScheme.error) }
                 }
             },
             confirmButton = {
@@ -212,7 +212,7 @@ fun WorkspaceScreen(
                         curlDialogOpen = true
                     }, enabled = !isLoading) { Text(tr("Importar cURL")) }
                     if (curlNotice != null && !curlDialogOpen) {
-                        Text(curlNotice.orEmpty(), color = MaterialTheme.colorScheme.error)
+                        Text(tr(curlNotice.orEmpty()), color = MaterialTheme.colorScheme.error)
                     }
                     if (isLoading) {
                         OutlinedButton(onClick = onCancel) {
@@ -252,7 +252,7 @@ fun WorkspaceScreen(
                             CodeEditor(
                                 value = draft.queryParamsText,
                                 onValueChange = onQueryParamsChange,
-                                label = "Query params · nombre=valor",
+                                label = tr("Query params · nombre=valor"),
                                 minLines = 7,
                             )
                             Text(
@@ -277,7 +277,7 @@ fun WorkspaceScreen(
                             CodeEditor(
                                 value = draft.cookiesText,
                                 onValueChange = onCookiesChange,
-                                label = "nombre=valor",
+                                label = tr("nombre=valor"),
                                 minLines = 8,
                             )
                         }
@@ -324,7 +324,7 @@ fun WorkspaceScreen(
                     }
                     Text("${tr("Respuesta recibida")} · ${response.protocol}", style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(response.body.take(500).ifBlank { "(sin contenido)" },
+                    Text(if (response.body.isBlank()) tr("(sin contenido)") else response.body.take(500),
                         style = MaterialTheme.typography.bodySmall.copy(fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace),
                         maxLines = 8)
                 }
@@ -379,7 +379,7 @@ private fun BodyTab(
             CodeEditor(
                 value = draft.body,
                 onValueChange = onBodyChange,
-                label = if (draft.bodyMode == BodyMode.BASE64_BINARY) "Cuerpo codificado en Base64" else "Cuerpo del request",
+                label = tr(if (draft.bodyMode == BodyMode.BASE64_BINARY) "Cuerpo codificado en Base64" else "Cuerpo del request"),
                 minLines = 14,
             )
         } else {

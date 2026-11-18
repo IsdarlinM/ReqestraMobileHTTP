@@ -23,6 +23,102 @@ object ReqestraLanguages {
 
     // Record: [English fallback, Russian, Mandarin Chinese, Portuguese, French].
     private val catalog: Map<String, Array<String>> = mapOf(
+        "URL no válida" to arrayOf("Invalid URL", "Недопустимый URL", "URL 无效", "URL inválida", "URL invalide"),
+        "La importación supera el límite de 120 peticiones." to arrayOf("Import exceeds the 120-request limit.", "Импорт превышает лимит в 120 запросов.", "导入超过 120 个请求的限制。", "A importação excede o limite de 120 requisições.", "L’importation dépasse la limite de 120 requêtes."),
+        "JSON demasiado grande." to arrayOf("JSON is too large.", "JSON слишком большой.", "JSON 文件过大。", "JSON muito grande.", "JSON trop volumineux."),
+        "El entorno ya existe." to arrayOf("Environment already exists.", "Окружение уже существует.", "环境已存在。", "O ambiente já existe.", "L’environnement existe déjà."),
+        "Entorno desconocido." to arrayOf("Unknown environment.", "Неизвестное окружение.", "未知环境。", "Ambiente desconhecido.", "Environnement inconnu."),
+        "HTTP sin cifrar requiere activar explícitamente el modo de laboratorio." to arrayOf("Unencrypted HTTP requires explicitly enabling lab mode.", "Незашифрованный HTTP требует явного включения лабораторного режима.", "未加密的 HTTP 需要明确启用实验模式。", "HTTP sem criptografia exige ativar o modo de laboratório.", "Le HTTP non chiffré nécessite l’activation explicite du mode laboratoire."),
+        "El fragmento #... no forma parte de una petición HTTP y debe eliminarse." to arrayOf("URL fragments (#...) are not part of HTTP requests and must be removed.", "Фрагменты URL (#...) не передаются в HTTP-запросах и должны быть удалены.", "URL 片段（#...）不属于 HTTP 请求，必须移除。", "Fragmentos (#...) não fazem parte de requisições HTTP e devem ser removidos.", "Les fragments d’URL (#...) ne font pas partie des requêtes HTTP et doivent être supprimés."),
+        "El método HTTP personalizado no es válido." to arrayOf("Invalid custom HTTP method.", "Недопустимый пользовательский HTTP-метод.", "自定义 HTTP 方法无效。", "Método HTTP personalizado inválido.", "Méthode HTTP personnalisée invalide."),
+        "Los headers deben usar saltos de línea LF, no CR." to arrayOf("Headers must use LF newlines, not CR.", "В заголовках нужны переводы строк LF, не CR.", "请求头必须使用 LF 换行，不能使用 CR。", "Cabeçalhos devem usar quebras LF, não CR.", "Les en-têtes doivent utiliser des sauts de ligne LF, pas CR."),
+        "Se permiten como máximo 100 cookies manuales." to arrayOf("Up to 100 manual cookies are allowed.", "Допускается не более 100 cookie, введённых вручную.", "最多允许 100 个手动 Cookie。", "São permitidos até 100 cookies manuais.", "100 cookies manuels maximum sont autorisés."),
+        "El cuerpo supera el límite de 5 MiB." to arrayOf("Request body exceeds the 5 MiB limit.", "Тело запроса превышает лимит в 5 МиБ.", "请求体超过 5 MiB 限制。", "O corpo excede o limite de 5 MiB.", "Le corps dépasse la limite de 5 Mio."),
+        "Nombre de variable inválido. Usa letras, números y guiones bajos." to arrayOf("Invalid variable name. Use letters, numbers and underscores.", "Недопустимое имя переменной. Используйте буквы, цифры и подчёркивания.", "变量名无效。请使用字母、数字和下划线。", "Nome de variável inválido. Use letras, números e sublinhados.", "Nom de variable invalide. Utilisez des lettres, chiffres et tirets bas."),
+        "Plantilla demasiado grande." to arrayOf("Template is too large.", "Шаблон слишком большой.", "模板过大。", "Modelo muito grande.", "Modèle trop volumineux."),
+        "La petición expandida supera el límite permitido." to arrayOf("Expanded request exceeds the permitted size.", "Развёрнутый запрос превышает допустимый размер.", "展开后的请求超过允许的大小。", "A requisição expandida excede o limite permitido.", "La requête développée dépasse la limite autorisée."),
+        "La lista de parámetros es demasiado grande." to arrayOf("Parameter list is too large.", "Список параметров слишком большой.", "参数列表过大。", "A lista de parâmetros é muito grande.", "La liste des paramètres est trop longue."),
+        "El comando supera el tamaño máximo permitido." to arrayOf("Command exceeds the maximum allowed size.", "Команда превышает допустимый размер.", "命令超过最大允许长度。", "O comando excede o tamanho máximo permitido.", "La commande dépasse la taille maximale autorisée."),
+        "Header inválido." to arrayOf("Invalid header.", "Недопустимый заголовок.", "请求头无效。", "Cabeçalho inválido.", "En-tête invalide."),
+        "Cuerpo vacío inesperado." to arrayOf("Unexpected empty body.", "Неожиданное пустое тело запроса.", "请求体意外为空。", "Corpo vazio inesperado.", "Corps vide inattendu."),
+        "No se admite leer archivos (@ruta) en la importación." to arrayOf("Reading local files (@path) during import is not supported.", "Чтение файлов (@путь) при импорте не поддерживается.", "导入时不支持读取本地文件（@路径）。", "Não é permitido ler arquivos (@caminho) na importação.", "La lecture de fichiers locaux (@chemin) n’est pas prise en charge."),
+        "Documento OpenAPI demasiado grande (máx. 256 KiB)." to arrayOf("OpenAPI document is too large (max. 256 KiB).", "Документ OpenAPI слишком большой (макс. 256 КиБ).", "OpenAPI 文档过大（最多 256 KiB）。", "Documento OpenAPI muito grande (máx. 256 KiB).", "Document OpenAPI trop volumineux (256 Kio max.)."),
+        "La especificación debe definir servers[0].url con HTTP o HTTPS absoluto." to arrayOf("The specification requires an absolute HTTP or HTTPS servers[0].url.", "Спецификация должна задавать абсолютный HTTP(S) servers[0].url.", "规范必须提供绝对 HTTP 或 HTTPS 的 servers[0].url。", "A especificação exige servers[0].url HTTP ou HTTPS absoluto.", "La spécification exige un servers[0].url HTTP ou HTTPS absolu."),
+        "Resuelve las variables del servidor OpenAPI antes de importar." to arrayOf("Resolve OpenAPI server variables before importing.", "Разрешите переменные сервера OpenAPI перед импортом.", "导入前请解析 OpenAPI 服务器变量。", "Resolva as variáveis do servidor OpenAPI antes de importar.", "Résolvez les variables du serveur OpenAPI avant l’importation."),
+        "Ruta OpenAPI inválida." to arrayOf("Invalid OpenAPI path.", "Недопустимый путь OpenAPI.", "OpenAPI 路径无效。", "Rota OpenAPI inválida.", "Chemin OpenAPI invalide."),
+        "Máximo 50 operaciones por documento." to arrayOf("Maximum 50 operations per document.", "Максимум 50 операций на документ.", "每份文档最多 50 个操作。", "Máximo de 50 operações por documento.", "50 opérations maximum par document."),
+        "Selecciona al menos un método." to arrayOf("Select at least one method.", "Выберите хотя бы один метод.", "至少选择一种方法。", "Selecione pelo menos um método.", "Sélectionnez au moins une méthode."),
+        "Un método que puede modificar datos requiere autorización explícita." to arrayOf("A method that can change data requires explicit authorization.", "Для метода, изменяющего данные, требуется явное разрешение.", "可能修改数据的方法需要明确授权。", "Um método que pode alterar dados exige autorização explícita.", "Une méthode pouvant modifier des données nécessite une autorisation explicite."),
+        "Máximo ocho rutas y ocho parámetros por ejecución." to arrayOf("Maximum eight routes and eight parameters per run.", "Максимум восемь путей и параметров за запуск.", "每次运行最多八个路由和八个参数。", "Máximo de oito rotas e oito parâmetros por execução.", "Huit routes et huit paramètres maximum par exécution."),
+        "No se permiten cambios de origen." to arrayOf("Origin changes are not allowed.", "Смена источника запрещена.", "不允许更改源站。", "Mudanças de origem não são permitidas.", "Les changements d’origine sont interdits."),
+        "La exploración excede 24 peticiones." to arrayOf("Exploration exceeds 24 requests.", "Исследование превышает лимит в 24 запроса.", "探索超过 24 个请求。", "A exploração excede 24 requisições.", "L’exploration dépasse 24 requêtes."),
+        "Plan demasiado grande." to arrayOf("Plan is too large.", "План слишком большой.", "计划过大。", "Plano muito grande.", "Plan trop volumineux."),
+        "El destino salió del origen autorizado." to arrayOf("Destination left the authorized origin.", "Назначение вышло за пределы разрешённого источника.", "目标超出授权源站范围。", "O destino saiu da origem autorizada.", "La destination a quitté l’origine autorisée."),
+        "La respuesta se truncó a 4 MiB." to arrayOf("Response truncated to 4 MiB.", "Ответ обрезан до 4 МиБ.", "响应已截断至 4 MiB。", "A resposta foi truncada em 4 MiB.", "La réponse a été tronquée à 4 Mio."),
+        "HTTP sin cifrar está bloqueado por Android o no fue autorizado." to arrayOf("Unencrypted HTTP is blocked by Android or not authorized.", "Незашифрованный HTTP заблокирован Android или не разрешён.", "未加密 HTTP 被 Android 阻止或未获授权。", "HTTP sem criptografia está bloqueado pelo Android ou não autorizado.", "Le HTTP non chiffré est bloqué par Android ou non autorisé."),
+        "No se pudo validar el certificado TLS del servidor." to arrayOf("Could not validate the server TLS certificate.", "Не удалось проверить TLS-сертификат сервера.", "无法验证服务器 TLS 证书。", "Não foi possível validar o certificado TLS do servidor.", "Impossible de valider le certificat TLS du serveur."),
+        "La petición agotó el tiempo de espera." to arrayOf("Request timed out.", "Время ожидания запроса истекло.", "请求超时。", "A requisição excedeu o tempo limite.", "Délai d’attente de la requête dépassé."),
+        "No fue posible conectar con el servidor." to arrayOf("Could not connect to the server.", "Не удалось подключиться к серверу.", "无法连接服务器。", "Não foi possível conectar ao servidor.", "Impossible de se connecter au serveur."),
+        "Redirección a otro origen bloqueada por seguridad. Abre el destino como una petición nueva para aprobarlo." to arrayOf("Cross-origin redirect blocked for security. Open the destination as a new request to authorize it.", "Перенаправление на другой источник заблокировано. Откройте цель отдельным запросом для разрешения.", "出于安全原因已阻止跨源重定向。请将目标作为新请求打开以授权。", "Redirecionamento para outra origem bloqueado por segurança. Abra o destino como nova requisição.", "Redirection vers une autre origine bloquée par sécurité. Ouvrez la destination comme nouvelle requête."),
+        "Límite de 120 peticiones guardadas." to arrayOf("Limit of 120 saved requests.", "Лимит — 120 сохранённых запросов.", "最多保存 120 个请求。", "Limite de 120 requisições salvas.", "Limite de 120 requêtes enregistrées."),
+        "Introduce un nombre de 1 a 80 caracteres." to arrayOf("Enter a name of 1 to 80 characters.", "Введите имя длиной от 1 до 80 символов.", "请输入 1 至 80 个字符的名称。", "Informe um nome de 1 a 80 caracteres.", "Saisissez un nom de 1 à 80 caractères."),
+        "La colección debe tener nombre." to arrayOf("Collection must have a name.", "У коллекции должно быть имя.", "集合必须有名称。", "A coleção deve ter um nome.", "La collection doit avoir un nom."),
+        "Seleccionado" to arrayOf("Selected", "Выбрано", "已选中", "Selecionado", "Sélectionné"),
+        "Ejecutar" to arrayOf("Run", "Выполнить", "运行", "Executar", "Exécuter"),
+        "TEST RUNNER" to arrayOf("TEST RUNNER", "ЗАПУСК ТЕСТОВ", "测试执行器", "EXECUTOR DE TESTES", "EXÉCUTION DES TESTS"),
+        "DISCOVERY LAB" to arrayOf("DISCOVERY LAB", "ИССЛЕДОВАНИЕ API", "API 探索", "LABORATÓRIO DE DESCOBERTA", "LABORATOIRE D’EXPLORATION"),
+        "PREVIEW" to arrayOf("PREVIEW", "ПРЕДПРОСМОТР", "预览", "PRÉ-VISUALIZAÇÃO", "APERÇU"),
+        "DONACIONES" to arrayOf("DONATIONS", "ПОЖЕРТВОВАНИЯ", "捐赠", "DOAÇÕES", "DONS"),
+        "Iniciando" to arrayOf("Starting", "Запуск", "正在启动", "Iniciando", "Démarrage"),
+        "respuestas" to arrayOf("responses", "ответов", "响应", "respostas", "réponses"),
+        "solicitudes" to arrayOf("requests", "запросов", "请求", "requisições", "requêtes"),
+        "headers" to arrayOf("headers", "заголовков", "请求头", "cabeçalhos", "en-têtes"),
+        "cookies" to arrayOf("cookies", "cookie", "Cookie", "cookies", "cookies"),
+        "(sin contenido)" to arrayOf("(no content)", "(нет содержимого)", "（无内容）", "(sem conteúdo)", "(aucun contenu)"),
+        "nombre=valor" to arrayOf("name=value", "имя=значение", "名称=值", "nome=valor", "nom=valeur"),
+        "Content-Type" to arrayOf("Content-Type", "Content-Type", "Content-Type", "Content-Type", "Content-Type"),
+        "Collection Manager" to arrayOf("Collection Manager", "Менеджер коллекций", "集合管理器", "Gerenciador de coleções", "Gestionnaire de collections"),
+        "Environment Variables" to arrayOf("Environment Variables", "Переменные окружения", "环境变量", "Variáveis de ambiente", "Variables d’environnement"),
+        "Test Assertions" to arrayOf("Test Assertions", "Проверки тестов", "测试断言", "Verificações de testes", "Assertions de tests"),
+        "cURL Toolkit" to arrayOf("cURL Toolkit", "Инструменты cURL", "cURL 工具箱", "Ferramentas cURL", "Outils cURL"),
+        "OpenAPI Importer" to arrayOf("OpenAPI Importer", "Импорт OpenAPI", "OpenAPI 导入器", "Importador OpenAPI", "Importateur OpenAPI"),
+        "Query Parameterizer" to arrayOf("Query Parameterizer", "Параметры запроса", "查询参数编辑器", "Parâmetros de consulta", "Paramétrage des requêtes"),
+        "Endpoint Explorer" to arrayOf("Endpoint Explorer", "Исследователь эндпоинтов", "端点探索器", "Explorador de endpoints", "Explorateur de points d’accès"),
+        "GraphQL Studio" to arrayOf("GraphQL Studio", "Студия GraphQL", "GraphQL 工作台", "Estúdio GraphQL", "Studio GraphQL"),
+        "Proxy Connector" to arrayOf("Proxy Connector", "Подключение прокси", "代理连接器", "Conector de proxy", "Connecteur proxy"),
+        "AI Assistant" to arrayOf("AI Assistant", "ИИ-помощник", "AI 助手", "Assistente de IA", "Assistant IA"),
+        "Reutilizar" to arrayOf("Reuse", "Повторно использовать", "重用", "Reutilizar", "Réutiliser"),
+        "Modo de sesión:" to arrayOf("Session mode:", "Режим сессии:", "会话模式：", "Modo de sessão:", "Mode de session :"),
+        "La URL inicial de Reqestra no es válida." to arrayOf("Reqestra's initial URL is invalid.", "Исходный URL Reqestra недействителен.", "Reqestra 初始 URL 无效。", "A URL inicial do Reqestra é inválida.", "L’URL initiale de Reqestra est invalide."),
+        "Comando cURL importado. Revisa la petición antes de enviarla." to arrayOf("cURL command imported. Review the request before sending.", "Команда cURL импортирована. Проверьте запрос перед отправкой.", "已导入 cURL 命令，请在发送前检查请求。", "Comando cURL importado. Revise antes de enviar.", "Commande cURL importée. Vérifiez la requête avant l’envoi."),
+        "La URL actual no permite determinar el origen de la sesión." to arrayOf("Cannot determine the session origin from the current URL.", "Не удалось определить источник сессии по текущему URL.", "无法从当前 URL 确定会话源站。", "Não foi possível determinar a origem da sessão a partir da URL.", "Impossible de déterminer l’origine de la session depuis l’URL."),
+        "JSON formateado." to arrayOf("JSON formatted.", "JSON отформатирован.", "JSON 已格式化。", "JSON formatado.", "JSON formaté."),
+        "Nombre de entorno inválido (1-40 caracteres)." to arrayOf("Invalid environment name (1–40 characters).", "Недопустимое имя окружения (1–40 символов).", "环境名称无效（1–40 个字符）。", "Nome de ambiente inválido (1–40 caracteres).", "Nom d’environnement invalide (1 à 40 caractères)."),
+        "Variable demasiado larga." to arrayOf("Variable value is too long.", "Значение переменной слишком длинное.", "变量值过长。", "O valor da variável é muito longo.", "La valeur de la variable est trop longue."),
+        "Assertion HTTP o tiempo inválidos." to arrayOf("Invalid HTTP assertion or timeout.", "Недопустимая HTTP-проверка или тайм-аут.", "HTTP 断言或超时值无效。", "Verificação HTTP ou tempo limite inválido.", "Assertion HTTP ou délai d’attente invalide."),
+        "La colección debe contener entre 1 y 20 peticiones." to arrayOf("The collection must contain 1 to 20 requests.", "Коллекция должна содержать от 1 до 20 запросов.", "集合必须包含 1 到 20 个请求。", "A coleção deve conter de 1 a 20 requisições.", "La collection doit contenir entre 1 et 20 requêtes."),
+        "Ejecución cancelada." to arrayOf("Run cancelled.", "Выполнение отменено.", "执行已取消。", "Execução cancelada.", "Exécution annulée."),
+        "Plan inválido" to arrayOf("Invalid plan", "Недопустимый план", "计划无效", "Plano inválido", "Plan invalide"),
+        "Exploración cancelada." to arrayOf("Exploration cancelled.", "Исследование отменено.", "探索已取消。", "Exploração cancelada.", "Exploration annulée."),
+        "Operación no disponible." to arrayOf("Operation unavailable.", "Операция недоступна.", "操作不可用。", "Operação indisponível.", "Opération indisponible."),
+        "Espacio de trabajo actualizado." to arrayOf("Workspace updated.", "Рабочая область обновлена.", "工作区已更新。", "Espaço de trabalho atualizado.", "Espace de travail mis à jour."),
+        "Historial eliminado." to arrayOf("History cleared.", "История очищена.", "历史记录已清除。", "Histórico apagado.", "Historique effacé."),
+        "Se recuperaron URL y método. El historial no almacena headers, cookies ni cuerpos." to arrayOf("URL and method restored. History does not store headers, cookies or bodies.", "URL и метод восстановлены. История не хранит заголовки, cookie и тела запросов.", "已恢复 URL 和方法。历史记录不保存请求头、Cookie 或请求体。", "URL e método restaurados. O histórico não armazena cabeçalhos, cookies ou corpos.", "URL et méthode restaurées. L’historique ne conserve ni en-têtes, ni cookies, ni corps."),
+        "Variables no válidas." to arrayOf("Invalid variables.", "Недопустимые переменные.", "变量无效。", "Variáveis inválidas.", "Variables invalides."),
+        "Petición completada." to arrayOf("Request completed.", "Запрос выполнен.", "请求已完成。", "Requisição concluída.", "Requête terminée."),
+        "La URL no es válida. Usa una URL HTTP o HTTPS completa." to arrayOf("Invalid URL. Enter a complete HTTP or HTTPS URL.", "Недопустимый URL. Укажите полный HTTP или HTTPS URL.", "URL 无效。请输入完整 HTTP 或 HTTPS URL。", "URL inválida. Informe uma URL HTTP ou HTTPS completa.", "URL invalide. Saisissez une URL HTTP ou HTTPS complète."),
+        "El cuerpo no es Base64 válido." to arrayOf("Request body is not valid Base64.", "Тело запроса не является допустимым Base64.", "请求体不是有效的 Base64。", "O corpo da requisição não é Base64 válido.", "Le corps de la requête n’est pas un Base64 valide."),
+        "No se puede agregar query: URL no válida." to arrayOf("Cannot add query parameters: invalid URL.", "Невозможно добавить параметры: недопустимый URL.", "无法添加查询参数：URL 无效。", "Não é possível adicionar parâmetros: URL inválida.", "Impossible d’ajouter des paramètres : URL invalide."),
+        "Timeout inválido." to arrayOf("Invalid timeout.", "Недопустимый тайм-аут.", "超时值无效。", "Tempo limite inválido.", "Délai d’attente invalide."),
+        "No se importa --insecure: Reqestra valida TLS." to arrayOf("Cannot import --insecure: Reqestra validates TLS.", "Нельзя импортировать --insecure: Reqestra проверяет TLS.", "无法导入 --insecure：Reqestra 会验证 TLS。", "Não é possível importar --insecure: Reqestra valida TLS.", "Impossible d’importer --insecure : Reqestra vérifie TLS."),
+        "No existe paths en OpenAPI." to arrayOf("OpenAPI does not contain paths.", "В OpenAPI отсутствует paths.", "OpenAPI 中缺少 paths。", "O OpenAPI não contém paths.", "Le document OpenAPI ne contient pas paths."),
+        "Introduce una URL de origen HTTP(S) válida." to arrayOf("Enter a valid HTTP(S) origin URL.", "Введите допустимый исходный HTTP(S) URL.", "请输入有效的 HTTP(S) 源站 URL。", "Informe uma URL de origem HTTP(S) válida.", "Saisissez une URL d’origine HTTP(S) valide."),
+        "URL no válida." to arrayOf("Invalid URL.", "Недопустимый URL.", "URL 无效。", "URL inválida.", "URL invalide."),
+        "Error al resolver las variables." to arrayOf("Could not resolve variables.", "Не удалось обработать переменные.", "无法解析变量。", "Erro ao resolver variáveis.", "Erreur de résolution des variables."),
+        "La petición no es válida." to arrayOf("The request is invalid.", "Недопустимый запрос.", "请求无效。", "A requisição é inválida.", "La requête est invalide."),
+        "La petición fue cancelada." to arrayOf("The request was cancelled.", "Запрос отменён.", "请求已取消。", "A requisição foi cancelada.", "La requête a été annulée."),
+        "Error inesperado al ejecutar la petición." to arrayOf("Unexpected error while executing the request.", "Неожиданная ошибка при выполнении запроса.", "执行请求时发生意外错误。", "Erro inesperado ao executar a requisição.", "Erreur inattendue lors de l’exécution de la requête."),
+        "(no results)" to arrayOf("(no results)", "(нет результатов)", "（无结果）", "(sem resultados)", "(aucun résultat)"),
         "Modo claro" to arrayOf(
             "Light mode", "Светлая тема", "浅色模式", "Modo claro", "Mode clair",
         ),
@@ -324,10 +420,32 @@ object ReqestraLanguages {
         "Módulos integrados y capacidades previstas; sin código remoto." to arrayOf("Built-in modules and planned capabilities; no remote code.", "Встроенные модули и планы; без удалённого кода.", "内置模块与计划功能；不运行远程代码。", "Módulos integrados e previstos; sem código remoto.", "Modules intégrés et prévus ; aucun code distant."),
     )
 
+    private data class DynamicMessage(val pattern: Regex, val forms: Array<String>)
+    private val dynamicMessages = listOf(
+        DynamicMessage(Regex("""^Se permiten como máximo (\d+) headers\.$"""), arrayOf("Maximum {1} headers are allowed.", "Допускается не более {1} заголовков.", "最多允许 {1} 个请求头。", "São permitidos no máximo {1} cabeçalhos.", "{1} en-têtes maximum sont autorisés.")),
+        DynamicMessage(Regex("""^Nombre de header inválido en la línea (\d+)\.$"""), arrayOf("Invalid header name on line {1}.", "Недопустимое имя заголовка в строке {1}.", "第 {1} 行的请求头名称无效。", "Nome de cabeçalho inválido na linha {1}.", "Nom d’en-tête invalide à la ligne {1}.")),
+        DynamicMessage(Regex("""^El valor de (.+) contiene saltos de línea no permitidos\.$"""), arrayOf("Value of {1} contains prohibited newlines.", "Значение {1} содержит недопустимые переводы строк.", "{1} 的值包含不允许的换行符。", "O valor de {1} contém quebras de linha proibidas.", "La valeur de {1} contient des sauts de ligne interdits.")),
+        DynamicMessage(Regex("""^Cookie inválida en la entrada (\d+)\. Usa nombre=valor\.$"""), arrayOf("Invalid cookie at entry {1}. Use name=value.", "Недопустимая cookie в записи {1}. Используйте имя=значение.", "第 {1} 项 Cookie 无效。请使用 名称=值。", "Cookie inválido na entrada {1}. Use nome=valor.", "Cookie invalide à l’entrée {1}. Utilisez nom=valeur.")),
+        DynamicMessage(Regex("""^La cookie (.+) contiene caracteres no permitidos\.$"""), arrayOf("Cookie {1} contains prohibited characters.", "Cookie {1} содержит недопустимые символы.", "Cookie {1} 包含不允许的字符。", "O cookie {1} contém caracteres proibidos.", "Le cookie {1} contient des caractères interdits.")),
+        DynamicMessage(Regex("""^Máximo (\d+) parámetros\.$"""), arrayOf("Maximum {1} parameters.", "Максимум {1} параметров.", "最多 {1} 个参数。", "Máximo de {1} parâmetros.", "{1} paramètres maximum.")),
+        DynamicMessage(Regex("""^El valor del parámetro (.+) no es válido\.$"""), arrayOf("Parameter {1} has an invalid value.", "Параметр {1} содержит недопустимое значение.", "参数 {1} 的值无效。", "O parâmetro {1} tem um valor inválido.", "Le paramètre {1} a une valeur invalide.")),
+        DynamicMessage(Regex("""^([A-Z-]+) no admite cuerpo en este cliente\.$"""), arrayOf("{1} does not support a body in this client.", "Клиент не поддерживает тело запроса для {1}.", "此客户端的 {1} 不支持请求体。", "{1} não aceita corpo neste cliente.", "{1} ne permet pas de corps dans ce client.")),
+        DynamicMessage(Regex("""^Sesión actualizada con (\d+) cookie\(s\)\.$"""), arrayOf("Session updated with {1} cookies.", "Сессия обновлена: {1} cookie.", "会话已更新，包含 {1} 个 Cookie。", "Sessão atualizada com {1} cookies.", "Session mise à jour avec {1} cookies.")),
+        DynamicMessage(Regex("""^Modo de sesión: (.+)\.$"""), arrayOf("Session mode: {1}.", "Режим сессии: {1}.", "会话模式：{1}。", "Modo de sessão: {1}.", "Mode de session : {1}.")),
+        DynamicMessage(Regex("""^Datos de la sesión (.+) eliminados\.$"""), arrayOf("Session {1} data cleared.", "Данные сессии {1} удалены.", "已清除 {1} 会话数据。", "Dados da sessão {1} apagados.", "Données de la session {1} effacées.")),
+        DynamicMessage(Regex("""^Importadas (\d+) operaciones OpenAPI JSON\.$"""), arrayOf("Imported {1} OpenAPI JSON operations.", "Импортировано {1} операций OpenAPI JSON.", "已导入 {1} 个 OpenAPI JSON 操作。", "Importadas {1} operações OpenAPI JSON.", "{1} opérations OpenAPI JSON importées.")),
+        DynamicMessage(Regex("""^Petición guardada en (.+)\.$"""), arrayOf("Request saved in {1}.", "Запрос сохранён в {1}.", "请求已保存至 {1}。", "Requisição salva em {1}.", "Requête enregistrée dans {1}.")),
+        DynamicMessage(Regex("""^Petición cargada desde (.+)\.$"""), arrayOf("Request loaded from {1}.", "Запрос загружен из {1}.", "已从 {1} 加载请求。", "Requisição carregada de {1}.", "Requête chargée depuis {1}.")),
+        DynamicMessage(Regex("""^Pruebas completadas: (\d+) correctas, (\d+) fallidas\.$"""), arrayOf("Tests completed: {1} passed, {2} failed.", "Тесты завершены: {1} пройдено, {2} с ошибками.", "测试完成：{1} 个通过，{2} 个失败。", "Testes concluídos: {1} aprovados, {2} falharam.", "Tests terminés : {1} réussis, {2} échoués.")),
+        DynamicMessage(Regex("""^Exploración terminada: (\d+) respuestas de (\d+) intentos\.$"""), arrayOf("Exploration complete: {1} responses from {2} attempts.", "Исследование завершено: {1} ответов из {2} попыток.", "探索完成：{2} 次尝试收到 {1} 个响应。", "Exploração concluída: {1} respostas de {2} tentativas.", "Exploration terminée : {1} réponses sur {2} tentatives.")),
+        DynamicMessage(Regex("""^Falta la variable \{\{(.+)\}\} en el entorno activo\.$"""), arrayOf("Missing variable {{{1}}} in the active environment.", "В активном окружении отсутствует переменная {{{1}}}.", "当前环境缺少变量 {{{1}}}。", "Variável {{{1}}} ausente no ambiente ativo.", "Variable {{{1}}} manquante dans l’environnement actif.")),
+        DynamicMessage(Regex("""^([A-Z]+) requiere un cuerpo\. Selecciona un tipo de cuerpo o usa uno vacío\.$"""), arrayOf("{1} requires a body. Select a body type or use an empty body.", "Для {1} требуется тело. Выберите тип тела или пустое тело.", "{1} 需要请求体。请选择请求体类型或使用空请求体。", "{1} exige um corpo. Selecione um tipo de corpo ou use um corpo vazio.", "{1} nécessite un corps. Choisissez un type de corps ou un corps vide.")),
+        DynamicMessage(Regex("""^Respuesta cargada en el editor de cuerpo\.\s*(.*)$"""), arrayOf("Response loaded into the body editor. {1}", "Ответ загружен в редактор тела. {1}", "响应已加载至请求体编辑器。{1}", "Resposta carregada no editor de corpo. {1}", "Réponse chargée dans l’éditeur de corps. {1}")),
+    )
+
     fun translate(source: String, language: String): String {
         val code = normalize(language)
         if (code == "es") return source
-        val values = catalog[source] ?: return source
         val index = when (code) {
             "ru" -> 1
             "zh" -> 2
@@ -335,7 +453,17 @@ object ReqestraLanguages {
             "fr" -> 4
             else -> 0
         }
-        return values[index].ifBlank { values[0] }
+        catalog[source]?.let { return it[index].ifBlank { it[0] } }
+        for (candidate in dynamicMessages) {
+            val match = candidate.pattern.matchEntire(source) ?: continue
+            var translated = candidate.forms[index].ifBlank { candidate.forms[0] }
+            // Only interpolate the captured parameters; request bodies are never translated.
+            match.groupValues.drop(1).forEachIndexed { i, value ->
+                translated = translated.replace("{${i + 1}}", value)
+            }
+            return translated.trim()
+        }
+        return source
     }
 }
 

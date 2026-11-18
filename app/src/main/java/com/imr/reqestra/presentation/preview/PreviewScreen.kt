@@ -37,7 +37,7 @@ fun PreviewScreen(
         StudioScreenHeader(
             title = tr("Vista del cuerpo"),
             subtitle = tr("Previsualización segura del contenido de la petición."),
-            eyebrow = "PREVIEW",
+            eyebrow = tr("PREVIEW"),
         )
         Text(
             if (bodyMode == BodyMode.HTML) tr("Renderizado HTML aislado, sin JavaScript ni acceso a red.") else "${tr("Vista del cuerpo")}: ${tr(bodyMode.label)}.",
@@ -68,7 +68,7 @@ fun PreviewScreen(
                 )
             } else {
                 Text(
-                    text = body.ifBlank { "(sin cuerpo)" },
+                    text = if (body.isBlank()) tr("(sin cuerpo)") else body,
                     modifier = Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
                     style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
                 )

@@ -40,7 +40,7 @@ fun PluginsScreen(onOpen: (String) -> Unit, modifier: Modifier = Modifier) {
         items(PluginCatalog.extensions, key = { it.id }) { extension ->
             StudioSurfaceCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                    Text(extension.title, style = MaterialTheme.typography.titleMedium)
+                    Text(tr(extension.title), style = MaterialTheme.typography.titleMedium)
                     StudioTag(
                         tr(if (extension.available) "Integrado" else "Planeado"),
                         if (extension.available) StudioTone.SUCCESS else StudioTone.NEUTRAL,

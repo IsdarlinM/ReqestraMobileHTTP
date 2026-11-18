@@ -107,7 +107,7 @@ fun DiscoveryScreen(
             StudioScreenHeader(
                 title = tr("Explorar API"),
                 subtitle = tr("Revisa rutas, parámetros candidatos y métodos en un origen autorizado."),
-                eyebrow = "DISCOVERY LAB",
+                eyebrow = tr("DISCOVERY LAB"),
             )
         }
         item {
@@ -139,7 +139,7 @@ fun DiscoveryScreen(
                                 routes = (routes.lineSequence().filter { it.isNotBlank() }.toList() + hints)
                                     .distinct().take(8).joinToString("\n")
                             },
-                        ) { Text("Agregar ${hints.size} rutas de la última respuesta") }
+                        ) { Text("${tr("Añadir rutas de respuesta anterior")}: ${hints.size}") }
                     }
                     Text(tr("Las rutas de una respuesta son pistas; no se analizan automáticamente."),
                         style = MaterialTheme.typography.bodySmall,
@@ -201,7 +201,7 @@ fun DiscoveryScreen(
                     ) { Text(tr("Revisar y ejecutar exploración")) }
                     if (isLoading) {
                         LinearProgressIndicator(Modifier.fillMaxWidth())
-                        Text("Progreso: ${progress ?: "iniciando"}")
+                        Text("${tr("Progreso")}: ${progress ?: tr("Iniciando")}")
                         OutlinedButton(onClick = onCancel) { Text(tr("Cancelar exploración")) }
                     }
                 }
@@ -209,7 +209,7 @@ fun DiscoveryScreen(
         }
         report?.let { finished ->
             item {
-                Text("Resultados · ${finished.successCount} respuestas / ${finished.findings.size} solicitudes",
+                Text("${tr("Resultados")} · ${finished.successCount} ${tr("respuestas")} / ${finished.findings.size} ${tr("solicitudes")}",
                     style = MaterialTheme.typography.titleMedium)
             }
             items(finished.findings.size) { index ->
@@ -232,7 +232,7 @@ fun DiscoveryScreen(
                             StudioTag(tr("Diferencia observada; revisar manualmente"), StudioTone.INFORMATION)
                         }
                         finding.allow?.let { Text("Allow: $it", style = MaterialTheme.typography.bodySmall) }
-                        finding.error?.let { Text(it, color = MaterialTheme.colorScheme.error,
+                        finding.error?.let { Text(tr(it), color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall) }
                     }
                 }

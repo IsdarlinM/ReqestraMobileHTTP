@@ -65,7 +65,7 @@ fun AutomationScreen(
             StudioScreenHeader(
                 title = tr("Automatización"),
                 subtitle = tr("Pruebas secuenciales, medibles y controladas."),
-                eyebrow = "TEST RUNNER",
+                eyebrow = tr("TEST RUNNER"),
             )
             StudioTag(tr("Hasta 20 peticiones · 1 petición/segundo"), StudioTone.INFORMATION)
         }
@@ -75,7 +75,7 @@ fun AutomationScreen(
                     Text(tr("Ejecutor de colecciones"), style = MaterialTheme.typography.titleMedium)
                     Box {
                         OutlinedButton(onClick = { menuOpen = true }, enabled = collections.isNotEmpty() && !isLoading) {
-                            Text(if (chosen.isEmpty()) "Crear una colección primero" else "Colección: $chosen ▾")
+                            Text(if (chosen.isEmpty()) tr("Crear una colección primero") else "${tr("Colección")}: $chosen ▾")
                         }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             collections.forEach { collection ->
@@ -129,7 +129,7 @@ fun AutomationScreen(
                             Text("${if (assertion.passed) "✓" else "✗"} ${assertion.label}: ${assertion.detail}",
                                 style = MaterialTheme.typography.bodySmall)
                         }
-                        check.error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                        check.error?.let { Text(tr(it), color = MaterialTheme.colorScheme.error) }
                     }
                 }
             }

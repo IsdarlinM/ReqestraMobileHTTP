@@ -36,7 +36,7 @@ fun SupportScreen(modifier: Modifier = Modifier) {
     ) {
         StudioScreenHeader(
             title = tr("Apoya Reqestra"),
-            eyebrow = "DONACIONES",
+            eyebrow = tr("DONACIONES"),
             subtitle = tr("Tu apoyo es opcional y no desbloquea funciones de la aplicación."),
         )
         StudioSurfaceCard {

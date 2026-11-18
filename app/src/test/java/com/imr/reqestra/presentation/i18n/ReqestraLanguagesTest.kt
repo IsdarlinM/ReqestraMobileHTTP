@@ -12,6 +12,14 @@ class ReqestraLanguagesTest {
         assertEquals("pt", ReqestraLanguages.normalize("pt-BR"))
         assertEquals("fr", ReqestraLanguages.normalize("fr-FR"))
     }
+    @Test fun statusAndValidationMessagesAreTranslatedWithoutChangingParameters() {
+        assertEquals("Selected", ReqestraLanguages.translate("Seleccionado", "en"))
+        assertEquals("已选中", ReqestraLanguages.translate("Seleccionado", "zh"))
+        assertEquals("Создать", ReqestraLanguages.translate("Crear", "ru"))
+        assertEquals("Запрос сохранён в Lab.", ReqestraLanguages.translate("Petición guardada en Lab.", "ru"))
+        assertEquals("Tests", ReqestraLanguages.translate("Pruebas", "fr"))
+        assertEquals("Bearer abc", ReqestraLanguages.translate("Bearer abc", "fr"))
+    }
     @Test fun navigationTranslationsAreAvailable() {
         assertEquals("Studio", ReqestraLanguages.translate("Estudio", "en"))
         assertEquals("Estudio", ReqestraLanguages.translate("Estudio", "es"))

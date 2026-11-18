@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
-  <meta name="description" content="Reqestra Studio: cliente HTTP web para inspección, colecciones, variables, pruebas y exploración autorizada.">
+  <meta name="description" content="Reqestra Studio: HTTP workbench for inspecting requests, collections, variables, testing and authorized exploration.">
   <meta name="theme-color" content="#07131F">
   <link rel="icon" href="./icon.png" type="image/png">
   <link rel="manifest" href="./manifest.webmanifest">
@@ -14,202 +14,210 @@
   <script type="module" src="./app.mjs"></script>
 </head>
 <body>
-  <a class="skip" href="#content">Saltar al contenido</a>
+  <a class="skip" href="#content">Skip to content</a>
   <div class="shell">
-    <aside class="sidebar" aria-label="Navegación">
-      <div class="brand"><img class="brand-image" src="./icon.png" alt="Reqestra logo"><div><strong>Reqestra</strong><small>HTTP STUDIO · WEB 3.4</small></div></div>
-      <div class="side-caption">ESPACIO DE TRABAJO</div>
-      <nav class="side-nav" aria-label="Secciones">
-        <button data-section="studio" class="active">⌘ &nbsp; Estudio</button>
-        <button data-section="collections">▤ &nbsp; Colecciones</button>
-        <button data-section="tests">✓ &nbsp; Pruebas</button>
-        <button data-section="discovery">◇ &nbsp; Explorar</button>
-        <button data-section="history">◷ &nbsp; Historial</button>
+    <aside class="sidebar" aria-label="Navigation">
+      <div class="brand"><img class="brand-image" src="./icon.png" alt="Reqestra logo"><div><strong>Reqestra</strong><small>HTTP STUDIO · WEB 3.5</small></div></div>
+      <div class="side-caption">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Sections">
+        <button data-section="studio" class="active">⌘   Studio</button>
+        <button data-section="collections">▤   Collections</button>
+        <button data-section="tests">✓   Tests</button>
+        <button data-section="discovery">◇   Explore</button>
+        <button data-section="history">◷   History</button>
         <button data-section="inspector">≡ &nbsp; Inspector</button>
-        <button data-section="preview">▣ &nbsp; Vista previa</button>
-        <button data-section="session">♧ &nbsp; Sesiones</button>
-        <button data-section="plugins">◈ &nbsp; Extensiones</button>
-        <button data-section="support">♥ &nbsp; Donar / Ayuda</button>
+        <button data-section="preview">▣   Preview</button>
+        <button data-section="session">♧   Sessions</button>
+        <button data-section="plugins">◈   Extensions</button>
+        <button data-section="support">♥   Donate / Help</button>
       </nav>
-      <div class="sidebar-footer"><span class="status-dot"></span> Cliente local · sin telemetría
-        <p>Las peticiones HTTP se envían solo cuando tú lo ordenas.</p>
+      <div class="sidebar-footer"><span class="status-dot"></span> Local client · no telemetry
+        <p>HTTP requests are sent only when you choose.</p>
       </div>
     </aside>
     <div class="main-area">
       <header class="topbar">
         <div class="topbar-brand" aria-label="Reqestra"><img class="brand-image small" src="./icon.png" alt=""><span>Reqestra <small>WEB</small></span></div>
         <div class="topbar-right">
-          <span id="vaultStatus" class="pill muted">Modo temporal</span>
-          <span id="engineStatus" class="pill muted">Motor navegador</span>
+          <span id="vaultStatus" class="pill muted">Temporary mode</span>
+          <span id="engineStatus" class="pill muted">Browser engine</span>
           <button id="donateNav" type="button" data-section="support"
-                  class="donate-cta" aria-label="Donar" title="Donar">
+                  class="donate-cta" aria-label="Donate" title="Donate">
             <span aria-hidden="true" class="donate-cta-icon">♥</span>
-            <span class="donate-cta-label">Donar</span>
+            <span class="donate-cta-label">Donate</span>
           </button>
-          <label class="language-control" for="languageSelect" title="Interface language">
-            <span aria-hidden="true">🌐</span>
-            <select id="languageSelect" aria-label="Interface language"></select>
-          </label>
-          <button id="themeToggle" class="icon-button" aria-label="Alternar apariencia">◐</button>
+          <div class="language-control" id="languageControl">
+            <button id="languageTrigger" class="language-trigger" type="button"
+                    aria-haspopup="listbox" aria-expanded="false" aria-controls="languageMenu"
+                    aria-label="Interface language" title="Interface language">
+              <span class="language-globe" aria-hidden="true">🌐</span>
+              <span id="languageCurrent" class="language-current">English</span>
+              <span class="language-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div id="languageMenu" class="language-menu" role="listbox"
+                 aria-label="Interface language" hidden></div>
+            <select id="languageSelect" hidden aria-label="Interface language"></select>
+          </div>
+          <button id="themeToggle" class="icon-button" aria-label="Switch appearance">◐</button>
         </div>
       </header>
       <main id="content">
         <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
         <section id="studio" class="page active" aria-labelledby="studioTitle">
           <div class="eyebrow">REQUEST WORKBENCH</div>
-          <div class="page-heading"><div><h1 id="studioTitle">Estudio HTTP</h1><p>Construye y depura solicitudes, sin renunciar al control de cada parámetro.</p></div><span class="pill success">Editor avanzado</span></div>
+          <div class="page-heading"><div><h1 id="studioTitle">HTTP Studio</h1><p>Build and debug requests with full control of every parameter.</p></div><span class="pill success">Advanced editor</span></div>
           <div class="layout-2">
             <div class="stack">
               <article class="panel">
-                <div class="panel-heading"><h2>Nueva petición</h2><span class="panel-hint">Control de origen</span></div>
-                <div class="field"><label for="url">URL completa o plantilla</label><input id="url" type="text" spellcheck="false" autocomplete="off" placeholder="https://api.example.com/v1/users"></div>
+                <div class="panel-heading"><h2>New request</h2><span class="panel-hint">Origin control</span></div>
+                <div class="field"><label for="url">Full URL or template</label><input id="url" type="text" spellcheck="false" autocomplete="off" placeholder="https://api.example.com/v1/users"></div>
                 <div class="field-grid">
-                  <div class="field"><label for="method">Método HTTP</label><select id="method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option><option>CUSTOM</option></select></div>
-                  <div class="field" id="customMethodField" hidden><label for="customMethod">Método personalizado</label><input id="customMethod" type="text" spellcheck="false" value="PROPFIND"></div>
+                  <div class="field"><label for="method">HTTP method</label><select id="method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option><option>CUSTOM</option></select></div>
+                  <div class="field" id="customMethodField" hidden><label for="customMethod">Custom method</label><input id="customMethod" type="text" spellcheck="false" value="PROPFIND"></div>
                 </div>
-                <div class="field"><label for="query">Parámetros Query <small>nombre=valor por línea</small></label><textarea id="query" rows="3" spellcheck="false" placeholder="page=1&#10;filter={{filtro}}"></textarea></div>
+                <div class="field"><label for="query">Query parameters <small>name=value per line</small></label><textarea id="query" rows="3" spellcheck="false" placeholder="page=1&#10;filter={{filter}}"></textarea></div>
                 <div class="field"><label for="headers">Headers</label><textarea id="headers" rows="4" spellcheck="false" placeholder="Accept: application/json&#10;Authorization: Bearer {{token}}"></textarea></div>
-                <div class="field"><label for="cookies">Cookies manuales <small>requieren gateway local</small></label><textarea id="cookies" rows="2" spellcheck="false" placeholder="session=valor"></textarea></div>
+                <div class="field"><label for="cookies">Manual cookies <small>require local gateway</small></label><textarea id="cookies" rows="2" spellcheck="false" placeholder="session=value"></textarea></div>
                 <div class="field-grid">
-                  <div class="field"><label for="bodyMode">Tipo de cuerpo</label><select id="bodyMode">
-                    <option value="NONE">Sin cuerpo</option><option value="RAW">Texto / Raw</option><option value="JSON">JSON</option><option value="HTML">HTML</option><option value="XML">XML</option><option value="FORM_URLENCODED">Form URL-encoded</option><option value="GRAPHQL">GraphQL</option><option value="BASE64_BINARY">Binario Base64</option>
+                  <div class="field"><label for="bodyMode">Body type</label><select id="bodyMode">
+                    <option value="NONE">No body</option><option value="RAW">Text / Raw</option><option value="JSON">JSON</option><option value="HTML">HTML</option><option value="XML">XML</option><option value="FORM_URLENCODED">Form URL-encoded</option><option value="GRAPHQL">GraphQL</option><option value="BASE64_BINARY">Base64 binary</option>
                   </select></div>
                   <div class="field"><label for="contentType">Content-Type</label><input id="contentType" spellcheck="false" placeholder="application/json"></div>
                 </div>
-                <div class="field"><label for="body">Body</label><textarea id="body" rows="7" spellcheck="false" placeholder='{"message":"Hola"}'></textarea></div>
+                <div class="field"><label for="body">Body</label><textarea id="body" rows="7" spellcheck="false" placeholder='{"message":"Hello"}'></textarea></div>
                 <div class="options">
-                  <label class="check"><input id="followRedirects" type="checkbox"> Seguir redirecciones</label>
-                  <label class="check"><input id="allowCleartext" type="checkbox"> Autorizar HTTP sin cifrar (laboratorio)</label>
-                  <label class="check"><input id="forceHttp1" type="checkbox"> Preferir HTTP/1.1 <small>(solo Android)</small></label>
+                  <label class="check"><input id="followRedirects" type="checkbox"> Follow redirects</label>
+                  <label class="check"><input id="allowCleartext" type="checkbox"> Allow unencrypted HTTP (lab)</label>
+                  <label class="check"><input id="forceHttp1" type="checkbox"> Prefer HTTP/1.1 <small>(Android only)</small></label>
                 </div>
                 <div class="field-grid">
-                  <div class="field"><label for="timeout">Tiempo máximo (segundos)</label><input id="timeout" type="number" min="1" max="120" value="30"></div>
-                  <div class="field"><label for="transportMode">Motor de red</label><select id="transportMode"><option value="browser">Navegador / CORS</option><option value="gateway">Gateway local autorizado</option></select></div>
+                  <div class="field"><label for="timeout">Timeout (seconds)</label><input id="timeout" type="number" min="1" max="120" value="30"></div>
+                  <div class="field"><label for="transportMode">Network engine</label><select id="transportMode"><option value="browser">Browser / CORS</option><option value="gateway">Authorized local gateway</option></select></div>
                 </div>
-                <p class="help">El navegador impone CORS y restringe headers. El gateway local opcional requiere configurar una lista de orígenes autorizados.</p>
+                <p class="help">Browsers enforce CORS and restrict headers. The optional gateway requires an allowlist of authorized origins.</p>
                 <div class="actions">
-                  <button id="send" class="button primary">➤ Enviar petición</button>
-                  <button id="cancel" class="button outline" disabled>Cancelar</button>
-                  <button id="formatJson" class="button ghost">Formatear JSON</button>
+                  <button id="send" class="button primary">➤ Send request</button>
+                  <button id="cancel" class="button outline" disabled>Cancel</button>
+                  <button id="formatJson" class="button ghost">Format JSON</button>
                 </div>
               </article>
               <article class="panel">
-                <div class="panel-heading"><h2>Herramientas cURL</h2></div>
-                <label for="curlInput">Importar comando (sin ejecutar shell)</label>
+                <div class="panel-heading"><h2>cURL tools</h2></div>
+                <label for="curlInput">Import command (without shell execution)</label>
                 <textarea id="curlInput" rows="3" spellcheck="false" placeholder="curl --request GET --url https://example.com"></textarea>
-                <div class="actions"><button id="importCurl" class="button outline">Importar cURL</button><button id="exportCurl" class="button ghost">Copiar cURL redactado</button></div>
+                <div class="actions"><button id="importCurl" class="button outline">Import cURL</button><button id="exportCurl" class="button ghost">Copy redacted cURL</button></div>
               </article>
             </div>
             <div class="stack">
               <article class="panel response-panel">
-                <div class="panel-heading"><h2>Respuesta reciente</h2><span class="status-dot"></span></div>
-                <div id="studioResponse" class="response-placeholder"><strong>Esperando una petición</strong><p>El estado, la latencia y la vista resumida aparecerán aquí.</p></div>
-                <button data-section="inspector" class="button ghost full">Abrir inspector completo</button>
+                <div class="panel-heading"><h2>Latest response</h2><span class="status-dot"></span></div>
+                <div id="studioResponse" class="response-placeholder"><strong>Waiting for a request</strong><p>Status, latency and response preview will appear here.</p></div>
+                <button data-section="inspector" class="button ghost full">Open full inspector</button>
               </article>
-              <article class="panel subtle"><div class="panel-heading"><h2>Variables dinámicas</h2><span class="pill info" id="activeEnvTag">Local</span></div><p class="help">Ejemplo: <code>{{baseUrl}}/users?token={{token}}</code>. Define las variables en Colecciones → Entornos. Se sustituyen al ejecutar y no aparecen en el historial.</p><button data-section="collections" class="button outline full">Gestionar entornos</button></article>
+              <article class="panel subtle"><div class="panel-heading"><h2>Dynamic variables</h2><span class="pill info" id="activeEnvTag">Local</span></div><p class="help">Example: <code>{{baseUrl}}/users?token={{token}}</code>. Define variables under Collections → Environments. They expand on execution and never appear in history.</p><button data-section="collections" class="button outline full">Manage environments</button></article>
             </div>
           </div>
         </section>
         <section id="collections" class="page" aria-labelledby="collectionsTitle">
-          <div class="eyebrow">WORKSPACE</div><h1 id="collectionsTitle">Colecciones y entornos</h1><p class="lead">Solicitudes reutilizables y secretos cifrados en este navegador.</p>
+          <div class="eyebrow">WORKSPACE</div><h1 id="collectionsTitle">Collections and environments</h1><p class="lead">Reusable requests and encrypted secrets stored in this browser.</p>
           <div class="layout-2">
             <div class="stack">
-              <article class="panel"><h2>Almacenamiento cifrado</h2><p class="help">AES-GCM y una clave derivada de tu contraseña. Sin sincronización automática con Android.</p>
-                <div class="field"><label for="vaultPassword">Contraseña del espacio local</label><input type="password" id="vaultPassword" autocomplete="new-password" placeholder="Mínimo 10 caracteres"></div>
-                <div class="actions"><button id="vaultCreate" class="button primary">Crear espacio cifrado</button><button id="vaultUnlock" class="button outline">Desbloquear</button><button id="vaultLock" class="button ghost">Bloquear</button></div>
-                <div class="actions"><button id="vaultExport" class="button ghost">Descargar respaldo cifrado</button><label class="button ghost file-button" for="vaultImportFile">Importar respaldo cifrado</label><input id="vaultImportFile" type="file" accept=".json,application/json" hidden></div>
-                <p class="help warning-text">Sin la contraseña, el contenido cifrado no se puede recuperar. El modo temporal no persiste después de recargar.</p>
+              <article class="panel"><h2>Encrypted storage</h2><p class="help">AES-GCM with a passphrase-derived key. No automatic synchronization with Android.</p>
+                <div class="field"><label for="vaultPassword">Local workspace passphrase</label><input type="password" id="vaultPassword" autocomplete="new-password" placeholder="At least 10 characters"></div>
+                <div class="actions"><button id="vaultCreate" class="button primary">Create encrypted workspace</button><button id="vaultUnlock" class="button outline">Unlock</button><button id="vaultLock" class="button ghost">Lock</button></div>
+                <div class="actions"><button id="vaultExport" class="button ghost">Download encrypted backup</button><label class="button ghost file-button" for="vaultImportFile">Import encrypted backup</label><input id="vaultImportFile" type="file" accept=".json,application/json" hidden></div>
+                <p class="help warning-text">Encrypted data cannot be recovered without the passphrase. Temporary mode resets on reload.</p>
               </article>
-              <article class="panel"><h2>Guardar petición</h2>
-                <div class="field"><label for="requestName">Nombre</label><input id="requestName" maxlength="80" placeholder="Consultar perfil"></div>
-                <div class="field"><label for="collectionName">Colección</label><input id="collectionName" maxlength="60" value="General"></div>
-                <button id="saveRequest" class="button primary full">Guardar petición actual</button>
+              <article class="panel"><h2>Save request</h2>
+                <div class="field"><label for="requestName">Name</label><input id="requestName" maxlength="80" placeholder="Fetch profile"></div>
+                <div class="field"><label for="collectionName">Collection</label><input id="collectionName" maxlength="60" value="General"></div>
+                <button id="saveRequest" class="button primary full">Save current request</button>
               </article>
-              <article class="panel"><h2>Importar OpenAPI 3.x JSON</h2><div class="field"><label for="openapiJson">Especificación</label><textarea id="openapiJson" rows="5" spellcheck="false" placeholder='{"openapi":"3.0.0","servers":[{"url":"https://api.example.com"}],"paths":{...}}'></textarea></div><button id="importOpenApi" class="button outline">Importar operaciones</button></article>
+              <article class="panel"><h2>Import OpenAPI 3.x JSON</h2><div class="field"><label for="openapiJson">Specification</label><textarea id="openapiJson" rows="5" spellcheck="false" placeholder='{"openapi":"3.0.0","servers":[{"url":"https://api.example.com"}],"paths":{...}}'></textarea></div><button id="importOpenApi" class="button outline">Import operations</button></article>
             </div>
             <div class="stack">
-              <article class="panel"><h2>Entornos y variables</h2>
-                <div class="field"><label for="environmentSelect">Entorno activo</label><select id="environmentSelect"></select></div>
-                <div class="field-grid"><div class="field"><label for="environmentName">Nuevo entorno</label><input id="environmentName" maxlength="40" placeholder="Laboratorio"></div><div class="field field-button"><button id="createEnvironment" class="button outline">Crear</button></div></div>
+              <article class="panel"><h2>Environments and variables</h2>
+                <div class="field"><label for="environmentSelect">Active environment</label><select id="environmentSelect"></select></div>
+                <div class="field-grid"><div class="field"><label for="environmentName">New environment</label><input id="environmentName" maxlength="40" placeholder="Laboratory"></div><div class="field field-button"><button id="createEnvironment" class="button outline">Create</button></div></div>
                 <div class="field"><label for="variableName">Variable</label><input id="variableName" placeholder="baseUrl" maxlength="64"></div>
-                <div class="field"><label for="variableValue">Valor privado</label><input type="password" id="variableValue" autocomplete="off" maxlength="4096" placeholder="No se mostrará después de guardar"></div>
-                <button id="saveVariable" class="button outline">Guardar variable</button>
+                <div class="field"><label for="variableValue">Private value</label><input type="password" id="variableValue" autocomplete="off" maxlength="4096" placeholder="Not shown after saving"></div>
+                <button id="saveVariable" class="button outline">Save variable</button>
                 <div id="variablesList" class="list-container" aria-live="polite"></div>
               </article>
-              <article class="panel"><div class="panel-heading"><h2>Solicitudes guardadas</h2><span id="savedCount" class="pill">0</span></div><div id="savedRequests" class="list-container"></div></article>
+              <article class="panel"><div class="panel-heading"><h2>Saved requests</h2><span id="savedCount" class="pill">0</span></div><div id="savedRequests" class="list-container"></div></article>
             </div>
           </div>
         </section>
         <section id="tests" class="page" aria-labelledby="testsTitle">
-          <div class="eyebrow">AUTOMATION</div><h1 id="testsTitle">Pruebas de colecciones</h1><p class="lead">Hasta 20 solicitudes secuenciales con un segundo entre cada una.</p>
+          <div class="eyebrow">AUTOMATION</div><h1 id="testsTitle">Collection tests</h1><p class="lead">Up to 20 sequential requests with one second between requests.</p>
           <article class="panel narrow">
-            <div class="field"><label for="testCollection">Colección</label><select id="testCollection"></select></div>
-            <div class="field-grid"><div class="field"><label for="expectedStatus">Código HTTP esperado</label><input id="expectedStatus" type="number" min="100" max="599" value="200"></div><div class="field"><label for="maxLatency">Latencia máxima (ms)</label><input id="maxLatency" type="number" min="1" max="120000" value="2000"></div></div>
-            <p class="help warning-text">Algunos métodos pueden modificar datos reales. Comprueba los permisos y el alcance antes de ejecutar.</p>
-            <div class="actions"><button id="runTests" class="button primary">Ejecutar colección</button><button id="cancelTests" class="button outline" disabled>Cancelar</button></div>
+            <div class="field"><label for="testCollection">Collection</label><select id="testCollection"></select></div>
+            <div class="field-grid"><div class="field"><label for="expectedStatus">Expected HTTP status</label><input id="expectedStatus" type="number" min="100" max="599" value="200"></div><div class="field"><label for="maxLatency">Maximum latency (ms)</label><input id="maxLatency" type="number" min="1" max="120000" value="2000"></div></div>
+            <p class="help warning-text">Some methods change real data. Verify scope and permissions before running.</p>
+            <div class="actions"><button id="runTests" class="button primary">Run collection</button><button id="cancelTests" class="button outline" disabled>Cancel</button></div>
             <output id="testProgress" class="help" aria-live="polite"></output>
           </article><div id="testResults" class="results-grid"></div>
         </section>
         <section id="discovery" class="page" aria-labelledby="discoveryTitle">
-          <div class="eyebrow">DISCOVERY LAB</div><h1 id="discoveryTitle">Explorar API</h1><p class="lead">Descubrimiento acotado sobre el mismo origen, con confirmación de autorización.</p>
+          <div class="eyebrow">DISCOVERY LAB</div><h1 id="discoveryTitle">Explore API</h1><p class="lead">Limited same-origin discovery with explicit authorization.</p>
           <div class="layout-2">
-            <article class="panel"><h2>Rutas y parámetros candidatos</h2>
-              <p class="help">El origen será la URL actual del Estudio. Máximo 8 rutas y 8 parámetros; no se siguen redirecciones.</p>
-              <div class="field"><label for="routes">Rutas absolutas · una por línea</label><textarea id="routes" rows="5" placeholder="/health&#10;/api/v1" spellcheck="false"></textarea></div>
-              <button id="addHints" class="button ghost">Añadir rutas de respuesta anterior</button>
-              <div class="field"><label for="parameterCandidates">Posibles parámetros · uno por línea</label><textarea id="parameterCandidates" rows="5" placeholder="include&#10;page&#10;filter" spellcheck="false"></textarea></div>
-              <p class="help">Las diferencias detectadas no confirman que un parámetro sea oculto o vulnerable.</p>
+            <article class="panel"><h2>Candidate routes and parameters</h2>
+              <p class="help">The current Studio URL sets the origin. Up to 8 routes and 8 parameters; redirects are not followed.</p>
+              <div class="field"><label for="routes">Absolute paths · one per line</label><textarea id="routes" rows="5" placeholder="/health&#10;/api/v1" spellcheck="false"></textarea></div>
+              <button id="addHints" class="button ghost">Add paths from previous response</button>
+              <div class="field"><label for="parameterCandidates">Candidate parameters · one per line</label><textarea id="parameterCandidates" rows="5" placeholder="include&#10;page&#10;filter" spellcheck="false"></textarea></div>
+              <p class="help">Observed differences do not prove that a parameter is hidden or vulnerable.</p>
             </article>
-            <article class="panel"><h2>Métodos HTTP</h2>
+            <article class="panel"><h2>HTTP methods</h2>
               <div class="option-grid">
                 <label class="check"><input type="checkbox" class="probe-method" value="GET" checked> GET</label>
                 <label class="check"><input type="checkbox" class="probe-method" value="HEAD" checked> HEAD</label>
                 <label class="check"><input type="checkbox" class="probe-method" value="OPTIONS" checked> OPTIONS</label>
               </div>
-              <label class="check"><input id="enableMutating" type="checkbox"> Habilitar métodos que pueden modificar datos</label>
+              <label class="check"><input id="enableMutating" type="checkbox"> Enable methods that can change data</label>
               <div id="mutatingMethods" class="option-grid" hidden>
                 <label class="check"><input type="checkbox" class="probe-method" value="POST"> POST</label>
                 <label class="check"><input type="checkbox" class="probe-method" value="PUT"> PUT</label>
                 <label class="check"><input type="checkbox" class="probe-method" value="PATCH"> PATCH</label>
                 <label class="check"><input type="checkbox" class="probe-method" value="DELETE"> DELETE</label>
               </div>
-              <label class="check important"><input id="confirmAuthorization" type="checkbox"> Confirmo que estoy autorizado a probar el origen seleccionado.</label>
-              <p class="help warning-text">Límite de 24 peticiones · 1/segundo · sin seguimiento de redirecciones. POST/PUT/PATCH/DELETE pueden modificar o eliminar datos.</p>
-              <div class="actions"><button id="runDiscovery" class="button primary">Ejecutar exploración</button><button id="cancelDiscovery" class="button outline" disabled>Cancelar</button></div>
+              <label class="check important"><input id="confirmAuthorization" type="checkbox"> I confirm I am authorized to test this origin.</label>
+              <p class="help warning-text">Up to 24 requests · 1/second · no redirects. POST/PUT/PATCH/DELETE can change or delete data.</p>
+              <div class="actions"><button id="runDiscovery" class="button primary">Run exploration</button><button id="cancelDiscovery" class="button outline" disabled>Cancel</button></div>
               <output id="discoveryProgress" class="help" aria-live="polite"></output>
             </article>
           </div><div id="discoveryResults" class="results-grid"></div>
         </section>
-        <section id="history" class="page" aria-labelledby="historyTitle"><div class="eyebrow">ACTIVIDAD</div><h1 id="historyTitle">Historial local</h1><p class="lead">Solo método, URL redactada, código HTTP y latencia (hasta 50).</p><button id="clearHistory" class="button outline">Borrar historial</button><div id="historyList" class="results-grid"></div></section>
-        <section id="inspector" class="page" aria-labelledby="inspectorTitle"><div class="eyebrow">DIAGNÓSTICO</div><h1 id="inspectorTitle">Inspector completo</h1><p class="lead">Solicitud redactada, cabeceras disponibles y respuesta HTTP.</p><div class="layout-2"><article class="panel"><h2>Solicitud enviada</h2><pre id="inspectorRequest" class="code-block">Sin petición.</pre></article><article class="panel"><h2>Respuesta recibida</h2><pre id="inspectorMeta" class="code-block">Sin respuesta.</pre></article></div><article class="panel"><h2>Cuerpo de respuesta <span class="panel-hint">máximo 4 MiB</span></h2><pre id="inspectorBody" class="code-block multiline">Sin respuesta.</pre><button id="copyResponse" class="button ghost">Copiar cuerpo de respuesta</button></article></section>
-        <section id="preview" class="page" aria-labelledby="previewTitle"><div class="eyebrow">PREVISUALIZACIÓN</div><h1 id="previewTitle">Vista previa del cuerpo</h1><p class="lead">HTML con sandbox y política de contenido restrictiva; los demás formatos se muestran como texto.</p><article class="panel"><iframe id="htmlPreview" class="html-preview" title="Vista previa HTML aislada" sandbox="" hidden></iframe><pre id="textPreview" class="code-block multiline">Sin contenido.</pre></article></section>
-        <section id="session" class="page" aria-labelledby="sessionTitle"><div class="eyebrow">SEGURIDAD</div><h1 id="sessionTitle">Sesiones</h1><p class="lead">Headers por origen y uso opcional de cookies administradas por el navegador.</p>
-          <article class="panel narrow"><p class="help">Origen actual: <strong id="sessionOrigin">—</strong></p>
-            <div class="field"><label for="sessionMode">Modo</label><select id="sessionMode"><option value="NONE">Sin sesión</option><option value="MEMORY">Memoria</option><option value="PERSISTENT">Persistente cifrada (headers)</option></select></div>
-            <div class="field"><label for="sessionHeaders">Headers del origen</label><textarea id="sessionHeaders" rows="6" spellcheck="false" placeholder="Authorization: Bearer {{token}}"></textarea></div>
-            <div class="actions"><button id="saveSession" class="button primary">Guardar headers</button><button id="clearSession" class="button outline">Limpiar headers</button></div>
-            <p class="help">Las cookies HttpOnly y sus detalles no son accesibles mediante JavaScript. Al seleccionar sesiones, el navegador puede incluir cookies de acuerdo con sus propias políticas; Reqestra no puede eliminarlas.</p>
+        <section id="history" class="page" aria-labelledby="historyTitle"><div class="eyebrow">ACTIVITY</div><h1 id="historyTitle">Local history</h1><p class="lead">Method, redacted URL, HTTP status and latency only (up to 50).</p><button id="clearHistory" class="button outline">Clear history</button><div id="historyList" class="results-grid"></div></section>
+        <section id="inspector" class="page" aria-labelledby="inspectorTitle"><div class="eyebrow">DIAGNOSTICS</div><h1 id="inspectorTitle">Full inspector</h1><p class="lead">Redacted request, available headers and HTTP response.</p><div class="layout-2"><article class="panel"><h2>Sent request</h2><pre id="inspectorRequest" class="code-block">No request yet.</pre></article><article class="panel"><h2>Received response</h2><pre id="inspectorMeta" class="code-block">No response yet.</pre></article></div><article class="panel"><h2>Response body <span class="panel-hint">maximum 4 MiB</span></h2><pre id="inspectorBody" class="code-block multiline">No response yet.</pre><button id="copyResponse" class="button ghost">Copy response body</button></article></section>
+        <section id="preview" class="page" aria-labelledby="previewTitle"><div class="eyebrow">PREVIEW</div><h1 id="previewTitle">Body preview</h1><p class="lead">Sandboxed HTML preview with strict content policy; other formats display as text.</p><article class="panel"><iframe id="htmlPreview" class="html-preview" title="Isolated HTML preview" sandbox="" hidden></iframe><pre id="textPreview" class="code-block multiline">No content.</pre></article></section>
+        <section id="session" class="page" aria-labelledby="sessionTitle"><div class="eyebrow">SECURITY</div><h1 id="sessionTitle">Sessions</h1><p class="lead">Origin-scoped headers and optional browser-managed cookies.</p>
+          <article class="panel narrow"><p class="help">Current origin: <strong id="sessionOrigin">—</strong></p>
+            <div class="field"><label for="sessionMode">Mode</label><select id="sessionMode"><option value="NONE">No session</option><option value="MEMORY">Memory</option><option value="PERSISTENT">Encrypted persistent (headers)</option></select></div>
+            <div class="field"><label for="sessionHeaders">Origin headers</label><textarea id="sessionHeaders" rows="6" spellcheck="false" placeholder="Authorization: Bearer {{token}}"></textarea></div>
+            <div class="actions"><button id="saveSession" class="button primary">Save headers</button><button id="clearSession" class="button outline">Clear headers</button></div>
+            <p class="help">JavaScript cannot access HttpOnly cookies. The browser may send its own cookies under its policies; Reqestra cannot delete them.</p>
           </article>
         </section>
-        <section id="plugins" class="page" aria-labelledby="pluginsTitle"><div class="eyebrow">ECOSISTEMA</div><h1 id="pluginsTitle">Extensiones y capacidades</h1><p class="lead">Funciones integradas y limitaciones del cliente web.</p><div id="pluginsList" class="results-grid"></div></section>
-        <section id="support" class="page" aria-labelledby="supportTitle"><div class="eyebrow">APOYA EL PROYECTO</div><h1 id="supportTitle">Donaciones voluntarias</h1><p class="lead">Reqestra permanece funcional sin donar; ninguna función requiere contribuciones.</p>
-          <article class="panel narrow"><div class="heart">♥</div><h2>Ayuda a mejorar Reqestra</h2>
-            <p>Si decides donar, la operación se completa exclusivamente en la página oficial de PayPal. Reqestra no recoge datos de tarjetas, identificadores de pago ni información financiera.</p>
-            <a id="donateLink" class="button primary full" href="https://www.paypal.com/donate/buttons" target="_blank" rel="noopener noreferrer" aria-disabled="true">Donar con PayPal ↗</a>
-            <p id="donateHelp" class="help">El propietario debe configurar el identificador público del botón PayPal antes de activar donaciones.</p>
-            <p class="help">La donación no desbloquea contenido, privilegios, insignias ni beneficios digitales.</p>
+        <section id="plugins" class="page" aria-labelledby="pluginsTitle"><div class="eyebrow">ECOSYSTEM</div><h1 id="pluginsTitle">Extensions and capabilities</h1><p class="lead">Built-in features and browser limitations.</p><div id="pluginsList" class="results-grid"></div></section>
+        <section id="support" class="page" aria-labelledby="supportTitle"><div class="eyebrow">SUPPORT THE PROJECT</div><h1 id="supportTitle">Voluntary donations</h1><p class="lead">Reqestra works without donations; no features require a contribution.</p>
+          <article class="panel narrow"><div class="heart">♥</div><h2>Help improve Reqestra</h2>
+            <p>If you choose to donate, payment is handled entirely by PayPal. Reqestra never collects card details or financial information.</p>
+            <a id="donateLink" class="button primary full" href="https://www.paypal.com/donate/buttons" target="_blank" rel="noopener noreferrer" aria-disabled="true">Donate with PayPal ↗</a>
+            <p id="donateHelp" class="help">The owner must configure the public PayPal button ID before enabling donations.</p>
+            <p class="help">Donations do not unlock content, privileges, badges or digital benefits.</p>
           </article>
         </section>
       </main>
-      <footer class="footer"><span>Reqestra Studio · 3.4.0</span><span>Cliente local · Uso autorizado exclusivamente · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Código fuente</a></span></footer>
+      <footer class="footer"><span>Reqestra Studio · 3.5.0</span><span>Local client · Authorized use only · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Source code</a></span></footer>
     </div>
   </div>
-  <nav class="mobile-nav" aria-label="Secciones principales">
-    <button data-section="studio"><span class="mobile-icon" aria-hidden="true">⌘</span><span>Estudio</span></button>
-    <button data-section="collections"><span class="mobile-icon" aria-hidden="true">▤</span><span>Colecciones</span></button>
-    <button data-section="tests"><span class="mobile-icon" aria-hidden="true">✓</span><span>Pruebas</span></button>
-    <button data-section="discovery"><span class="mobile-icon" aria-hidden="true">◇</span><span>Explorar</span></button>
-    <button id="moreNav" aria-label="Más herramientas"><span class="mobile-icon" aria-hidden="true">⋯</span><span>Más</span></button>
+  <nav class="mobile-nav" aria-label="Main sections">
+    <button data-section="studio"><span class="mobile-icon" aria-hidden="true">⌘</span><span>Studio</span></button>
+    <button data-section="collections"><span class="mobile-icon" aria-hidden="true">▤</span><span>Collections</span></button>
+    <button data-section="tests"><span class="mobile-icon" aria-hidden="true">✓</span><span>Tests</span></button>
+    <button data-section="discovery"><span class="mobile-icon" aria-hidden="true">◇</span><span>Explore</span></button>
+    <button id="moreNav" aria-label="More tools"><span class="mobile-icon" aria-hidden="true">⋯</span><span>More</span></button>
   </nav>
 </body>
 </html>

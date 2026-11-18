@@ -248,3 +248,68 @@ la identidad de marca ni se genera un segundo logotipo distinto.
 | Pulsar Donar | Abre la pantalla de apoyo, sin pagar automáticamente |
 | Abrir Web y Android | Mantienen exactamente el mismo PNG |
 
+
+
+## 8. Auditoría de localización y selector de idiomas — 3.5.0
+
+### Selector de Android
+
+El menú desplegable 🌐 sigue el diseño de Material 3 y la paleta de Reqestra
+en claro y oscuro. Muestra un encabezado localizado «Idioma de la interfaz»,
+el código (EN, ES, RU, ZH, PT o FR), el nombre nativo y una marca de
+verificación para la opción elegida. La fila activa usa el color
+`primaryContainer` y el texto `onPrimaryContainer`, que cambian
+con el tema. La selección se anuncia para accesibilidad y persiste
+en las preferencias locales.
+
+### Selector de Web
+
+Se reemplazó el `select` nativo visible por un menú accesible con
+`aria-expanded`, `role="listbox"` y filas `aria-selected`.
+La opción activa presenta una marca ✓, borde y fondo de acento tanto
+en modo claro como oscuro. Se soportan teclado, Escape, flechas,
+clic exterior y foco de retorno al cerrar. El selector anterior
+permanece oculto solo para conservar compatibilidad interna.
+
+### Cadenas y cobertura
+
+- Los seis idiomas son: **en, es, ru, zh (simplificado), pt y fr**.
+- La **web** contiene un catálogo de 328 claves estáticas en los seis
+  idiomas, todas con entradas no vacías, además de plantillas para
+  mensajes dinámicos con números o nombres. Se convirtieron 165 textos
+  y atributos del HTML inicial de español a inglés, manteniendo la
+  posibilidad de traducirlos nuevamente al español u otro idioma.
+- La **aplicación Android** centraliza 384 cadenas localizadas,
+  más plantillas para mensajes dinámicos de pruebas, red y validación.
+  Se corrigieron textos fijos en pantallas como Colecciones,
+  Descubrimiento, Automatización, Inspector, Sesiones, Vista previa
+  y Extensiones. Los avisos del estado de la UI pasan ahora por
+  el catálogo antes de mostrarse.
+- Las traducciones se aplican a la **interfaz y mensajes propios**,
+  no al contenido generado por usuarios, URLs, encabezados,
+  valores de variables ni cuerpos HTTP. Los mensajes arbitrarios
+  devueltos por servidores o librerías externas también se dejan
+  intactos salvo coincidencias con errores locales reconocidos.
+- Se añadieron pruebas para valores de traducción, seis idiomas,
+  respuestas dinámicas, idioma resaltado y texto inicial inglés.
+
+### Aspectos que requieren revisión en dispositivos reales
+
+Una prueba unitaria de cobertura garantiza que las claves estén
+presentes, **no** la calidad idiomática profesional ni que todo
+control se vea bien en todos los tamaños. Para publicar una versión
+internacional, probar manualmente la navegación y las alertas en
+los seis idiomas, especialmente los textos extensos en ruso, francés
+y portugués. Revisar también accesibilidad con TalkBack, VoiceOver
+y lectores del navegador, así como el retorno del foco en el menú Web.
+
+### Comprobación
+
+```bash
+cd ~/ReqestraMobileHTTP
+git pull --ff-only origin main
+cd web
+npm run check && npm test
+cd ..
+./gradlew --no-daemon :app:testDebugUnitTest :app:assembleDebug
+```

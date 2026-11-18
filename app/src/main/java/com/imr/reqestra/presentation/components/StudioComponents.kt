@@ -68,7 +68,7 @@ fun StatusBanner(
             tint = foreground,
         )
         Text(
-            text = message,
+            text = tr(message),
             color = foreground,
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.bodyMedium,

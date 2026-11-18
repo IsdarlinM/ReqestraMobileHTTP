@@ -127,7 +127,7 @@ const val DEFAULT_BODY = """<!doctype html>
   <main>
     <h1>Reqestra</h1>
     <p>Edit method, URL, query, headers, cookies, body and transport options.</p>
-    <code>imr :: v3.4.0</code>
+    <code>imr :: v3.5.0</code>
   </main>
 </body>
 </html>"""
