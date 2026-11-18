@@ -98,6 +98,7 @@ function syncDraft(id){
 }
 function go(id){
   if(!$(id))return;
+  $("mobileMoreMenu")?.remove();
   activeSection=id;ui.nav(id);
   if(id==="session")renderSession();
   if(id==="preview")ui.preview(state.draft);

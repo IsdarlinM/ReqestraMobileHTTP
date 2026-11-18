@@ -23,3 +23,29 @@ main{width:100%;max-width:1420px;margin:0 auto;padding:31px clamp(18px,3.3vw,45p
 .language-control:focus-within{outline:2px solid var(--info);outline-offset:2px}
 @media(max-width:750px){.language-control select{min-width:66px;max-width:95px}
   .topbar-right{flex-wrap:nowrap}.topbar-right .pill{display:none}}
+
+
+/* 3.4 UI refinement — high-visibility donation and clear mobile navigation. */
+.donate-cta{
+  appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  flex-shrink:0;min-height:44px;min-width:44px;padding:8px 15px;
+  color:var(--accent-dark);background:var(--accent);border:1px solid transparent;
+  border-radius:13px;font:inherit;font-size:13px;font-weight:800;
+  letter-spacing:.1px;cursor:pointer;white-space:nowrap;
+  transition:filter .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.donate-cta-icon{font-size:18px;line-height:1}
+.donate-cta:hover{filter:brightness(.94);transform:translateY(-1px)}
+.donate-cta.active{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 38%,transparent)}
+.donate-cta:focus-visible{outline:3px solid var(--info);outline-offset:3px}
+.mobile-nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.mobile-nav .mobile-icon{display:block;font-size:19px;font-weight:700;line-height:1}
+@media(max-width:420px){
+  .donate-cta{padding:0;width:44px;height:44px}
+  .donate-cta-label{display:none}
+  .topbar-right{gap:5px}
+}
+@media(max-width:355px){
+  .topbar-brand > span{display:none}
+  .language-control select{min-width:58px;max-width:78px}
+}

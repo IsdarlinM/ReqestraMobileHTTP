@@ -14,6 +14,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.Image
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,14 +30,16 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,8 +57,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
@@ -76,6 +85,7 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var openMenu by remember { mutableStateOf(false) }
     var openLanguageMenu by remember { mutableStateOf(false) }
+    val compactLayout = LocalConfiguration.current.screenWidthDp < 420
     val context = LocalContext.current
     val preferences = remember(context) {
         context.getSharedPreferences("reqestra_ui", android.content.Context.MODE_PRIVATE)
@@ -95,31 +105,33 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.reqestra_brand),
                             contentDescription = "Reqestra logo",
-                            modifier = Modifier.size(36.dp).clip(RoundedCornerShape(11.dp)),
+                            modifier = Modifier.size(32.dp).clip(RoundedCornerShape(10.dp)),
                         )
                         Column {
-                            Text(tr("Reqestra"), style = MaterialTheme.typography.titleMedium)
-                            Text(tr("HTTP STUDIO  •  3.4"), style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("Reqestra", style = MaterialTheme.typography.titleMedium, maxLines = 1)
+                            if (!compactLayout) {
+                                Text(
+                                    "HTTP STUDIO  •  3.4",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                         }
                     }
                 },
                 actions = {
                     Box {
                         IconButton(onClick = { openLanguageMenu = true }) {
-                            Icon(
-                                Icons.Outlined.Language,
-                                contentDescription = tr("Idioma"),
-                            )
+                            Icon(Icons.Outlined.Language, contentDescription = tr("Idioma"))
                         }
                         DropdownMenu(
                             expanded = openLanguageMenu,
@@ -137,28 +149,41 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                             }
                         }
                     }
-                    Box {
-                        IconButton(onClick = { openMenu = true }) {
-                            Icon(Icons.Outlined.MoreVert, contentDescription = tr("Más herramientas"))
+                    if (compactLayout) {
+                        IconButton(
+                            onClick = { viewModel.selectSection(AppSection.SUPPORT) },
+                            modifier = Modifier.size(44.dp).background(
+                                MaterialTheme.colorScheme.tertiaryContainer,
+                                RoundedCornerShape(12.dp),
+                            ),
+                        ) {
+                            Icon(
+                                Icons.Outlined.FavoriteBorder,
+                                contentDescription = tr("Donar"),
+                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                            )
                         }
-                        DropdownMenu(expanded = openMenu, onDismissRequest = { openMenu = false }) {
-                            listOf(
-                                AppSection.HISTORY to tr("Historial de peticiones"),
-                                AppSection.RESPONSE to tr("Inspector completo"),
-                                AppSection.PREVIEW to tr("Vista previa"),
-                                AppSection.SESSION to tr("Sesiones"),
-                                AppSection.PLUGINS to tr("Extensiones"),
-                                AppSection.SUPPORT to tr("Apoyar proyecto · PayPal"),
-                            ).forEach { (section, label) ->
-                                DropdownMenuItem(text = { Text(label) }, onClick = {
-                                    openMenu = false
-                                    viewModel.selectSection(section)
-                                })
-                            }
+                    } else {
+                        FilledTonalButton(
+                            onClick = { viewModel.selectSection(AppSection.SUPPORT) },
+                            modifier = Modifier.heightIn(min = 44.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                            colors = ButtonDefaults.filledTonalButtonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                            ),
+                        ) {
+                            Icon(Icons.Outlined.FavoriteBorder, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(5.dp))
+                            Text(tr("Donar"), style = MaterialTheme.typography.labelLarge, maxLines = 1)
                         }
                     }
+                    IconButton(onClick = { openMenu = true }) {
+                        Icon(Icons.Outlined.MoreVert, contentDescription = tr("Más herramientas"))
+                    }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
@@ -187,6 +212,15 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
                     { Icon(Icons.Outlined.Search, contentDescription = null) }) {
                     viewModel.selectSection(AppSection.DISCOVERY)
                 }
+                SectionItem(
+                    selected = state.selectedSection !in setOf(
+                        AppSection.REQUEST, AppSection.COLLECTIONS,
+                        AppSection.AUTOMATION, AppSection.DISCOVERY,
+                    ),
+                    label = tr("Más"),
+                    icon = { Icon(Icons.Outlined.MoreHoriz, contentDescription = null) },
+                    onClick = { openMenu = true },
+                )
                 }
             }
         },
@@ -294,6 +328,15 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
             }
         }
     }
+    if (openMenu) {
+        MoreToolsSheet(
+            onDismiss = { openMenu = false },
+            onSelect = { section ->
+                openMenu = false
+                viewModel.selectSection(section)
+            },
+        )
+    }
     }
 }
 
@@ -301,11 +344,12 @@ fun ReqestraApp(viewModel: MainViewModel = viewModel()) {
 private fun RowScope.SectionItem(selected: Boolean, label: String, icon: @Composable () -> Unit, onClick: () -> Unit) {
     TextButton(
         onClick = onClick,
-        modifier = Modifier.weight(1f).heightIn(min = 58.dp),
+        modifier = Modifier.weight(1f).heightIn(min = 64.dp).semantics { this.selected = selected },
         colors = ButtonDefaults.textButtonColors(
             contentColor = if (selected) MaterialTheme.colorScheme.onPrimaryContainer
                 else MaterialTheme.colorScheme.onSurfaceVariant,
         ),
+        contentPadding = PaddingValues(horizontal = 1.dp, vertical = 5.dp),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -321,7 +365,7 @@ private fun RowScope.SectionItem(selected: Boolean, label: String, icon: @Compos
             ) {
                 icon()
             }
-            Text(label, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+            Text(label, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }

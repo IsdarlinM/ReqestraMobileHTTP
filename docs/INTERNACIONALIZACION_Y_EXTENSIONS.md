@@ -127,3 +127,67 @@ cd ~/ReqestraMobileHTTP
 Las pruebas unitarias no sustituyen verificaciones visuales en dispositivos,
 CORS real, accesibilidad ni la validación de gradientes del logo.
 La actualización a GitHub no demuestra por sí sola que el APK esté compilado.
+
+
+## 6. Navegación y visibilidad de las donaciones
+
+### Android
+
+La barra superior utiliza un encabezado alineado a la izquierda con el icono
+corporativo. A su derecha, y **antes** del selector de idioma 🌐 y del botón
+de menú ⋮, se ubica el acceso directo a donaciones.
+
+- En teléfonos estrechos, el acceso se representa como un botón táctil de
+  **corazón** con descripción accesible localizada.
+- En pantallas más anchas, muestra el **corazón y el texto Donate/Donar**
+  traducido al idioma de interfaz.
+- En ambos casos, el botón conduce a la pantalla informativa de apoyo al proyecto,
+  donde el usuario elige explícitamente abrir la página oficial PayPal.
+  No inicia pagos ni cambia permisos por sí solo.
+
+La barra inferior tiene **cinco** destinos: Estudio, Colecciones, Pruebas,
+Explorar y Más. Los cuatro primeros abren funciones principales y Más
+despliega una hoja inferior con filas de iconos, títulos y descripciones
+para Historial, Inspector, Vista previa, Sesiones, Extensiones y Apoyar
+proyecto. El icono ⋮ de la cabecera abre la **misma hoja**: ambos accesos
+comparten un solo menú y no hay opciones desconectadas.
+
+La etiqueta y la función semántica seleccionada de cada pestaña se
+actualizan con el destino activo. Las etiquetas largas pueden usar
+puntos suspensivos visuales en pantallas pequeñas, pero el botón conserva
+su descripción de accesibilidad.
+
+### Web
+
+La barra superior muestra permanentemente un botón contrastado
+**Donate/Donar** con icono ♥, incluso en la página principal. Se
+encuentra junto al selector de idiomas y al control de apariencia.
+En pantallas muy estrechas se conserva un botón de corazón de 44 px
+con nombre accesible, para evitar que se solape con el logotipo.
+El botón abre la sección **Support/Apoyar proyecto**, no PayPal directamente.
+
+El sitio web mantiene el menú lateral de escritorio y cinco
+accesos inferiores para dispositivos móviles; se añadieron
+iconos a las acciones de navegación móvil.
+
+### Seguridad, voluntariedad y configuración
+
+- La aportación es opcional y **no activa funciones**.
+- Solo la pantalla de apoyo ofrece el enlace saliente de pago,
+  con el dominio oficial de PayPal, si existe una ID pública válida.
+- El \`hosted_button_id\` configurado por el propietario proviene de
+  un enlace de administración; se debe **verificar por separado**
+  la página pública y la cuenta beneficiaria antes de publicar.
+- El botón no recopila números de tarjeta ni credenciales en Reqestra.
+
+### Comprobación rápida
+
+1. Abre Android y Web en inglés y español; revisa el texto del botón.
+2. Comprueba teléfonos de 320, 360 y 420 dp/px para detectar
+   desbordamientos de cabecera y navegación.
+3. En Android pulsa ⋮ y Más: ambos deben mostrar la misma hoja.
+4. Abre cada una de las seis herramientas secundarias y confirma
+   que la pantalla correspondiente se presenta.
+5. Pulsa Donate/Donar: debe abrir la pantalla de apoyo sin lanzar
+   un pago automáticamente.
+6. Comprueba PayPal solo tras verificar el destinatario.

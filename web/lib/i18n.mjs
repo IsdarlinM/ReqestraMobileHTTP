@@ -12,6 +12,7 @@ export const LOCALES = Object.freeze([
   {code:"fr",name:"Français"},
 ]);
 const rows = [
+  ["Donar","Donate","Поддержать","捐赠","Doar","Faire un don"],
   // spanish identifier, english, russian, simplified chinese, portuguese, french
   ["Estudio","Studio","Студия","工作台","Estúdio","Studio"],
   ["Colecciones","Collections","Коллекции","集合","Coleções","Collections"],

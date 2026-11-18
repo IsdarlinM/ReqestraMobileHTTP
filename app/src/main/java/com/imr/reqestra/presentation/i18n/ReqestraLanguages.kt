@@ -23,6 +23,15 @@ object ReqestraLanguages {
 
     // Record: [English fallback, Russian, Mandarin Chinese, Portuguese, French].
     private val catalog: Map<String, Array<String>> = mapOf(
+
+        "Donar" to arrayOf("Donate", "Поддержать", "捐赠", "Doar", "Faire un don"),
+        "Acceso rápido a herramientas y resultados." to arrayOf(
+            "Quick access to tools and results.",
+            "Быстрый доступ к инструментам и результатам.",
+            "快速访问工具与结果。",
+            "Acesso rápido a ferramentas e resultados.",
+            "Accès rapide aux outils et aux résultats.",
+        ),
         "DIAGNÓSTICO" to arrayOf("DIAGNOSTICS", "ДИАГНОСТИКА", "诊断", "DIAGNÓSTICO", "DIAGNOSTIC"),
         "PREVISUALIZACIÓN" to arrayOf("PREVIEW", "ПРЕДПРОСМОТР", "预览", "PRÉ-VISUALIZAÇÃO", "APERÇU"),
         "ECOSISTEMA" to arrayOf("ECOSYSTEM", "ЭКОСИСТЕМА", "生态系统", "ECOSSISTEMA", "ÉCOSYSTÈME"),

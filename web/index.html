@@ -37,10 +37,15 @@
     </aside>
     <div class="main-area">
       <header class="topbar">
-        <div class="topbar-brand"><img class="brand-image small" src="./icon.png" alt=""><span>Reqestra <small>WEB</small></span></div>
+        <div class="topbar-brand" aria-label="Reqestra"><img class="brand-image small" src="./icon.png" alt=""><span>Reqestra <small>WEB</small></span></div>
         <div class="topbar-right">
           <span id="vaultStatus" class="pill muted">Modo temporal</span>
           <span id="engineStatus" class="pill muted">Motor navegador</span>
+          <button id="donateNav" type="button" data-section="support"
+                  class="donate-cta" aria-label="Donar" title="Donar">
+            <span aria-hidden="true" class="donate-cta-icon">♥</span>
+            <span class="donate-cta-label">Donar</span>
+          </button>
           <label class="language-control" for="languageSelect" title="Interface language">
             <span aria-hidden="true">🌐</span>
             <select id="languageSelect" aria-label="Interface language"></select>
@@ -199,6 +204,12 @@
       <footer class="footer"><span>Reqestra Studio · 3.4.0</span><span>Cliente local · Uso autorizado exclusivamente · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Código fuente</a></span></footer>
     </div>
   </div>
-  <nav class="mobile-nav" aria-label="Secciones principales"><button data-section="studio">Estudio</button><button data-section="collections">Colecciones</button><button data-section="tests">Pruebas</button><button data-section="discovery">Explorar</button><button id="moreNav" aria-label="Más herramientas">Más</button></nav>
+  <nav class="mobile-nav" aria-label="Secciones principales">
+    <button data-section="studio"><span class="mobile-icon" aria-hidden="true">⌘</span><span>Estudio</span></button>
+    <button data-section="collections"><span class="mobile-icon" aria-hidden="true">▤</span><span>Colecciones</span></button>
+    <button data-section="tests"><span class="mobile-icon" aria-hidden="true">✓</span><span>Pruebas</span></button>
+    <button data-section="discovery"><span class="mobile-icon" aria-hidden="true">◇</span><span>Explorar</span></button>
+    <button id="moreNav" aria-label="Más herramientas"><span class="mobile-icon" aria-hidden="true">⋯</span><span>Más</span></button>
+  </nav>
 </body>
 </html>
