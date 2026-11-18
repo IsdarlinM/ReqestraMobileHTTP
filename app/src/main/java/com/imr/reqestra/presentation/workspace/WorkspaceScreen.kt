@@ -57,6 +57,7 @@ import com.imr.reqestra.domain.model.BodyPolicy
 import com.imr.reqestra.domain.model.HttpMethodOption
 import com.imr.reqestra.domain.model.RequestDraft
 import com.imr.reqestra.domain.model.ResponseSnapshot
+import com.imr.reqestra.core.curl.CurlCodec
 import com.imr.reqestra.presentation.components.CodeEditor
 import com.imr.reqestra.presentation.components.StatusBanner
 
