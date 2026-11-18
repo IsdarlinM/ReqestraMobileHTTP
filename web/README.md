@@ -60,3 +60,14 @@ con un borde, fondo y ✓ en claro y oscuro, permite seleccionar por
 teclado y guarda la selección. Los catálogos locales cubren 328
 etiquetas web en los seis idiomas e incluyen plantillas para mensajes
 dinámicos. No se traducen URLs, secretos, ni cuerpos de peticiones.
+
+## Acerca de la aplicación y ayuda
+
+La página **About & Help** está disponible en el menú lateral y en la
+opción **More** para móviles. Incluye una guía de uso rápida, funciones
+y limitaciones del navegador, privacidad, versión y enlaces oficiales
+a la [guía de uso](../docs/GUIA_DE_USO.md), la configuración Web y
+el repositorio de problemas. No envía solicitudes HTTP automáticamente.
+
+La versión sigue siendo **3.5.0**; solo se renovó la caché interna
+de la PWA para propagar los cambios visuales.

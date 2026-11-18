@@ -327,6 +327,49 @@ const metadataRows = [
 const brandRows = [
   ["HTTP STUDIO · WEB 3.5","HTTP STUDIO · WEB 3.5","HTTP-СТУДИЯ · WEB 3.5","HTTP 工作台 · WEB 3.5","ESTÚDIO HTTP · WEB 3.5","STUDIO HTTP · WEB 3.5"],
 ];
+const aboutHelpRows = [
+  ["Acerca de y ayuda","About & Help","О приложении и помощь","关于与帮助","Sobre e ajuda","À propos et aide"],
+  ["Aprende a usar Reqestra y consulta sus recursos.","Learn to use Reqestra and find helpful resources.","Узнайте, как использовать Reqestra, и найдите полезные материалы.","了解如何使用 Reqestra 并查看帮助资源。","Aprenda a usar o Reqestra e consulte os recursos disponíveis.","Découvrez comment utiliser Reqestra et ses ressources."],
+  ["ACERCA DE","ABOUT","О ПРИЛОЖЕНИИ","关于","SOBRE","À PROPOS"],
+  ["Acerca de Reqestra","About Reqestra","О Reqestra","关于 Reqestra","Sobre o Reqestra","À propos de Reqestra"],
+  ["Acerca de Reqestra y ayuda","About Reqestra & Help","О Reqestra и помощь","关于 Reqestra 与帮助","Sobre o Reqestra e ajuda","À propos de Reqestra et aide"],
+  ["Cliente HTTP para crear, probar e inspeccionar solicitudes de forma controlada.","HTTP client for creating, testing and inspecting requests with full control.","HTTP-клиент для создания, проверки и анализа запросов с полным контролем.","用于创建、测试和检查 HTTP 请求的客户端，完整掌控每个步骤。","Cliente HTTP para criar, testar e inspecionar requisições com controle total.","Client HTTP pour créer, tester et inspecter des requêtes en gardant le contrôle."],
+  ["Herramientas HTTP para crear, probar e inspeccionar solicitudes con control en cada paso.","HTTP tools for building, testing and inspecting requests with control over each step.","Инструменты HTTP для создания, проверки и анализа запросов с контролем каждого шага.","用于创建、测试和检查请求的 HTTP 工具，控制每一步操作。","Ferramentas HTTP para criar, testar e inspecionar requisições com controle em cada etapa.","Outils HTTP pour créer, tester et inspecter des requêtes en maîtrisant chaque étape."],
+  ["Versión","Version","Версия","版本","Versão","Version"],
+  ["· Android y Web","· Android & Web","· Android и Web","· Android 与 Web","· Android e Web","· Android et Web"],
+  ["Explora flujos HTTP sin perder el control de tus solicitudes.","Explore HTTP workflows without surrendering control of your requests.","Исследуйте HTTP-сценарии, сохраняя контроль над запросами.","探索 HTTP 工作流程，同时保持对请求的掌控。","Explore fluxos HTTP sem perder o controle das requisições.","Explorez les flux HTTP tout en gardant le contrôle de vos requêtes."],
+  ["PRIMEROS PASOS","GETTING STARTED","НАЧАЛО РАБОТЫ","快速入门","PRIMEIROS PASSOS","PREMIERS PAS"],
+  ["Guía rápida","Quick start","Краткое руководство","快速入门","Guia rápido","Guide rapide"],
+  ["1. Crea una solicitud","1. Create a request","1. Создайте запрос","1. 创建请求","1. Crie uma requisição","1. Créez une requête"],
+  ["Abre Estudio, introduce una URL HTTP(S) y elige el método.","Open Studio, enter an HTTP(S) URL and select a method.","Откройте студию, введите HTTP(S) URL и выберите метод.","打开工作台，输入 HTTP(S) URL 并选择方法。","Abra o Estúdio, digite uma URL HTTP(S) e escolha um método.","Ouvrez le Studio, saisissez une URL HTTP(S) et choisissez une méthode."],
+  ["2. Ajusta y envía","2. Customize and send","2. Настройте и отправьте","2. 配置并发送","2. Configure e envie","2. Configurez et envoyez"],
+  ["Configura parámetros, headers o cuerpo y pulsa Enviar.","Set query parameters, headers or a body, then send your request.","Настройте параметры, заголовки или тело, затем отправьте запрос.","设置查询参数、请求头或请求体，然后发送请求。","Configure parâmetros, cabeçalhos ou corpo e envie a requisição.","Configurez les paramètres, en-têtes ou le corps, puis envoyez la requête."],
+  ["3. Inspecciona el resultado","3. Inspect the response","3. Проверьте ответ","3. 检查响应","3. Inspecione a resposta","3. Inspectez la réponse"],
+  ["Revisa el estado, el cuerpo y los headers en Inspector.","Review status, response body and headers in Inspector.","Просмотрите статус, тело ответа и заголовки в Инспекторе.","在检查器中查看状态码、响应体和响应头。","Confira o status, o corpo e os cabeçalhos no Inspetor.","Consultez le statut, le corps et les en-têtes dans l’Inspecteur."],
+  ["Abrir Estudio","Open Studio","Открыть студию","打开工作台","Abrir Estúdio","Ouvrir le Studio"],
+  ["FUNCIONES","FEATURES","ФУНКЦИИ","功能","RECURSOS","FONCTIONNALITÉS"],
+  ["Qué puedes hacer","What you can do","Что вы можете делать","主要功能","O que você pode fazer","Ce que vous pouvez faire"],
+  ["Herramientas principales","Main features","Основные функции","主要功能","Principais recursos","Fonctions principales"],
+  ["Colecciones: guarda solicitudes y entornos.","Collections: save requests and environments.","Коллекции: сохраняйте запросы и окружения.","集合：保存请求和环境。","Coleções: salve requisições e ambientes.","Collections : enregistrez des requêtes et des environnements."],
+  ["Pruebas: ejecuta verificaciones de estado y latencia.","Tests: check HTTP status and response latency.","Тесты: проверяйте HTTP-статус и задержку.","测试：检查 HTTP 状态码和响应延迟。","Testes: verifique o status HTTP e a latência.","Tests : vérifiez le statut HTTP et la latence."],
+  ["Explorar: comprueba rutas autorizadas con límites y confirmación.","Explore: inspect authorized endpoints with safeguards.","Исследование: проверяйте разрешённые адреса с ограничениями.","探索：在安全限制下检查已授权的端点。","Explorar: inspecione endpoints autorizados com limites de segurança.","Explorer : inspectez les points d’accès autorisés avec des protections."],
+  ["Extensiones: accede a herramientas integradas y capacidades previstas.","Extensions: access built-in tools and planned capabilities.","Расширения: встроенные инструменты и будущие возможности.","扩展：使用内置工具并了解规划中的功能。","Extensões: acesse ferramentas integradas e recursos planejados.","Extensions : accédez aux outils intégrés et aux fonctions prévues."],
+  ["Ver extensiones","View extensions","Посмотреть расширения","查看扩展","Ver extensões","Voir les extensions"],
+  ["Privacidad y seguridad","Privacy and safety","Конфиденциальность и безопасность","隐私与安全","Privacidade e segurança","Confidentialité et sécurité"],
+  ["Las solicitudes se envían únicamente cuando tú las ejecutas.","Requests are sent only when you run them.","Запросы отправляются только по вашей команде.","仅在您主动执行时才发送请求。","As requisições são enviadas somente quando você as executa.","Les requêtes sont envoyées uniquement lorsque vous les lancez."],
+  ["Los datos de trabajo se guardan localmente según el modo de almacenamiento elegido.","Workspace data stays local according to the storage mode you choose.","Данные рабочей области хранятся локально согласно выбранному режиму.","工作区数据根据所选存储模式保存在本地。","Os dados de trabalho ficam no dispositivo conforme o modo escolhido.","Les données de travail restent locales selon le mode de stockage choisi."],
+  ["Los navegadores aplican CORS y restringen algunos headers.","Browsers enforce CORS and restrict certain headers.","Браузеры применяют CORS и ограничивают некоторые заголовки.","浏览器实施 CORS 并限制某些请求头。","Os navegadores aplicam CORS e restringem alguns cabeçalhos.","Les navigateurs appliquent CORS et restreignent certains en-têtes."],
+  ["Antes de explorar un servidor, confirma que tienes autorización.","Only explore endpoints you are authorized to test.","Исследуйте только те серверы, тестирование которых разрешено.","仅探索您有权测试的端点。","Explore somente endpoints que você tem autorização para testar.","N’explorez que les serveurs que vous êtes autorisé à tester."],
+  ["AYUDA","HELP","ПОМОЩЬ","帮助","AJUDA","AIDE"],
+  ["Ayuda y recursos","Help and resources","Помощь и ресурсы","帮助与资源","Ajuda e recursos","Aide et ressources"],
+  ["Lee la documentación, consulta la configuración o informa de un problema.","Read the project documentation, review setup steps or report an issue.","Читайте документацию, инструкции по настройке или сообщите об ошибке.","阅读项目文档、查看设置步骤或报告问题。","Leia a documentação, consulte a configuração ou relate um problema.","Lisez la documentation, consultez la configuration ou signalez un problème."],
+  ["Documentación","Documentation","Документация","文档","Documentação","Documentation"],
+  ["Guía de configuración web","Web setup guide","Руководство по настройке Web","Web 设置指南","Guia de configuração web","Guide de configuration Web"],
+  ["Reportar un problema","Report an issue","Сообщить о проблеме","报告问题","Relatar um problema","Signaler un problème"],
+  ["Repositorio de código","Source repository","Репозиторий исходного кода","源代码仓库","Repositório de código","Dépôt du code source"],
+  ["Los enlaces se abren en el navegador.","Links open in the browser.","Ссылки открываются в браузере.","链接将在浏览器中打开。","Os links abrem no navegador.","Les liens s’ouvrent dans le navigateur."],
+  ["Los enlaces se abren en otra pestaña. Esta página no comparte datos de solicitudes.","Links open in a new browser tab. No request data is shared by this page.","Ссылки открываются в новой вкладке. Эта страница не передаёт данные запросов.","链接会在新标签页打开。本页面不会共享请求数据。","Os links abrem em outra guia. Esta página não compartilha dados das requisições.","Les liens s’ouvrent dans un nouvel onglet. Cette page ne partage aucune donnée de requête."],
+];
 const extraEn = [
  ["Navegación","Navigation"],
  ["La donación no desbloquea contenido, privilegios, insignias ni beneficios digitales.","Donations do not unlock content, privileges, badges or digital benefits."],
@@ -390,7 +433,7 @@ const extraLocales = new Map([
   ["Recepción de respuesta", ["Получен ответ","接收响应","Recebimento da resposta","Réception de la réponse"]],
 ]);
 const catalogs = Object.fromEntries(LOCALES.map(l=>[l.code,new Map()]));
-for(const [es,en,ru,zh,pt,fr] of [...rows,...additionalRows,...completeRows,...validationRows,...coreRows,...metadataRows,...brandRows]){
+for(const [es,en,ru,zh,pt,fr] of [...rows,...additionalRows,...completeRows,...validationRows,...coreRows,...metadataRows,...brandRows,...aboutHelpRows]){
   for(const [code,value] of [["en",en],["es",es],["ru",ru],["zh",zh],["pt",pt],["fr",fr]])
     catalogs[code].set(es,value);
 }

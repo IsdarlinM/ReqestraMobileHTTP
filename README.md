@@ -10,6 +10,18 @@ imr :: v3.5.0
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
 
+## Acerca de Reqestra y Ayuda
+
+Android incluye **Acerca de y ayuda** dentro del menú inferior **Más**.
+La Web incorpora **About & Help** en la navegación lateral y en **More**
+cuando se usa desde un teléfono. Ambas pantallas muestran el logotipo,
+la versión actual, una guía de primeros pasos, funciones disponibles,
+recomendaciones de privacidad y enlaces a documentación y problemas.
+
+La guía extensa está en [docs/GUIA_DE_USO.md](docs/GUIA_DE_USO.md).
+La sección está traducida a los seis idiomas de la interfaz.
+**No se ha cambiado el número de versión** por esta mejora.
+
 ## Selector de idioma y traducciones — 3.5
 
 Android y Web incluyen un selector de idioma con la opción activa resaltada

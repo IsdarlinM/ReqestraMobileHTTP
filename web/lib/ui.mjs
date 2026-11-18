@@ -26,6 +26,12 @@ export function nav(section) {
     const active=button.dataset.section===section;button.classList.toggle("active",active);
     if(active)button.setAttribute("aria-current","page");else button.removeAttribute("aria-current");
   }
+  const more=$("moreNav");
+  if(more){
+    const active=!["studio","collections","tests","discovery"].includes(section);
+    more.classList.toggle("active",active);
+    if(active)more.setAttribute("aria-current","page");else more.removeAttribute("aria-current");
+  }
   window.scrollTo({top:0,behavior:"auto"});
 }
 export function responseSummary(response) {
@@ -193,7 +199,7 @@ export function mobileMenu(openSection) {
     const menu=node("div",null,"mobile-more");menu.id="mobileMoreMenu";
     for(const [id,title] of [
       ["history","Historial"],["inspector","Inspector"],["preview","Vista previa"],
-      ["session","Sesiones"],["plugins","Extensiones"],["support","Donar / Ayuda"]
+      ["session","Sesiones"],["plugins","Extensiones"],["about","About & Help"],["support","Donar / Ayuda"]
     ]){
       const b=node("button",title);b.addEventListener("click",()=>{menu.remove();openSection(id);});
       menu.append(b);

@@ -84,6 +84,7 @@ import com.imr.reqestra.presentation.response.ResponseScreen
 import com.imr.reqestra.presentation.session.SessionScreen
 import com.imr.reqestra.presentation.workspace.WorkspaceScreen
 import com.imr.reqestra.presentation.support.SupportScreen
+import com.imr.reqestra.presentation.about.AboutScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -388,6 +389,7 @@ fun ReqestraApp(
                     },
                 )
                 AppSection.SUPPORT -> SupportScreen()
+                AppSection.ABOUT -> AboutScreen()
                 AppSection.SESSION -> SessionScreen(
                     mode = state.draft.sessionMode,
                     origin = state.sessionOrigin,

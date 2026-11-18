@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -111,6 +112,11 @@ internal fun MoreToolsSheet(
                 tr("Módulos integrados y capacidades previstas; sin código remoto."),
                 Icons.Outlined.Extension,
             ) { onSelect(AppSection.PLUGINS) }
+            ToolShortcut(
+                tr("Acerca de y ayuda"),
+                tr("Aprende a usar Reqestra y consulta sus recursos."),
+                Icons.Outlined.Info,
+            ) { onSelect(AppSection.ABOUT) }
         }
     }
 }

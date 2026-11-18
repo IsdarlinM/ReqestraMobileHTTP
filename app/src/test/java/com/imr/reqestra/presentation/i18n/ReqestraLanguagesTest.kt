@@ -20,6 +20,21 @@ class ReqestraLanguagesTest {
         assertEquals("Tests", ReqestraLanguages.translate("Pruebas", "fr"))
         assertEquals("Bearer abc", ReqestraLanguages.translate("Bearer abc", "fr"))
     }
+    @Test fun aboutHelpIsAvailableForAllSixLanguages() {
+        val translations = mapOf(
+            "en" to "About & Help",
+            "es" to "Acerca de y ayuda",
+            "ru" to "О приложении и помощь",
+            "zh" to "关于与帮助",
+            "pt" to "Sobre e ajuda",
+            "fr" to "À propos et aide",
+        )
+        for ((language, expected) in translations) {
+            assertEquals(expected, ReqestraLanguages.translate("Acerca de y ayuda", language))
+            assertEquals(true, ReqestraLanguages.translate("Guía rápida", language).isNotBlank())
+            assertEquals(true, ReqestraLanguages.translate("Documentación", language).isNotBlank())
+        }
+    }
     @Test fun navigationTranslationsAreAvailable() {
         assertEquals("Studio", ReqestraLanguages.translate("Estudio", "en"))
         assertEquals("Estudio", ReqestraLanguages.translate("Estudio", "es"))

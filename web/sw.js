@@ -1,5 +1,5 @@
 // Cache the app shell only; never cache HTTP requests, responses, gateway data or credentials.
-const NAME="reqestra-shell-3.5-i18n";
+const NAME="reqestra-shell-3.5-about-help";
 const SHELL=["./","./index.html","./styles.css","./config.js","./app.mjs",
   "./lib/core.mjs","./lib/ui.mjs","./lib/vault.mjs","./lib/transport.mjs",
   "./icon.png","./lib/i18n.mjs","./manifest.webmanifest"];

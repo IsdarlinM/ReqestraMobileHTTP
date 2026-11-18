@@ -29,6 +29,7 @@
         <button data-section="preview">▣   Preview</button>
         <button data-section="session">♧   Sessions</button>
         <button data-section="plugins">◈   Extensions</button>
+        <button data-section="about">ⓘ   About & Help</button>
         <button data-section="support">♥   Donate / Help</button>
       </nav>
       <div class="sidebar-footer"><span class="status-dot"></span> Local client · no telemetry
@@ -200,6 +201,64 @@
           </article>
         </section>
         <section id="plugins" class="page" aria-labelledby="pluginsTitle"><div class="eyebrow">ECOSYSTEM</div><h1 id="pluginsTitle">Extensions and capabilities</h1><p class="lead">Built-in features and browser limitations.</p><div id="pluginsList" class="results-grid"></div></section>
+        <section id="about" class="page" aria-labelledby="aboutTitle">
+          <div class="eyebrow">ABOUT</div>
+          <h1 id="aboutTitle">About Reqestra & Help</h1>
+          <p class="lead">HTTP tools for building, testing and inspecting requests with control over each step.</p>
+          <div class="about-identity panel">
+            <img src="./icon.png" width="76" height="76" alt="Reqestra logo" class="about-logo">
+            <div class="about-identity-copy">
+              <h2>Reqestra HTTP Studio</h2>
+              <p>Version <strong>3.5.0</strong> · Android & Web</p>
+              <p>Explore HTTP workflows without surrendering control of your requests.</p>
+            </div>
+          </div>
+          <div class="about-grid">
+            <article class="panel">
+              <div class="about-kicker">GETTING STARTED</div>
+              <h2>Quick start</h2>
+              <ol class="about-steps">
+                <li><strong>1. Create a request</strong><span>Open Studio, enter an HTTP(S) URL and select a method.</span></li>
+                <li><strong>2. Customize and send</strong><span>Set query parameters, headers or a body, then send your request.</span></li>
+                <li><strong>3. Inspect the response</strong><span>Review status, response body and headers in Inspector.</span></li>
+              </ol>
+              <button type="button" class="button outline" data-section="studio">Open Studio</button>
+            </article>
+            <article class="panel">
+              <div class="about-kicker">FEATURES</div>
+              <h2>What you can do</h2>
+              <ul class="about-points">
+                <li>Collections: save requests and environments.</li>
+                <li>Tests: check HTTP status and response latency.</li>
+                <li>Explore: inspect authorized endpoints with safeguards.</li>
+                <li>Extensions: access built-in tools and planned capabilities.</li>
+              </ul>
+              <button type="button" class="button outline" data-section="plugins">View extensions</button>
+            </article>
+            <article class="panel">
+              <div class="about-kicker">SECURITY</div>
+              <h2>Privacy and safety</h2>
+              <ul class="about-points">
+                <li>Requests are sent only when you run them.</li>
+                <li>Workspace data stays local according to the storage mode you choose.</li>
+                <li>Browsers enforce CORS and restrict certain headers.</li>
+                <li>Only explore endpoints you are authorized to test.</li>
+              </ul>
+            </article>
+            <article class="panel">
+              <div class="about-kicker">HELP</div>
+              <h2>Help and resources</h2>
+              <p>Read the project documentation, review setup steps or report an issue.</p>
+              <div class="about-links">
+                <a class="button outline" href="https://github.com/IsdarlinM/ReqestraMobileHTTP/blob/main/docs/GUIA_DE_USO.md" target="_blank" rel="noopener noreferrer">Documentation <span aria-hidden="true">↗</span></a>
+                <a class="button outline" href="https://github.com/IsdarlinM/ReqestraMobileHTTP/blob/main/docs/WEB_SETUP.md" target="_blank" rel="noopener noreferrer">Web setup guide <span aria-hidden="true">↗</span></a>
+                <a class="button outline" href="https://github.com/IsdarlinM/ReqestraMobileHTTP/issues" target="_blank" rel="noopener noreferrer">Report an issue <span aria-hidden="true">↗</span></a>
+                <a class="button ghost" href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Source repository <span aria-hidden="true">↗</span></a>
+              </div>
+              <p class="help">Links open in a new browser tab. No request data is shared by this page.</p>
+            </article>
+          </div>
+        </section>
         <section id="support" class="page" aria-labelledby="supportTitle"><div class="eyebrow">SUPPORT THE PROJECT</div><h1 id="supportTitle">Voluntary donations</h1><p class="lead">Reqestra works without donations; no features require a contribution.</p>
           <article class="panel narrow"><div class="heart">♥</div><h2>Help improve Reqestra</h2>
             <p>If you choose to donate, payment is handled entirely by PayPal. Reqestra never collects card details or financial information.</p>

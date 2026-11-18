@@ -313,3 +313,33 @@ npm run check && npm test
 cd ..
 ./gradlew --no-daemon :app:testDebugUnitTest :app:assembleDebug
 ```
+
+## 9. Acerca de Reqestra y Ayuda — sin cambio de versión
+
+### Android
+
+Desde **Más** en la barra inferior se puede abrir la pantalla
+**Acerca de y ayuda**. Reutiliza el estilo del proyecto, la misma imagen
+PNG corporativa y la versión obtenida de `BuildConfig.VERSION_NAME`.
+Incluye primeros pasos, herramientas integradas, privacidad y seguridad,
+más botones para abrir la guía, reportar problemas o consultar el código
+en GitHub mediante HTTPS.
+
+### Web
+
+En escritorio, **About & Help** se encuentra en la navegación lateral;
+en móviles, dentro de **More**. Contiene los mismos conceptos, describe
+la limitación CORS propia de navegadores y ofrece accesos a Estudio,
+Extensiones, documentación y problemas. Los enlaces se abren en otra
+pestaña con protección `noopener noreferrer`. La página es informativa
+y no envía peticiones de red hasta que se sigue un enlace externo.
+
+### Idiomas y comprobación
+
+Las etiquetas, párrafos y enlaces nuevos cuentan con traducciones
+para inglés, español, ruso, chino mandarín simplificado, portugués
+y francés. Se añadieron pruebas sobre navegación y disponibilidad
+de los textos. La guía completa está en
+[GUIA_DE_USO.md](GUIA_DE_USO.md).
+
+La versión pública de Android y Web permanece **3.5.0**.

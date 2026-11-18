@@ -40,7 +40,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
-enum class AppSection { REQUEST, DISCOVERY, COLLECTIONS, AUTOMATION, HISTORY, PREVIEW, RESPONSE, SESSION, PLUGINS, SUPPORT }
+enum class AppSection { REQUEST, DISCOVERY, COLLECTIONS, AUTOMATION, HISTORY, PREVIEW, RESPONSE, SESSION, PLUGINS, SUPPORT, ABOUT }
 
 data class MainUiState(
     val draft: RequestDraft = RequestDraft(),
