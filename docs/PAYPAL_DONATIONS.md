@@ -23,6 +23,18 @@ Enlace oficial: https://developer.paypal.com/sdk/donate/
 
 Si PayPal genera otro tipo de enlace incompatible, no lo fuerces: adapta la integración tras revisar el enlace oficial y validarlo. Esta versión admite únicamente la modalidad hospedada donate/?hosted_button_id.
 
+## Configuración conjunta desde Termux
+
+Tras crear tu botón de donación en PayPal, configura Android y Web con **un solo comando**:
+
+    cd ~/ReqestraMobileHTTP
+    git pull --ff-only origin main
+    bash scripts/configure-paypal.sh
+
+El asistente te pedirá únicamente el valor **público** `hosted_button_id` de tu propio botón, comprobará su formato y actualizará `~/.gradle/gradle.properties` y `web/config.js`. No solicita contraseña, API key ni secretos.
+
+Comprueba que el enlace generado abre la página **de tu cuenta receptora** en paypal.com. Después puedes subir solo `web/config.js` a GitHub si deseas que el sitio web público ofrezca donaciones. Este script no publica un sitio ni compila la APK por sí solo.
+
 ## 3. Configurar el proyecto Android
 
 En la máquina de compilación o Termux, abre el archivo local de propiedades Gradle del usuario:
