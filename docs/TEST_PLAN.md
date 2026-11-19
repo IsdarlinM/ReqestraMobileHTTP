@@ -1,122 +1,122 @@
-# Reqestra 3.3 — Plan de pruebas funcionales, de seguridad y accesibilidad
+# Reqestra 3.3 — Functional, Security, and Accessibility Test Plan
 
-## Criterios de aceptación
+## Acceptance criteria
 
-1. Los dos clientes conservan sus funciones existentes de composición HTTP.
-2. Los límites de tamaño, tasa y alcance de descubrimiento se cumplen.
-3. Los secretos no aparecen en el historial, cURL exportado ni backup web en texto plano.
-4. No hay acceso a PayPal hasta configurar una ID pública válida; todas las funciones son accesibles sin donar.
-5. No se consideran verificadas las compilaciones hasta obtener resultados reproducibles de Gradle/Node/navegador.
+1. Both clients retain their existing HTTP request composition features.
+2. Size, rate, and discovery-scope limits are enforced.
+3. Secrets do not appear in history, exported cURL, or plaintext web backups.
+4. PayPal cannot be accessed until a valid public button ID is configured; every feature remains usable without donating.
+5. Builds are not considered verified until reproducible Gradle, Node, and browser results exist.
 
-## 1. Pruebas automatizadas Web
+## 1. Automated web tests
 
-Requisitos: Node 20 o posterior, sin dependencias externas.
+Requirements: Node.js 20 or later; no external dependencies.
 
     cd web
     npm run check
     npm test
 
-Archivos: web/tests/core.test.mjs y web/tests/vault.test.mjs. Cubren expansión de variables, query, errores de validación, importación OpenAPI, ruta de mismo origen, métodos mutantes desactivados, heurística pasiva, cURL redactado, assertions y cifrado de repositorio WebCrypto.
+Files: `web/tests/core.test.mjs` and `web/tests/vault.test.mjs`. They cover variable expansion, query construction, validation failures, OpenAPI imports, same-origin paths, disabled state-changing methods, passive heuristics, redacted cURL, assertions, and WebCrypto vault encryption.
 
-**Nota:** estas pruebas de unidad no ejercitan automáticamente el DOM real, CORS ni los permisos de navegador.
+**Note:** these unit tests do not automatically exercise the real DOM, CORS, or browser permissions.
 
-## 2. Pruebas automatizadas Android
+## 2. Automated Android tests
 
     cd ~/ReqestraMobileHTTP
     ./gradlew --no-daemon testDebugUnitTest assembleDebug --stacktrace
 
-Además de las pruebas existentes sobre HTTP, sesiones, cURL, descubrimiento, colecciones y validación, PayPalDonationsTest comprueba la construcción segura de un enlace HTTPS a www.paypal.com y el rechazo de IDs maliciosas/vacías.
+In addition to existing HTTP, session, cURL, discovery, collection, and validation tests, `PayPalDonationsTest` checks safe HTTPS URL construction for www.paypal.com and rejects empty or malicious IDs.
 
-Históricamente el workflow de GitHub Actions ha fallado incluso antes de asignarse un runner; no tomes un commit subido como confirmación de compilación correcta. Compila localmente y conserva el log de error.
+Historically, GitHub Actions has sometimes failed before assigning a runner. A pushed commit is not proof of a successful build. Build locally and retain error logs.
 
-## 3. Matriz manual de funciones
+## 3. Manual feature test matrix
 
-| ID | Componente | Prueba | Resultado esperado |
+| ID | Component | Test | Expected result |
 |---|---|---|---|
-| WEB-01 | Estudio | GET a API con CORS autorizado | HTTP/status/body/latencia |
-| WEB-02 | URL | URL con usuario:contraseña | Rechazo |
-| WEB-03 | HTTP | Desactivar allowCleartext y enviar http | Rechazo |
-| WEB-04 | Headers | Intentar Content-Length manual | Rechazo |
-| WEB-05 | Cookies | Cookie manual con motor navegador | Mensaje de limitación |
-| WEB-06 | Query | existing=1 y filtro con espacios | Se conserva existing y se codifica filtro |
-| WEB-07 | Variables | Variable {{token}} no definida | Error antes de enviar |
-| WEB-08 | Variables | token con valor sensible | No aparece en historial ni exportación cURL |
-| WEB-09 | Body | JSON inválido + botón formatear | Mensaje sin pérdida de texto |
-| WEB-10 | cURL | Importación cURL simple | Draft cargado y editable |
-| WEB-11 | cURL | cURL con -k | Rechazo de TLS inseguro |
-| WEB-12 | OpenAPI | Documento 3.x con GET/POST | Importa 2 operaciones |
-| WEB-13 | OpenAPI | YAML o servidor relativo | Rechazo documentado |
-| WEB-14 | Vault | Crear, cerrar, desbloquear | Datos cifrados recuperados |
-| WEB-15 | Vault | Contraseña incorrecta | Rechazo sin exponer datos |
-| WEB-16 | Vault | Exportar e importar backup | Se solicita misma passphrase |
-| WEB-17 | Colecciones | Guardar y recuperar draft | Campos conservados |
-| WEB-18 | Colecciones | Eliminar una petición | Requiere confirmación |
-| WEB-19 | Entornos | Cambiar Local a QA | Las variables cambian |
-| WEB-20 | Pruebas | Colección 2 solicitudes | PASS/FAIL y progreso |
-| WEB-21 | Pruebas | Cancelación durante test | Interrupción sin nuevas solicitudes |
-| WEB-22 | Discovery | /health con mismo origen | Resultado de ruta |
-| WEB-23 | Discovery | Intentar URL externa como ruta | Rechazo |
-| WEB-24 | Discovery | 9 rutas | Rechazo por límite |
-| WEB-25 | Discovery | DELETE sin habilitar | Bloqueo |
-| WEB-26 | Discovery | DELETE con activación + confirmación | Envío intencional |
-| WEB-27 | Discovery | Parámetro extra | Diferencia de status/tamaño si existe |
-| WEB-28 | Preview | HTML con script e imagen remota | No ejecuta scripts ni carga recursos externos |
-| WEB-29 | Historial | 51 peticiones | Máximo 50 filas |
-| WEB-30 | Gateway | Sin allowed origins | 403 y gateway desactivado |
-| WEB-31 | Gateway | Origen distinto de allowlist | Bloqueado |
-| WEB-32 | Gateway | 127.0.0.1 sin opt-in | Bloqueado |
-| WEB-33 | Gateway | Allow private targets explícito en laboratorio | Acceso solo al origen autorizado |
-| WEB-34 | Gateway | Redirección 302 | No sigue Location |
-| WEB-35 | PayPal | ID vacía | Botón desactivado |
-| WEB-36 | PayPal | ID pública válida | Enlace solo a www.paypal.com |
-| WEB-37 | PWA | Instalación y modo offline | Solo shell disponible; no respuestas HTTP cacheadas |
-| WEB-38 | CSP | HTML inyectado en respuesta/historial | Se muestra como texto, no ejecuta scripts |
-| MOB-01 | Android | Compilar con JDK17/SDK36 | BUILD SUCCESSFUL |
-| MOB-02 | Android | Navegación en 4 pestañas + menú | Acceso a todas las pantallas |
-| MOB-03 | Android | GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS | Respuestas esperadas |
-| MOB-04 | Android | SessionMode NONE/MEMORY/PERSISTENT | Semántica según origen |
-| MOB-05 | Android | RequestParameterizer variables+query | Resolución, límites, encoding |
-| MOB-06 | Android | Discovery Planner + Explorer | Límite 24, mismo origen |
-| MOB-07 | Android | PayPal sin ID | Botón inactivo |
-| MOB-08 | Android | PayPal con ID pública | Browser externo al enlace PayPal |
-| MOB-09 | Android | TalkBack / rotación / texto ampliado | Campos accesibles y legibles |
+| WEB-01 | Studio | GET to an API with permitted CORS | HTTP/status/body/latency |
+| WEB-02 | URL | URL with username:password | Rejected |
+| WEB-03 | HTTP | Disable allowCleartext and send HTTP | Rejected |
+| WEB-04 | Headers | Set Content-Length manually | Rejected |
+| WEB-05 | Cookies | Manual Cookie with browser transport | Limitation notice |
+| WEB-06 | Query | existing=1 and a filter containing spaces | Existing query preserved; filter encoded |
+| WEB-07 | Variables | Undefined {{token}} variable | Error before sending |
+| WEB-08 | Variables | Sensitive token value | Not in history or exported cURL |
+| WEB-09 | Body | Invalid JSON + Format button | Warning without losing text |
+| WEB-10 | cURL | Import simple cURL | Editable draft loaded |
+| WEB-11 | cURL | cURL using -k | Insecure TLS rejected |
+| WEB-12 | OpenAPI | 3.x document with GET/POST | Imports two operations |
+| WEB-13 | OpenAPI | YAML or relative server | Documented rejection |
+| WEB-14 | Vault | Create, lock, unlock | Encrypted data restored |
+| WEB-15 | Vault | Incorrect password | Rejected without exposing data |
+| WEB-16 | Vault | Export/import backup | Same passphrase required |
+| WEB-17 | Collections | Save/retrieve draft | Fields preserved |
+| WEB-18 | Collections | Delete a request | Confirmation required |
+| WEB-19 | Environments | Switch from Local to QA | Variables change |
+| WEB-20 | Tests | Two-request collection | PASS/FAIL and progress |
+| WEB-21 | Tests | Cancel during execution | Stops without new requests |
+| WEB-22 | Discovery | /health on same origin | Route result |
+| WEB-23 | Discovery | External URL used as path | Rejected |
+| WEB-24 | Discovery | Nine paths | Rejected by limit |
+| WEB-25 | Discovery | DELETE without opt-in | Blocked |
+| WEB-26 | Discovery | DELETE with opt-in and confirmation | Intentional request sent |
+| WEB-27 | Discovery | Additional parameter | Status/size difference if present |
+| WEB-28 | Preview | HTML with script and remote image | Scripts blocked; remote resources not loaded |
+| WEB-29 | History | 51 requests | Maximum of 50 rows |
+| WEB-30 | Gateway | No allowed origins | 403; gateway disabled |
+| WEB-31 | Gateway | Origin outside allowlist | Blocked |
+| WEB-32 | Gateway | 127.0.0.1 without opt-in | Blocked |
+| WEB-33 | Gateway | Explicit private-target opt-in in lab | Only authorized origin accessible |
+| WEB-34 | Gateway | HTTP 302 redirect | Location not followed |
+| WEB-35 | PayPal | Empty ID | Button disabled |
+| WEB-36 | PayPal | Valid public ID | Link to www.paypal.com only |
+| WEB-37 | PWA | Install and use offline | App shell only; HTTP responses not cached |
+| WEB-38 | CSP | Inject HTML in response/history | Rendered as text; scripts not executed |
+| MOB-01 | Android | Build with JDK 17/SDK 36 | BUILD SUCCESSFUL |
+| MOB-02 | Android | Four-tab navigation + menu | Every screen accessible |
+| MOB-03 | Android | GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS | Expected responses |
+| MOB-04 | Android | SessionMode NONE/MEMORY/PERSISTENT | Correct origin semantics |
+| MOB-05 | Android | RequestParameterizer variables + query | Resolution, limits, encoding |
+| MOB-06 | Android | Discovery Planner + Explorer | Limit of 24; same origin |
+| MOB-07 | Android | PayPal without ID | Button inactive |
+| MOB-08 | Android | PayPal with public ID | Opens PayPal link in external browser |
+| MOB-09 | Android | TalkBack/rotation/larger text | Accessible and readable fields |
 
-## 4. Verificación de accesibilidad
+## 4. Accessibility verification
 
-- Navegación por teclado y foco visible en Web.
-- Labels vinculados a inputs; botones con nombre textual; avisos con role=status/alert.
-- Áreas táctiles de 44 px Web y 48 dp Android donde corresponda.
-- Modo claro y oscuro, contraste de textos críticos.
-- Texto al 200 %, orientación horizontal, móvil 320-420 px, desktop 1280-1920 px.
-- Preferencias de reducir movimiento en Web.
-- Foco accesible tras cambiar de sección y abrir submenú móvil.
-- PayPal se abre en un contexto nuevo sólo tras interacción explícita.
+- Keyboard navigation and visible web focus.
+- Labels associated with inputs; buttons with accessible names; notices using role=status/alert.
+- 44 px web and 48 dp Android touch targets where appropriate.
+- Light/dark themes and contrast for critical text.
+- 200% text scale, landscape, mobile widths 320–420 px, and desktop widths 1280–1920 px.
+- Reduced-motion preferences on the web.
+- Accessible focus after section changes and opening the mobile submenu.
+- PayPal opens a new context only after explicit interaction.
 
-## 5. Dispositivos y navegadores
+## 5. Devices and browsers
 
-Pruebas sugeridas: Chrome Android, Firefox Android, Chrome/Edge/Firefox desktop y Safari moderno (macOS/iOS) con HTTPS o localhost. No supongas que todas las plataformas permiten mismo acceso a almacenamiento, WebCrypto, headers o cookies. En Android prueba al menos dispositivo API 26 y otro API 35/36 si están disponibles.
+Suggested platforms: Chrome Android, Firefox Android, desktop Chrome/Edge/Firefox, and modern Safari on macOS/iOS using HTTPS or localhost. Do not assume every platform offers identical storage, WebCrypto, header, or cookie access. For Android, test at least an API 26 device and an API 35/36 device if available.
 
-## 6. Prueba de seguridad del gateway (local solamente)
+## 6. Gateway security test (local only)
 
-Sirve una API propia en localhost:8080 y activa explícitamente:
+Host your own API on localhost:8080 and explicitly enable:
 
     REQESTRA_ALLOWED_ORIGINS=http://127.0.0.1:8080 REQESTRA_ALLOW_PRIVATE_TARGETS=1 node server.mjs
 
-Comprueba que URLs fuera de origen se rechazan, que redirects no se siguen, que Host y Content-Length no se aceptan manualmente, que el proceso no escucha públicamente cuando hay allowlist y que no existen logs con tokens. No realices escaneos externos no autorizados.
+Verify that out-of-origin URLs are rejected, redirects are not followed, Host and Content-Length cannot be set manually, the process does not listen publicly when an allowlist is set, and logs contain no tokens. Do not perform unauthorized external scans.
 
-## 7. Antes de publicar
+## 7. Before publishing
 
-- [ ] WEB: npm run check y npm test sin errores.
-- [ ] MOB: testDebugUnitTest y assembleDebug sin errores.
-- [ ] PayPal: cuenta real y beneficiario confirmados; botones desactivados sin ID.
-- [ ] Política de Google Play revisada; ninguna contraprestación digital a donantes.
-- [ ] Gateway privado no publicado sin autenticación.
-- [ ] Sitio web HTTPS con CSP, sin secretos en código cliente.
-- [ ] Pruebas manuales de CORS y cookies documentadas.
-- [ ] Documentación y licencia revisadas.
-- [ ] Capturas y datos ficticios; no introducir credenciales reales de prueba en repositorio.
-- [ ] Comprobar seguridad, privacidad y uso autorizado.
+- [ ] WEB: `npm run check` and `npm test` succeed.
+- [ ] MOB: `testDebugUnitTest` and `assembleDebug` succeed.
+- [ ] PayPal: receiving account and beneficiary confirmed; buttons disabled without an ID.
+- [ ] Google Play policy reviewed; donors receive no digital benefits.
+- [ ] Private gateway not exposed publicly without authentication.
+- [ ] HTTPS website with CSP and no secrets in client code.
+- [ ] Manual CORS and cookie tests documented.
+- [ ] Documentation and license reviewed.
+- [ ] Screenshots and test data are fictional; no real test credentials in the repository.
+- [ ] Security, privacy, and authorized-use policies reviewed.
 
-## 8. Reportar un fallo
+## 8. Reporting a bug
 
-Incluye versión del commit, entorno (Android/Termux/browser), forma de ejecutar, pasos mínimos, comportamiento esperado/real y extracto de error **sin tokens, cookies, claves ni URLs internas sensibles**. Evita publicar respuestas completas de APIs privadas.
+Include the commit version, environment (Android/Termux/browser), launch instructions, minimal reproduction steps, expected and actual behavior, and a sanitized error excerpt **without tokens, cookies, keys, or sensitive internal URLs**. Avoid publishing full responses from private APIs.
