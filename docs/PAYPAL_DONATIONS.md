@@ -1,130 +1,120 @@
-# Donaciones voluntarias en Reqestra — PayPal
+# Voluntary Donations to Reqestra — PayPal
 
-**Versión:** Reqestra 3.3 (Android y Web). La app **no procesa pagos ni verifica transacciones**: abre una página de donación alojada directamente en paypal.com.
+**Version:** Reqestra 3.3 (Android and Web). The app **does not process payments or verify transactions**. It opens a donation page hosted directly on paypal.com.
 
-## Configuración del botón aportado por el propietario
+## Owner-provided button configuration
 
-El propietario facilitó el enlace de administración `https://www.paypal.com/donate/buttons/manage/DZW75X5SML2RJ`.
-El segmento final `DZW75X5SML2RJ` se ha configurado como candidato a `hosted_button_id`
-en el cliente Web y como valor público predeterminado para Android, de acuerdo con
-el formato de botones alojados por PayPal. Una propiedad Gradle local
-`paypalHostedButtonId` no vacía prevalece sobre ese valor predeterminado.
+The owner provided the administration URL `https://www.paypal.com/donate/buttons/manage/DZW75X5SML2RJ`.
+Its final segment, `DZW75X5SML2RJ`, was configured as a candidate `hosted_button_id` in the web client and as a default public value for Android, based on PayPal's hosted-button ID format. A nonempty local Gradle property `paypalHostedButtonId` overrides that default.
 
-**Verificación pendiente:** el enlace administrativo NO es para los donantes y no prueba
-que el identificador de administración sea igual a la ID pública del botón. El
-propietario debe abrir `https://www.paypal.com/donate/?hosted_button_id=DZW75X5SML2RJ`
-en sesión privada, confirmar que aparece una página activa de donaciones de Reqestra
-y comprobar que el beneficiario es su cuenta antes de publicar o distribuir.
+**Verification pending:** the administration URL is NOT for donors and does not prove that the administration identifier matches the public button ID. The owner must open `https://www.paypal.com/donate/?hosted_button_id=DZW75X5SML2RJ` in a private session, confirm that it displays an active Reqestra donation page, and check that the beneficiary is the intended account before publication or distribution.
 
-Si PayPal muestra una ID distinta dentro del código generado de **Compartir / Integrar**,
-hay que reemplazar el valor en `web/config.js` y el predeterminado de
-`app/build.gradle.kts`, o ejecutar `scripts/configure-paypal.sh` para
-actualizar localmente Android y Web antes de compilar.
+If PayPal displays a different ID in its generated **Share / Embed** code, replace the value in `web/config.js` and the default in `app/build.gradle.kts`, or run `scripts/configure-paypal.sh` to update Android and Web locally before building.
 
-## 1. Qué está integrado
+## 1. What is integrated
 
-- Android: opción **Apoyar proyecto · PayPal** en el menú de herramientas; pantalla explicativa y botón externo.
-- Web: sección **Donar / Ayuda** con botón externo.
-- Ambos validan un identificador **público** alfanumérico de botón alojado y generan una URL fija al host www.paypal.com.
-- Si falta la ID, la acción de pago se mantiene desactivada y muestra una explicación.
-- Las donaciones no desbloquean funcionalidades, cuentas, insignias, suscripciones, servicios ni contenido.
-- No existe infraestructura en Reqestra para capturar números de tarjeta, contraseñas PayPal, correos de donantes ni justificantes de pago.
+- Android: **Support Project · PayPal** in the tools menu, with an explanation screen and external button.
+- Web: **Donate / Support** section with an external button.
+- Both clients validate an alphanumeric **public** hosted-button ID and construct a fixed URL on `www.paypal.com`.
+- Without an ID, the payment action remains disabled and displays an explanation.
+- Donations do not unlock features, accounts, badges, subscriptions, services, or content.
+- Reqestra has no infrastructure to collect card numbers, PayPal passwords, donor emails, or payment receipts.
 
-## 2. Crear el botón con tu propia cuenta
+## 2. Create a button for your own account
 
-1. Entra en https://www.paypal.com/donate/buttons con la cuenta PayPal receptora.
-2. Crea una página o botón de donaciones, si tu cuenta/país son aptos. Las opciones, comisiones y elegibilidad varían según región y categoría de cuenta.
-3. Comprueba cuidadosamente el nombre, moneda, descripción y cuenta beneficiaria en la interfaz de PayPal.
-4. Copia el valor **hosted_button_id** del enlace generado. Es una ID pública de enlace, no una llave privada.
-5. Prueba manualmente que PayPal muestra la cuenta correcta antes de activar el botón en Reqestra.
+1. Sign in to https://www.paypal.com/donate/buttons using the intended PayPal receiving account.
+2. Create a donation page or button if your account and country are eligible. Options, fees, and eligibility vary by region and account category.
+3. Carefully review the name, currency, description, and beneficiary in PayPal.
+4. Copy the generated `hosted_button_id`. It is a public link identifier, not a private key.
+5. Manually verify that PayPal shows the correct account before enabling the Reqestra button.
 
-Enlace oficial: https://developer.paypal.com/sdk/donate/
+Official reference: https://developer.paypal.com/sdk/donate/
 
-Si PayPal genera otro tipo de enlace incompatible, no lo fuerces: adapta la integración tras revisar el enlace oficial y validarlo. Esta versión admite únicamente la modalidad hospedada donate/?hosted_button_id.
+If PayPal generates an incompatible link type, do not force it into this integration. Review the official URL before adapting and validating the integration. This version supports only the hosted `donate/?hosted_button_id` format.
 
-## Configuración conjunta desde Termux
+## Configure both clients from Termux
 
-Tras crear tu botón de donación en PayPal, configura Android y Web con **un solo comando**:
+After creating your PayPal donation button, configure Android and Web with **one command**:
 
     cd ~/ReqestraMobileHTTP
     git pull --ff-only origin main
     bash scripts/configure-paypal.sh
 
-El asistente te pedirá únicamente el valor **público** `hosted_button_id` de tu propio botón, comprobará su formato y actualizará `~/.gradle/gradle.properties` y `web/config.js`. No solicita contraseña, API key ni secretos.
+The wizard requests only the **public** `hosted_button_id` of your own button, validates its format, and updates `~/.gradle/gradle.properties` and `web/config.js`. It does not request your password, API key, or secrets.
 
-Comprueba que el enlace generado abre la página **de tu cuenta receptora** en paypal.com. Después puedes subir solo `web/config.js` a GitHub si deseas que el sitio web público ofrezca donaciones. Este script no publica un sitio ni compila la APK por sí solo.
+Verify that the generated URL opens the PayPal donation page for **your receiving account**. You may then commit only `web/config.js` to GitHub if you want your public web site to accept donations. This script neither publishes a site nor builds an APK automatically.
 
-## 3. Configurar el proyecto Android
+## 3. Configure Android
 
-En la máquina de compilación o Termux, abre el archivo local de propiedades Gradle del usuario:
+On your build computer or Termux, open the local user-level Gradle properties file:
 
     mkdir -p ~/.gradle
     nano ~/.gradle/gradle.properties
 
-Añade (usa tu ID real, NO el texto de ejemplo):
+Add your real ID (do NOT use this sample value):
 
-    paypalHostedButtonId=TU_ID_PUBLICA
+    paypalHostedButtonId=YOUR_PUBLIC_ID
 
-Luego compila:
+Then build:
 
     cd ~/ReqestraMobileHTTP
     ./gradlew --no-daemon testDebugUnitTest assembleDebug
 
-Android genera el enlace usando BuildConfig.PAYPAL_HOSTED_BUTTON_ID. No necesita PayPal SDK, client secret ni permisos Android adicionales, porque el pago se abre en el navegador del sistema.
+Android constructs the URL from `BuildConfig.PAYPAL_HOSTED_BUTTON_ID`. No PayPal SDK, client secret, or additional Android permission is required, because payment opens in the system browser.
 
-**Advertencia:** BuildConfig es parte del APK distribuido y puede leerse públicamente. Debe contener solamente la ID pública; **nunca** claves privadas, tokens OAuth o API credentials. No se recomienda incluir la ID en un archivo fuente versionado si el propietario no desea mostrarla en GitHub.
+**Warning:** BuildConfig is embedded in the distributed APK and can be read by others. Include only the public ID, **never** private keys, OAuth tokens, or API credentials. Avoid committing it to source control if the owner does not wish to publish the ID on GitHub.
 
-Si no se configura, se compila con el botón desactivado.
+Without configuration, the button is disabled.
 
-## 4. Configurar Web
+## 4. Configure the web client
 
-Edita web/config.js:
+Edit `web/config.js`:
 
     window.REQESTRA_CONFIG = Object.freeze({
-      paypalHostedButtonId: "TU_ID_PUBLICA",
+      paypalHostedButtonId: "YOUR_PUBLIC_ID",
     });
 
-Publica de nuevo web/config.js. La ID se entrega a cada navegador, ya que es pública. El botón abre una nueva pestaña al dominio oficial PayPal con rel=noopener noreferrer.
+Republish `web/config.js`. The ID is delivered to every browser because it is public. The button opens a new tab on PayPal's official domain with `rel=noopener noreferrer`.
 
-Si está sin configurar, no se abre un checkout genérico ni se solicita información financiera en Reqestra.
+Without configuration, Reqestra does not open a generic checkout or request financial information.
 
-## 5. Experiencia para el donante
+## 5. Donor experience
 
-1. Abre la sección de donaciones desde la app o la web.
-2. Lee el aviso de voluntariedad.
-3. Si hay ID configurada, pulsa **Donar con PayPal**.
-4. Verifica el dominio oficial paypal.com, el beneficiario y las condiciones.
-5. Completa o cancela el aporte en PayPal. Reqestra no conoce ni guarda su resultado.
+1. Open the donation section in the app or web client.
+2. Read the voluntary-contribution notice.
+3. If an ID is configured, choose **Donate with PayPal**.
+4. Verify the official paypal.com domain, beneficiary, and terms.
+5. Complete or cancel the contribution on PayPal. Reqestra does not learn or store the outcome.
 
-No mostrar nunca «Pago completado» únicamente porque se haya pulsado el botón. Para validar transacciones y emitir recibos haría falta una integración oficial adicional en un servidor seguro, que esta versión **no** incluye.
+Never display "Payment completed" merely because the button was selected. Verifying transactions and issuing receipts would require an additional official server-side integration, which this version **does not** include.
 
-## 6. Política de tiendas y consideraciones legales
+## 6. Store policies and legal considerations
 
-Las contribuciones a un creador sin contraprestaciones digitales pueden quedar fuera de Google Play Billing si se cumplen las condiciones publicadas por Google, pero Google Play puede evaluar la implementación concreta y sus normas pueden cambiar. Verifica las reglas actuales antes de distribuir la aplicación:
+Contributions to a creator without digital benefits may fall outside Google Play Billing when Google's published conditions are met. However, Google Play may evaluate the actual implementation and policies can change. Review the current rules before distribution:
 
 - https://support.google.com/googleplay/android-developer/answer/10281818
 - https://support.google.com/googleplay/android-developer/answer/9858738
 
-**No ofrezcas beneficios dentro de la app a cambio de donar** (por ejemplo, funcionalidades, badges o suscripciones); ello podría cambiar el tratamiento de la operación y requerir facturación de la tienda.
+**Do not offer in-app benefits in exchange for donations**, such as features, badges, or subscriptions; this may change how the transaction is classified and require store billing.
 
-No llames «donación benéfica» ni prometas deducciones fiscales si no existe acreditación aplicable. PayPal determina sus propias condiciones de elegibilidad para donaciones y el receptor debe verificar obligaciones fiscales, reglas locales y política de la tienda aplicable. Este documento es una guía técnica, no asesoría tributaria o legal.
+Do not describe contributions as "charitable donations" or promise tax deductions without appropriate accreditation. PayPal determines its own donation eligibility terms; recipients must verify applicable tax obligations, local rules, and app-store policies. This document is technical guidance, not legal or tax advice.
 
-## 7. Seguridad y pruebas
+## 7. Security and testing
 
-- [ ] URL comienza exactamente por https://www.paypal.com/donate/.
-- [ ] La ID contiene solo letras o números, 6 a 64 caracteres.
-- [ ] No se puede introducir una URL externa arbitraria desde la interfaz.
-- [ ] Sin ID, el botón queda desactivado en Android y Web.
-- [ ] El botón no solicita credenciales o tarjetas en Reqestra.
-- [ ] La web usa target=_blank con rel=noopener noreferrer.
-- [ ] El modo sin donaciones conserva todas las características.
-- [ ] La cuenta receptora se comprueba visualmente en PayPal antes de distribuir.
-- [ ] Se verifican las políticas actuales de Google Play y PayPal para el mercado objetivo.
+- [ ] The URL starts exactly with `https://www.paypal.com/donate/`.
+- [ ] The ID contains only letters or digits, 6–64 characters.
+- [ ] The UI cannot supply an arbitrary external payment URL.
+- [ ] Without an ID, the button is disabled on Android and Web.
+- [ ] Reqestra does not ask donors for credentials or card numbers.
+- [ ] The web client uses `target=_blank` with `rel=noopener noreferrer`.
+- [ ] All features remain available when donations are disabled.
+- [ ] The receiving account is visually verified on PayPal before distribution.
+- [ ] Current Google Play and PayPal policies are reviewed for the target market.
 
-## 8. Enlaces de referencia
+## 8. References
 
-- PayPal, creación de botones: https://www.paypal.com/donate/buttons
+- PayPal button creation: https://www.paypal.com/donate/buttons
 - PayPal Donate SDK: https://developer.paypal.com/sdk/donate/
-- Google Play, aclaraciones sobre contribuciones: https://support.google.com/googleplay/android-developer/answer/10281818
+- Google Play guidance on contributions: https://support.google.com/googleplay/android-developer/answer/10281818
 
-No subas credenciales PayPal ni intentes integrarlas con una URL de botón alojado.
+Do not upload PayPal credentials or attempt to pass them through a hosted-button URL.
