@@ -10,6 +10,10 @@ imr :: v3.5.1
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
 
+## Revisión de colores de menús — Android y Web
+
+Los desplegables Android de método HTTP, tipo de cuerpo, entorno y colección de pruebas usan explícitamente la superficie del tema y su color de texto correspondiente. El selector de idioma y el panel **Más** ya disponían de colores temáticos. Se conserva la identidad visual de Reqestra en claro y oscuro, sin modificar la lógica HTTP. La web mantiene su sistema CSS independiente; consultar [sistema visual](docs/DESIGN_SYSTEM.md) y [guía web](docs/WEB_SETUP.md). La verificación visual en dispositivo sigue pendiente.
+
 ## Reqestra 3.5.1 — interfaz y entrega
 
 - **Web:** el botón Donar utiliza un icono de corazón **SVG** de 20 × 20 px,
