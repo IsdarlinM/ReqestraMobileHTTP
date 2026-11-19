@@ -1,16 +1,16 @@
-# Reqestra 3.3 — Arquitectura, datos y seguridad
+# Reqestra 3.3 — Architecture, Data, and Security
 
-## 1. Visión general
+## 1. Overview
 
-Reqestra consta de **dos clientes diferentes** que comparten funciones, convenciones visuales y sintaxis de variables, pero no una base de código ni un almacén de secretos común:
+Reqestra consists of **two distinct clients** sharing functionality, visual conventions, and variable syntax, but not a codebase or common secret store:
 
-- **Android:** Kotlin + Jetpack Compose, OkHttp, AndroidSessionRepository, WorkspaceStore y Android Keystore.
-- **Web:** HTML semántico, CSS adaptable, JavaScript ES modules, Fetch API, WebCrypto, Service Worker restringido y gateway local opcional en Node.js 20+.
-- **PayPal:** enlace externo a una página de donación alojada por PayPal. No hay integración de órdenes/captura/webhooks.
+- **Android:** Kotlin, Jetpack Compose, OkHttp, AndroidSessionRepository, WorkspaceStore, and Android Keystore.
+- **Web:** semantic HTML, responsive CSS, JavaScript ES modules, Fetch API, WebCrypto, a restricted service worker, and an optional Node.js 20+ local gateway.
+- **PayPal:** an external link to a PayPal-hosted donation page. There is no order, capture, or webhook integration.
 
-Ningún cliente exige cuentas de Reqestra, backend centralizado, base de datos remota o telemetría.
+Neither client requires Reqestra accounts, a centralized backend, a remote database, or telemetry.
 
-## 2. Estructura del repositorio
+## 2. Repository structure
 
     app/src/main/java/com/imr/reqestra/
       core/validation/RequestValidator.kt
@@ -27,18 +27,18 @@ Ningún cliente exige cuentas de Reqestra, backend centralizado, base de datos r
       presentation/ReqestraApp.kt
       presentation/support/SupportScreen.kt
     web/
-      index.html             UI accesible y navegación
+      index.html             Accessible UI and navigation
       styles.css             Material Studio palette
-      config.js              ID pública opcional de PayPal
-      app.mjs                Estado, acciones y coordinación
-      lib/core.mjs           Query, variables, OpenAPI, cURL, descubrimiento
-      lib/ui.mjs             Renderizado DOM seguro con textContent
-      lib/transport.mjs      Fetch directo y gateway
-      lib/vault.mjs          AES-256-GCM de workspace
-      server.mjs             Gateway local de origen restringido
-      sw.js                  Cache única de interfaz
-      package.json           scripts npm (sin dependencias externas)
-      tests/                 pruebas Node
+      config.js              Optional public PayPal ID
+      app.mjs                State, actions, and coordination
+      lib/core.mjs           Query, variables, OpenAPI, cURL, discovery
+      lib/ui.mjs             Safe DOM rendering using textContent
+      lib/transport.mjs      Direct Fetch and gateway
+      lib/vault.mjs          AES-256-GCM workspace encryption
+      server.mjs             Origin-restricted local gateway
+      sw.js                  App-shell-only cache
+      package.json           npm scripts (no external dependencies)
+      tests/                 Node tests
     docs/
       FEATURES_AND_USE_CASES.md
       WEB_SETUP.md
@@ -46,123 +46,123 @@ Ningún cliente exige cuentas de Reqestra, backend centralizado, base de datos r
       ARCHITECTURE_AND_SECURITY.md
       TEST_PLAN.md
 
-## 3. Flujo de envío
+## 3. Request flow
 
 ### Android
 
-Usuario → Compose WorkspaceScreen → MainViewModel → RequestParameterizer → RequestValidator → HttpEngine/OkHttp → ResponseSnapshot → Inspector/Historial.
+User → Compose WorkspaceScreen → MainViewModel → RequestParameterizer → RequestValidator → HttpEngine/OkHttp → ResponseSnapshot → Inspector/History.
 
-Los headers y cookies de sesión se aplican por origen. Reqestra limita los tamaños y controla redirecciones, TLS y transporte mediante OkHttp.
+Session headers and cookies are applied per origin. Reqestra enforces size limits and controls redirects, TLS, and transport via OkHttp.
 
-### Web directa
+### Direct web
 
-Usuario → app.mjs → core.parametrizeDraft → core.validateDraft → Fetch del navegador → transport.readLimited → Inspector/Historial.
+User → app.mjs → core.parametrizeDraft → core.validateDraft → Browser Fetch → transport.readLimited → Inspector/History.
 
-Browser Fetch respeta obligatoriamente CORS, políticas de cookies, certificados TLS, mixed content y headers prohibidos. Los errores se muestran como fallos de red/CORS sin inventar estados HTTP no disponibles.
+Browser Fetch must obey CORS, cookie policies, TLS certificate validation, mixed-content restrictions, and forbidden-header rules. Errors appear as network/CORS failures rather than invented HTTP status codes.
 
-### Web con gateway
+### Web with gateway
 
-Usuario → app.mjs → Web Fetch same-origin POST /api/execute → web/server.mjs → allowlist exacta + DNS filtrado y fijado → Node HTTPS/HTTP → respuesta JSON limitada → Inspector.
+User → app.mjs → same-origin Web Fetch POST /api/execute → web/server.mjs → exact allowlist + DNS filtering and pinning → Node HTTPS/HTTP → limited JSON response → Inspector.
 
-- La solicitud requiere interacción del usuario.
-- El gateway no inicia exploraciones por sí solo ni hace cron jobs.
-- Se mantiene desconectado si REQESTRA_ALLOWED_ORIGINS está vacío.
-- Sólo escucha en loopback cuando tiene permitido ejecutar solicitudes.
-- Se valida el origen completo (esquema, host, puerto) antes de realizar DNS.
-- Se obtiene DNS previamente y se fija la dirección IP validada para la conexión; se rechazan rangos reservados por defecto.
-- No se siguen redirects desde Node.
-- El servidor evita imprimir URLs, headers, body y tokens en los logs.
-- Sólo 60 solicitudes/minuto por cliente, dos conexiones simultáneas y limites de payload.
+- Requests require user interaction.
+- The gateway does not initiate discovery or scheduled jobs by itself.
+- It remains disabled if `REQESTRA_ALLOWED_ORIGINS` is empty.
+- When authorized to forward requests, it listens on loopback only.
+- The entire origin (scheme, host, port) is validated before DNS lookup.
+- DNS is resolved first and the validated IP is pinned for connection; reserved ranges are rejected by default.
+- Node does not follow redirects.
+- The server avoids logging URLs, headers, bodies, or tokens.
+- Limits: 60 requests/minute per client, two concurrent connections, and bounded payloads.
 
-**Limitaciones:** no es un gateway de producción, no incluye autenticación a múltiples usuarios, protección avanzada contra proxies aguas arriba ni persistencia de cookies. No debe exponerse a Internet ni colocarse detrás de un reverse proxy público sin una revisión de arquitectura completa. El acceso de usuarios maliciosos con control local al proceso podría usar los orígenes permitidos.
+**Limitations:** this is not a production gateway. It has no multiuser authentication, advanced upstream proxy protection, or cookie persistence. Do not expose it to the Internet or place it behind a public reverse proxy without a complete architecture review. Malicious users with local access to the process could target configured allowed origins.
 
-## 4. Modelo de datos
+## 4. Data model
 
 ### RequestDraft
 
-URL, método, customMethod, queryParamsText, headersText, cookiesText, bodyMode, contentType, body, timeoutSeconds, allowCleartext, followRedirects, forceHttp1 y configuración de sesión.
+URL, method, customMethod, queryParamsText, headersText, cookiesText, bodyMode, contentType, body, timeoutSeconds, allowCleartext, followRedirects, forceHttp1, and session configuration.
 
 ### SavedRequest
 
-ID, nombre, nombre de colección, RequestDraft original sin expandir las variables. Se usan IDs aleatorios.
+ID, name, collection name, original RequestDraft with variables unexpanded. Uses random IDs.
 
 ### Environment
 
-Nombre + mapa de variables. El mapa puede contener secretos y debe permanecer cifrado cuando se guarda.
+Name and variable map. The map may contain secrets and must remain encrypted when persisted.
 
 ### Workspace
 
-Lista de solicitudes, entornos, entorno activo, headers persistentes por origen en web. En Android el repositorio de sesiones se almacena separadamente en Keystore.
+List of requests, environments, active environment, and origin-scoped persistent headers on the web. Android stores its session repository separately using Keystore.
 
 ### HistoryEntry
 
-ID, método, URL redactada, status, duración y timestamp. **No** persiste headers ni body ni response completa.
+ID, method, redacted URL, status, duration, and timestamp. **No** headers, body, or complete response are persisted.
 
 ### Response
 
-Status, headers expuestos, durationMs, body limitado, indicador de truncamiento y solicitud saneada. En web se conserva solo en memoria.
+Status, exposed headers, durationMs, bounded body, truncation indicator, and sanitized request. On the web, this is retained only in memory.
 
-## 5. Almacenamiento cifrado
+## 5. Encrypted storage
 
 ### Android
 
-AES-GCM y Android Keystore mediante SecurePreferences. No hay sincronización multi-dispositivo. Un desinstalado o pérdida de clave puede hacer inaccesibles los datos.
+AES-GCM and Android Keystore through SecurePreferences. There is no cross-device synchronization. Uninstalling the app or losing the key may render data inaccessible.
 
 ### Web
 
-El usuario debe crear un espacio de trabajo cifrado con contraseña (mínimo diez caracteres). Se usa WebCrypto:
+The user creates a password-protected workspace (minimum ten characters), using WebCrypto:
 
-1. Generar salt aleatorio de 16 bytes.
-2. PBKDF2-SHA256, 260 000 iteraciones.
-3. Derivar clave AES-256-GCM no exportable.
-4. Generar nonce de 12 bytes por guardado.
-5. Cifrar JSON de borrador, colecciones, entornos, sesiones persistentes e historial.
-6. Guardar salt, nonce y ciphertext en localStorage.
+1. Generate a random 16-byte salt.
+2. Run PBKDF2-SHA256 for 260,000 iterations.
+3. Derive a non-exportable AES-256-GCM key.
+4. Generate a 12-byte nonce per save.
+5. Encrypt JSON containing draft, collections, environments, persistent sessions, and history.
+6. Store salt, nonce, and ciphertext in localStorage.
 
-No se almacena contraseña ni clave de descifrado en disco deliberadamente. La app no implementa recuperación de passphrase. Bloquear/recargar obliga a desbloquear.
+Neither the password nor decryption key is intentionally stored on disk. There is no passphrase recovery. Locking or reloading requires unlocking again.
 
-**No confundir cifrado en reposo con protección contra XSS o malware activo**: mientras el espacio esté desbloqueado, JavaScript legítimo tiene acceso a datos en memoria. Utiliza un navegador confiable y verifica extensiones.
+**Encryption at rest is not protection against XSS or active malware.** While the vault is unlocked, legitimate JavaScript can access data in memory. Use a trusted browser and review its extensions.
 
-## 6. Modelo de amenazas y medidas
+## 6. Threat model and mitigations
 
-| Riesgo | Medida | Riesgo residual |
+| Risk | Mitigation | Residual risk |
 |---|---|---|
-| Secretos en historial | URL y headers redactados, sin body persistente | Body mostrado puede contener secretos |
-| Lectura del almacenamiento web | AES-GCM con clave derivada de passphrase | Extensión/XSS con pestaña desbloqueada |
-| SSRF desde gateway | Allowed origins exactos, DNS filtrado, IP fijada, loopback | Operador puede habilitar IP privada explícitamente |
-| Abuso de gateway público | Sin publicación pública; bind loopback | Otros procesos locales pueden alcanzarlo |
-| Lectura de recursos locales | No hay exploración de archivos ni file:// | Usuario del equipo conserva control local |
-| Exceso de tráfico | Máx. 24/20, 1 solicitud/segundo; gateway 60/min | Usuario puede ejecutar varias sesiones repetidamente |
-| Desbordamiento de memoria | Request 5 MiB, response 4 MiB | UI puede consumir memoria en dispositivos pequeños |
-| Código externo en preview | iframe sandbox + CSP, WebView Android aislada | HTML complejo puede no renderizarse |
-| Comandos cURL maliciosos | Interpretación como texto, sin shell, rechaza -k | Importador parcial |
-| Fugas vía Referer | Referrer-Policy no-referrer en gateway | En hosting estático depende de cabeceras del proveedor |
-| Manipulación de destino PayPal | URL https fija + ID alfanumérica | Debes comprobar manualmente el beneficiario real |
-| CORS / cookies | Políticas estándar del navegador | Limitación funcional inherente |
+| Secrets in history | Redacted URL and headers; no persisted body | Displayed bodies may contain secrets |
+| Web storage disclosure | AES-GCM with passphrase-derived key | Extension/XSS while the tab is unlocked |
+| Gateway SSRF | Exact origin allowlist, DNS filtering, pinned IP, loopback | Operator can explicitly allow private IPs |
+| Public gateway abuse | No public deployment; loopback binding | Other local processes may connect |
+| Local resource access | No file enumeration or file:// | Device owner retains local control |
+| Excess traffic | Up to 24/20 requests, one per second; gateway 60/min | User may repeat sessions |
+| Memory exhaustion | 5 MiB requests and 4 MiB responses | UI memory usage on small devices |
+| External code in preview | Sandbox iframe + CSP; isolated Android WebView | Complex HTML may not render |
+| Malicious cURL commands | Parse as text, no shell execution, reject -k | Partial import support |
+| Referer leakage | Gateway Referrer-Policy: no-referrer | Static host headers depend on provider |
+| PayPal destination tampering | Fixed HTTPS URL and alphanumeric ID | Owner must verify actual beneficiary |
+| CORS/cookies | Standard browser policies | Inherent feature limitations |
 
-### Cabeceras CSP del servidor local
+### Local server CSP headers
 
-En Node se sirven cabeceras Content-Security-Policy, X-Content-Type-Options, X-Frame-Options y Referrer-Policy. Si publicas estáticamente, configura cabeceras equivalentes en tu proveedor. No habilites scripts inline arbitrarios.
+Node serves Content-Security-Policy, X-Content-Type-Options, X-Frame-Options, and Referrer-Policy headers. When publishing as a static site, configure equivalent headers with the host. Do not allow arbitrary inline scripts.
 
-### Cache Service Worker
+### Service worker cache
 
-La PWA utiliza una lista cerrada de archivos de la interfaz y estrategia de actualización network-first; no cachea /api, URLs remotas, headers ni respuestas del cliente HTTP. El almacenamiento de secretos corresponde exclusivamente al Vault cifrado.
+The PWA uses a closed list of UI assets and a network-first update strategy; it does not cache /api, remote URLs, headers, or HTTP client responses. Secrets are stored only in the encrypted vault.
 
-## 7. Descubrimiento acotado
+## 7. Bounded discovery
 
-- No hay listas internas de diccionario, recursión, escaneos de IP ni intentos de evasión de controles.
-- Primero se hace un baseline GET y después las rutas/parámetros/métodos candidatos del mismo origen.
-- Se consideran indicios de diferencia solo estado y tamaño comparados con baseline; es una heurística imperfecta.
-- GET, HEAD, OPTIONS vienen seleccionados por defecto. Los métodos que pueden modificar recursos exigen habilitación y confirmación adicionales.
-- La cancelación es best-effort: no puede garantizar que el servidor no haya procesado ya una mutación.
+- No internal wordlists, recursion, IP scanning, or attempts to evade access controls.
+- A baseline GET is followed by candidate paths, parameters, and methods from the same origin.
+- Differences in status and size compared with the baseline are only imperfect heuristics.
+- GET, HEAD, and OPTIONS are selected by default. Potentially state-changing methods require additional enablement and confirmation.
+- Cancellation is best-effort: it cannot guarantee that a server has not already applied a mutation.
 
-## 8. Donaciones y compliance
+## 8. Donations and compliance
 
-Un botón PayPal hosted_button_id no es un secret de API. La URL abre PayPal externamente y no es evidencia de una donación completada. No hay intercambio de información financiera entre Reqestra y PayPal salvo la navegación del donante por su propia decisión.
+A PayPal `hosted_button_id` is not an API secret. The URL opens PayPal externally and is not evidence of a completed donation. Reqestra does not exchange financial information with PayPal; donors navigate there voluntarily.
 
-Google Play puede exigir Play Billing si una contribución permite acceder a bienes, funcionalidades o servicios digitales. Reqestra **no** otorga beneficios por donar. Los cambios futuros a los incentivos o a la política requieren revisión. Consulta docs/PAYPAL_DONATIONS.md.
+Google Play may require Play Billing if contributions unlock digital goods, features, or services. Reqestra **does not** grant benefits for donations. Future changes to incentives or store policies require review. See [PayPal donations](PAYPAL_DONATIONS.md).
 
-## 9. Pruebas y release
+## 9. Testing and release
 
 ### Android
 
@@ -175,8 +175,8 @@ Google Play puede exigir Play Billing si una contribución permite acceder a bie
     npm test
     npm start
 
-Verificar CORS, TLS, restricciones del gateway, persistencia cifrada, cancelación, métodos con efectos y botones PayPal mediante pruebas manuales. Los tests no son una auditoría integral de seguridad.
+Manually verify CORS, TLS, gateway restrictions, encrypted persistence, cancellation, state-changing methods, and PayPal buttons. Tests are not a comprehensive security audit.
 
-## 10. Desarrollo futuro
+## 10. Future development
 
-La paridad real de red entre Android y Web en un servicio alojado exigiría backend multiusuario con autenticación, scopes ACL, DNS pinning, observabilidad saneada, cuotas por cuenta, protección CSRF, TLS y revisión de privacidad. Estos elementos no se deben confundir con el gateway local actual. La sincronización remota de secretos requeriría un diseño criptográfico independiente y consentimiento explícito.
+True network parity between Android and a remotely hosted web service would require a multiuser backend with authentication, scoped ACLs, DNS pinning, sanitized observability, account quotas, CSRF protection, TLS, and privacy review. Do not confuse these requirements with the existing local gateway. Remote secret synchronization would require separate cryptographic design and explicit consent.
