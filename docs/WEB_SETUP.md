@@ -1,13 +1,13 @@
-# Reqestra Web 3.3 — Instalación, ejecución y publicación
+# Reqestra Web 3.3 — Installation, Operation, and Deployment
 
-## Requisitos
+## Requirements
 
-- Navegador actual con Fetch, módulos ES, WebCrypto y JavaScript habilitado.
-- Para servir localmente: Node.js 20 o superior. Sin paquetes NPM de terceros.
-- Para cifrar espacio persistente: localhost o sitio HTTPS (contexto seguro).
-- Para publicar: servidor web estático HTTPS. El gateway no está disponible en hosting estático.
+- A modern browser with Fetch, ES modules, WebCrypto, and JavaScript enabled.
+- For local hosting: Node.js 20 or later, without third-party NPM packages.
+- For encrypted persistent storage: localhost or an HTTPS site (secure context).
+- For publication: static HTTPS hosting. The gateway is not available on static hosting.
 
-## 1. Iniciar en PC/Linux/macOS
+## 1. Start on PC/Linux/macOS
 
     git clone https://github.com/IsdarlinM/ReqestraMobileHTTP.git
     cd ReqestraMobileHTTP/web
@@ -15,22 +15,22 @@
     npm test
     npm start
 
-Abre **http://127.0.0.1:5173**.
+Open **http://127.0.0.1:5173**.
 
-Para otro puerto:
+For another port:
 
     PORT=4173 node server.mjs
 
-También puedes servir la web de manera puramente estática sin gateway, por ejemplo:
+You can also serve the web client as a purely static site, without the gateway:
 
     cd web
     python3 -m http.server 5173 --bind 127.0.0.1
 
-Abre http://127.0.0.1:5173. El motor Web directo requiere que la API permita peticiones CORS desde ese origen. La página no envía peticiones HTTP a APIs hasta que pulses los botones de envío o exploración.
+Open http://127.0.0.1:5173. The direct web transport requires the destination API to allow CORS requests from this origin. The page does not send API requests until you select a Send or Explore action.
 
-## 2. Ejecutar desde Android/Termux
+## 2. Run on Android/Termux
 
-En el directorio de tu clon:
+From your cloned repository:
 
     pkg install nodejs
     cd ~/ReqestraMobileHTTP
@@ -38,121 +38,121 @@ En el directorio de tu clon:
     cd web
     node server.mjs
 
-En el navegador del mismo dispositivo abre http://127.0.0.1:5173. WebCrypto está disponible en localhost en navegadores compatibles. Para la app Android nativa compila con el Gradle wrapper y el SDK Android configurados.
+Open http://127.0.0.1:5173 in a browser on the same device. Compatible browsers support WebCrypto on localhost. For the native Android app, build with the Gradle wrapper and a configured Android SDK.
 
-## 3. Modo navegador
+## 3. Browser mode
 
-Es el modo predeterminado; no necesita servidor de API Reqestra. Envía solicitudes por Fetch directamente desde el navegador. Limitaciones obligatorias:
+This is the default mode and requires no Reqestra API server. Requests are sent directly through Fetch. Mandatory limitations include:
 
-- CORS del servidor de destino.
-- El navegador controla Cookie, Host, Content-Length, Connection, Origin y otros headers.
-- Los certificados TLS deben ser válidos para el navegador.
-- Las cookies HttpOnly y algunos headers de respuesta no son visibles a JavaScript.
-- HTTP desde páginas HTTPS puede estar bloqueado por Mixed Content.
-- Algunos status de redirecciones no seguidas se presentan como opaqueredirect.
-- Force HTTP/1.1 no está disponible.
-- Cada navegador puede imponer además políticas de privacidad, CSP y red.
+- The target server's CORS policy.
+- Browser-controlled headers such as Cookie, Host, Content-Length, Connection, and Origin.
+- TLS certificates must be valid for the browser.
+- HttpOnly cookies and some response headers are unavailable to JavaScript.
+- HTTPS pages may block HTTP requests as mixed content.
+- Some manually intercepted redirect results appear as `opaqueredirect`.
+- Forcing HTTP/1.1 is not available.
+- Browsers may impose additional privacy, CSP, and networking policies.
 
-Si la API está en tu control, permite explícitamente en CORS el origen de Reqestra Web y los headers/métodos que vas a utilizar. No uses * junto con credenciales y no deshabilites CORS del navegador por comodidad.
+If you own the API, explicitly allow the Reqestra Web origin and the required headers/methods in its CORS configuration. Do not combine wildcard origins with credentials or disable browser CORS security as a shortcut.
 
-## 4. Gateway privado opcional
+## 4. Optional private gateway
 
-El gateway implementado en web/server.mjs sirve la interfaz y permite solicitudes HTTP del navegador hacia destinos declarados de antemano por ti.
+The gateway in `web/server.mjs` serves the interface and relays browser HTTP requests to destinations that you explicitly configure in advance.
 
-**El gateway sólo debe ejecutarse en loopback, NO en Internet pública.** No implementa login, roles, control multiusuario ni un sistema de autenticación para exponerlo remotamente. Cuando existen orígenes permitidos, el servidor rechaza bind fuera de localhost.
+**Run the gateway only on loopback, NOT on the public Internet.** It has no login, roles, multiuser authorization, or authentication system for remote exposure. When allowed origins are configured, the server refuses to bind outside localhost.
 
-Ejemplo para tu API de desarrollo:
+Example for your development API:
 
     cd web
     REQESTRA_ALLOWED_ORIGINS=https://api.example.com node server.mjs
 
-Para varios orígenes exactos (incluye esquema y puerto):
+Multiple exact origins (including scheme and port):
 
     REQESTRA_ALLOWED_ORIGINS=https://api1.example.com,https://api2.example.com:8443 node server.mjs
 
-Abre http://127.0.0.1:5173 y selecciona **Motor de red → Gateway local autorizado** en Estudio.
+Open http://127.0.0.1:5173 and choose **Network Engine → Authorized Local Gateway** in Studio.
 
-Para laboratorio privado con IP de loopback o una IP interna se requiere una segunda activación explícita:
+A private lab using a loopback or internal IP requires a second explicit opt-in:
 
     REQESTRA_ALLOWED_ORIGINS=http://127.0.0.1:8080 REQESTRA_ALLOW_PRIVATE_TARGETS=1 node server.mjs
 
-Sólo utilízalo en un laboratorio propio. El valor 1 desactiva el bloqueo de direcciones privadas, incluso cuando el host resuelve a ellas.
+Only use this in your own lab. Setting the option to 1 disables private-address blocking, including for hostnames that resolve to private addresses.
 
-### Límites del gateway
+### Gateway restrictions
 
-- Requiere allowlist de **origen exacto** (esquema, host y puerto).
-- Resuelve el destino y fija la IP validada durante el establecimiento de la conexión para limitar rebinding DNS.
-- Bloquea por defecto loopback, redes privadas, link-local y rangos especiales.
-- No sigue redirecciones HTTP.
-- Sólo admite GET, HEAD, OPTIONS, POST, PUT, PATCH y DELETE.
-- No permite redefinir Host ni headers de framing.
-- Límite de cuerpo 5 MiB; límite de lectura de respuesta 4 MiB; timeout 1-120 segundos.
-- Máximo 60 solicitudes por minuto por IP cliente y 2 simultáneas.
-- No almacena tokens, cookies, request bodies ni resultados en disco.
-- El usuario configura todos los orígenes autorizados. Nunca configurar un servicio genérico que acepte cualquier host.
-- Mantiene datos confidenciales en la memoria del proceso durante una solicitud; para acceso remoto sería indispensable TLS, autenticación, auditoría y controles de autorización adicionales.
+- Requires an allowlist of **exact origins** (scheme, host, and port).
+- Resolves DNS and pins the validated IP during connection establishment to limit DNS rebinding.
+- Blocks loopback, private, link-local, and special-purpose ranges by default.
+- Does not follow HTTP redirects.
+- Supports only GET, HEAD, OPTIONS, POST, PUT, PATCH, and DELETE.
+- Does not permit overriding Host or framing headers.
+- Request-body limit: 5 MiB; response-read limit: 4 MiB; timeout: 1–120 seconds.
+- At most 60 requests per minute per client IP and 2 simultaneous requests.
+- Does not persist tokens, cookies, request bodies, or results to disk.
+- The operator must configure every authorized origin; never deploy a generic relay that accepts any host.
+- Confidential data stays in process memory while a request is handled. Remote access would require additional TLS, authentication, auditing, and authorization controls.
 
-El gateway sólo sustituye algunas limitaciones del navegador para pruebas en equipo propio. No replica completamente las sesiones de OkHttp ni funciona como un servicio multiusuario.
+The gateway works around some browser restrictions for testing your own services. It does not completely reproduce OkHttp sessions and is not a multiuser service.
 
-## 5. Almacenamiento cifrado en la web
+## 5. Encrypted web storage
 
-En Colecciones pulsa **Crear espacio cifrado** e introduce una contraseña larga. Se deriva la clave con PBKDF2-SHA256 (260000 iteraciones) y se cifran borrador, entornos, colecciones, headers persistentes e historial redactado con AES-256-GCM de WebCrypto. La contraseña no se transmite a servidor y no se incluye en el archivo cifrado.
+In Collections, select **Create Encrypted Vault** and enter a long password. The key is derived with PBKDF2-SHA256 (260,000 iterations), and draft requests, environments, collections, persistent headers, and redacted history are encrypted with WebCrypto AES-256-GCM. The password is not sent to a server or stored in the encrypted file.
 
-- Si no creas un espacio, trabajas en memoria temporal.
-- Después de recargar, pulsa Desbloquear con la misma contraseña.
-- Puedes descargar e importar un respaldo .enc.json cifrado.
-- Importar reemplaza el espacio del navegador actual; guarda un respaldo previo.
-- Si pierdes la contraseña o se dañan los datos cifrados, no hay recuperación.
-- Los datos Android cifrados con Keystore no pueden importarse automáticamente.
-- El navegador, las extensiones y el equipo deben ser de confianza.
+- Without a vault, work is temporary and held in memory.
+- After reloading, select **Unlock** and enter the same password.
+- You can download or import an encrypted `.enc.json` backup.
+- Importing replaces the current browser workspace; back up your existing data first.
+- Lost passwords or damaged encrypted data cannot be recovered.
+- Android Keystore-encrypted data cannot be imported automatically.
+- Trust the browser, its extensions, and the device.
 
-## 6. Donaciones PayPal en la web
+## 6. PayPal donations on the web
 
-El propietario crea un botón alojado desde la interfaz de PayPal:
+The project owner creates a hosted donation button through PayPal:
 
 https://www.paypal.com/donate/buttons
 
-Elige la cuenta receptora correcta, completa la configuración y localiza el identificador público **hosted_button_id**. No inventes una ID ni copies un correo secreto o credenciales de PayPal.
+Select the correct receiving account, complete the configuration, and find the public **hosted_button_id**. Do not invent an ID or include a secret email address or PayPal credentials.
 
-Edita web/config.js y establece solamente la ID pública:
+Edit `web/config.js` and set only the public ID:
 
     window.REQESTRA_CONFIG = Object.freeze({
-      paypalHostedButtonId: "TU_ID_PUBLICA",
+      paypalHostedButtonId: "YOUR_PUBLIC_ID",
     });
 
-Actualiza/redistribuye el archivo web/config.js. La sección **Donar / Ayuda** activará un enlace externo que abre:
+Redistribute `web/config.js`. The **Donate / Support** section then enables an external link to:
 
-    https://www.paypal.com/donate/?hosted_button_id=TU_ID_PUBLICA
+    https://www.paypal.com/donate/?hosted_button_id=YOUR_PUBLIC_ID
 
-Si la ID no está presente o no supera validación alfanumérica, el botón queda inactivo. El dinero lo procesa PayPal, no el frontend Reqestra. Consulta también docs/PAYPAL_DONATIONS.md para requisitos de distribución.
+If the ID is missing or fails alphanumeric validation, the action stays disabled. PayPal, not the Reqestra frontend, processes the payment. See `docs/PAYPAL_DONATIONS.md` for distribution requirements.
 
-## 7. Publicar como sitio HTTPS
+## 7. Publish as an HTTPS site
 
-Se puede publicar el contenido de **web/** en GitHub Pages, Netlify, Cloudflare Pages u otro alojamiento estático, apuntando la raíz de publicación a web/. Ajusta rutas según el proveedor; los recursos están escritos relativos a la carpeta. Utiliza HTTPS para habilitar almacenamiento cifrado.
+The contents of **web/** can be deployed on GitHub Pages, Netlify, Cloudflare Pages, or another static host, with `web/` as the publication root. Adjust paths for the provider; resources are referenced relative to that folder. Use HTTPS for encrypted storage.
 
-En hosting estático sólo existe motor navegador. No añadas credenciales, llaves de PayPal ni tokens al archivo config.js o al repositorio. La ID pública de botón alojado sí puede ser visible. No hay API de pagos, base de datos remota ni webhook en el sitio.
+Static hosting supports browser mode only. Do not put credentials, PayPal secret keys, or tokens in `config.js` or the repository. The public hosted-button ID may be visible. There is no payment API, remote database, or webhook on the site.
 
-**Importante:** GitHub Pages no ejecuta web/server.mjs; un sitio público no podrá utilizar el gateway privado a menos que lo despliegues por separado detrás de una arquitectura de autorización diseñada y auditada para ello (no incluida).
+**Important:** GitHub Pages does not run `web/server.mjs`. A public site cannot use the private gateway unless it is deployed separately behind an authorization architecture designed and audited for that purpose (not included).
 
-La PWA puede instalarse en navegadores compatibles. El service worker cachea únicamente la interfaz; evita interceptar las peticiones HTTP ni almacenar respuestas de APIs.
+Compatible browsers can install the PWA. Its service worker caches the app shell only; it does not intercept HTTP test requests or store API responses.
 
-## 8. Comprobar que funciona
+## 8. Verify operation
 
     cd web
     npm run check
     npm test
     npm start
 
-Revisa manualmente con el navegador: Estudio, Query, variable faltante, validación de URL, Importación cURL, OpenAPI, colección, sesión por origen, historial, pruebas, exploración, cancelación, vista previa y donación configurada. Los tests de Node no reemplazan pruebas de navegador para CORS, Service Workers o accesibilidad.
+Manually inspect Studio, Query, missing variables, URL validation, cURL import, OpenAPI, collections, origin-scoped sessions, history, tests, discovery, cancellation, preview, and configured donations. Node tests do not replace browser tests for CORS, service workers, or accessibility.
 
 ## 9. Troubleshooting
 
-- Error Fetch/CORS: revisa Access-Control-Allow-Origin de tu API. No significa automáticamente que la API esté caída.
-- Error TLS: el navegador rechaza certificado incorrecto; no se implementa modo insecure.
-- No puedo escribir Cookie manual: utiliza gateway local autorizado o cookies gestionadas por el navegador.
-- Gateway desactivado: define REQESTRA_ALLOWED_ORIGINS, reinicia el servidor y vuelve a seleccionar Gateway.
-- Origen no permitido: añade esquema/host/puerto exactos a la allowlist; no abras a todos los destinos.
-- WebCrypto no disponible: usa HTTPS o localhost.
-- No puedo desbloquear: verifica contraseña y archivo de backup; no existe recuperación.
-- PayPal desactivado: configura hosted_button_id público y vuelve a publicar web/config.js.
-- La PWA muestra versión antigua: asegúrate de publicar todos los archivos y recargar con conexión.
+- Fetch/CORS error: check your API's Access-Control-Allow-Origin. The error does not necessarily mean the API is offline.
+- TLS error: the browser rejected the certificate; no insecure mode is implemented.
+- Cannot write a manual Cookie header: use the authorized local gateway or browser-managed cookies.
+- Gateway disabled: set REQESTRA_ALLOWED_ORIGINS, restart the server, and select Gateway again.
+- Origin not permitted: add the exact scheme/host/port to the allowlist; do not allow every destination.
+- WebCrypto unavailable: use HTTPS or localhost.
+- Cannot unlock: verify the password and backup; recovery is not supported.
+- PayPal disabled: configure the public hosted_button_id and republish web/config.js.
+- PWA shows an old version: publish every file and reload while online.
