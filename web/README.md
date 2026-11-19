@@ -1,89 +1,72 @@
 # Reqestra Web 3.5.1
 
-Cliente web multilingüe de Reqestra: Estudio HTTP, query/variables, colecciones cifradas, OpenAPI/cURL, sesiones por origen, pruebas, exploración acotada, historial, inspector, vista previa HTML aislada y donaciones PayPal configurables.
+Reqestra's multilingual web client includes an HTTP Studio, query parameters and variables, encrypted collections, OpenAPI/cURL, origin-scoped sessions, tests, bounded discovery, history, inspector, isolated HTML preview, and configurable PayPal donations.
 
-## Iniciar
+## Getting started
 
-Requiere Node 20 o superior:
+Requires Node.js 20 or later:
 
     cd web
     npm run check
     npm test
     npm start
 
-Abre http://127.0.0.1:5173.
+Open http://127.0.0.1:5173.
 
-## Modalidades de envío
+## Request transport modes
 
-**Navegador:** Fetch directo; está sujeto a CORS, cookies, políticas TLS y headers prohibidos.
+**Browser:** Direct Fetch, subject to CORS, browser cookies, TLS policies, and forbidden request headers.
 
-**Gateway local privado:** habilita manualmente una lista de orígenes de API bajo tu control:
+**Private local gateway:** Manually configure an allowlist of API origins under your control:
 
     REQESTRA_ALLOWED_ORIGINS=https://api.example.com node server.mjs
 
-En la interfaz selecciona **Gateway local autorizado**. No se configura por defecto ni puede exponerse fuera de loopback cuando la allowlist está activa. Para APIs locales propias se requiere REQESTRA_ALLOW_PRIVATE_TARGETS=1 explícito; evita hacerlo en redes compartidas.
+Choose **Authorized Local Gateway** in the interface. It is not configured by default and cannot bind outside loopback when the allowlist is active. Your own local APIs require the explicit `REQESTRA_ALLOW_PRIVATE_TARGETS=1` option; avoid enabling this on shared networks.
 
-## Secretos y almacenamiento
+## Secrets and storage
 
-La app funciona en modo temporal sin guardar secretos. Para persistir, crea un almacén cifrado AES-GCM con contraseña (WebCrypto/PBKDF2). Se puede descargar un backup cifrado. No hay recuperación de contraseña ni sincronización automática con Android.
+The app can operate temporarily without persisting secrets. For persistence, create a password-protected AES-GCM encrypted vault (WebCrypto/PBKDF2). You can download an encrypted backup. There is no password recovery or automatic Android synchronization.
 
-## Donaciones
+## Donations
 
-Crea tu botón de donación desde https://www.paypal.com/donate/buttons y escribe su **ID pública**, sin secretos, en web/config.js. La opción permanece desactivada hasta que exista una ID válida. Los pagos se completan fuera de Reqestra en PayPal.
+Create a donation button at https://www.paypal.com/donate/buttons and put its **public ID**, never a secret, in `web/config.js`. The option remains disabled until a valid ID is configured. Payments take place outside Reqestra on PayPal.
 
-## Documentación
+## Documentation
 
-- [Manual funcional y casos de uso](../docs/FEATURES_AND_USE_CASES.md)
-- [Guía completa de instalación y despliegue](../docs/WEB_SETUP.md)
-- [Integración PayPal](../docs/PAYPAL_DONATIONS.md)
-- [Arquitectura y seguridad](../docs/ARCHITECTURE_AND_SECURITY.md)
-- [Matriz de pruebas](../docs/TEST_PLAN.md)
+- [Feature manual and use cases](../docs/FEATURES_AND_USE_CASES.md)
+- [Full installation and deployment guide](../docs/WEB_SETUP.md)
+- [PayPal integration](../docs/PAYPAL_DONATIONS.md)
+- [Architecture and security](../docs/ARCHITECTURE_AND_SECURITY.md)
+- [Test matrix](../docs/TEST_PLAN.md)
 
-No publiques el gateway en un dominio público ni confundas la ausencia de CORS con un problema del servidor de destino.
+Do not expose the gateway on a public domain or interpret a CORS error as proof that the destination server is down.
 
-## Idioma e identidad visual
+## Languages and visual identity
 
-Los textos de la interfaz usan inglés de respaldo. Se detecta el idioma principal
- del dispositivo (inglés, español, ruso, mandarín simplificado, portugués o francés);
- el control 🌐 de la barra superior permite elegir manualmente uno de los seis.
- La selección se guarda en localStorage, separada del almacén cifrado de solicitudes.
+English is the interface fallback language. The app detects the device's primary language (English, Spanish, Russian, Simplified Mandarin Chinese, Portuguese, or French); the 🌐 control in the top bar allows manual selection of any of the six. This choice is saved in localStorage separately from the encrypted request vault.
 
-La PWA, favicon y cabecera comparten el logo R con órbita turquesa mediante web/icon.png.
-Los datos de tus solicitudes y respuestas nunca se traducen automáticamente.
-Las descripciones extensas heredadas pueden conservar inglés de respaldo y requieren
-revisión lingüística antes de presentar el producto como totalmente traducido.
+The PWA, favicon, and header share the same turquoise-orbit R logo via `web/icon.png`. Your request and response data are never translated automatically. Some legacy descriptive text may use English fallbacks and should undergo native-language review before claiming complete localization.
 
-## Auditoría de idiomas 3.5
+## Language audit — 3.5
 
-El HTML inicial está en inglés. El selector 🌐 muestra el idioma activo
-con un borde, fondo y ✓ en claro y oscuro, permite seleccionar por
-teclado y guarda la selección. Los catálogos locales cubren 328
-etiquetas web en los seis idiomas e incluyen plantillas para mensajes
-dinámicos. No se traducen URLs, secretos, ni cuerpos de peticiones.
+The initial HTML is in English. The 🌐 selector highlights the active language using a border, background, and check mark ✓ in both themes, supports keyboard selection, and persists the choice. Local catalogs cover 328 web labels in six languages, including templates for dynamic messages. URLs, secrets, and request bodies are not translated.
 
-## Acerca de la aplicación y ayuda
+## About the application and help
 
-La página **About & Help** está disponible en el menú lateral y en la
-opción **More** para móviles. Incluye una guía de uso rápida, funciones
-y limitaciones del navegador, privacidad, versión y enlaces oficiales
-a la [guía de uso](../docs/GUIA_DE_USO.md), la configuración Web y
-el repositorio de problemas. No envía solicitudes HTTP automáticamente.
+The **About & Help** page is available in the desktop sidebar and under **More** on mobile. It includes a quick-start guide, features and browser limitations, privacy, the current version, and official links to the [user guide](../docs/GUIA_DE_USO.md), web setup, and issue tracker. It never sends HTTP requests automatically.
 
-La sección de ayuda llegó en la 3.5.0. La versión actual es **3.5.1**.
+The help page was introduced in 3.5.0. The current version is **3.5.1**.
 
-## Encabezado accesible 3.5.1
+## Accessible header — 3.5.1
 
-El botón Donar contiene un SVG de corazón con geometría y dimensiones fijas;
-no utiliza el glifo ♥, que dependía de la fuente del navegador. En teléfonos
-muestra un icono de 20 px centrado en una superficie de 44 × 44 px.
-El botón de apariencia tiene iconos SVG de sol/luna y una descripción
-accesible traducida a los seis idiomas, sin ocultar el acceso a donaciones.
-Los estados del navegador se ocultan en pantallas intermedias para evitar
-controles superpuestos.
+The Donate button uses a heart SVG with fixed geometry and dimensions instead of the font-dependent `♥` glyph. On phones, a centered 20 px icon sits inside a 44 × 44 px touch target.
 
-Los enlaces de pago siguen abriéndose exclusivamente en PayPal, y la
-aplicación no recopila datos financieros.
+The appearance button uses sun/moon SVG icons and an accessible label translated into six languages, without hiding access to donations. Browser status indicators are hidden at intermediate widths to prevent overlapping controls.
 
-## Consistencia visual con Android (3.5.1)
+Payment links open only on PayPal; the application does not collect financial information.
 
-La aplicación web conserva su propio sistema de colores CSS y no comparte directamente los tokens de Jetpack Compose. La revisión de los menús desplegables Android (método HTTP, cuerpo, entornos y colecciones de pruebas) está documentada en [`docs/DESIGN_SYSTEM.md`](../docs/DESIGN_SYSTEM.md). Para validar la paridad visual, comprobar los menús web y Android en modos claro y oscuro, con foco de teclado, selección y contraste de texto. Esta nota no implica que se hayan ejecutado pruebas visuales automatizadas en ambas plataformas.
+## Visual consistency with Android (3.5.1)
+
+The web client retains its own CSS color system rather than sharing Jetpack Compose tokens directly. The Android dropdown review (HTTP method, body mode, environments, and test collections) is documented in [`docs/DESIGN_SYSTEM.md`](../docs/DESIGN_SYSTEM.md).
+
+To verify visual parity, inspect web and Android menus in both light and dark themes, including keyboard focus, selection states, and text contrast. This note does not mean automated visual tests were executed on both platforms.
