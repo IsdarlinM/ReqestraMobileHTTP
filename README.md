@@ -1,6 +1,6 @@
-# Reqestra 3.5.1 — Android y Web
+# Reqestra 3.5.1 — Android and Web
 
-**Reqestra** es un banco de trabajo HTTP para **Android nativo y navegadores web** orientado a desarrollo, depuración de APIs y pruebas de seguridad autorizadas. Permite construir, modificar, enviar e inspeccionar peticiones completas sin limitar el editor al HTML.
+**Reqestra** is an HTTP workbench for **native Android and web browsers**, designed for development, API debugging, and authorized security testing. It lets users build, modify, send, and inspect complete HTTP requests without limiting editing to HTML.
 
 ```text
 Reqestra
@@ -8,28 +8,20 @@ Mobile HTTP Workbench
 imr :: v3.5.1
 ```
 
-El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
+The name combines **request** and **orchestration**: a single workspace for composing and controlling the full request lifecycle.
 
-## Revisión de colores de menús — Android y Web
+## Menu color review — Android and Web
 
-Los desplegables Android de método HTTP, tipo de cuerpo, entorno y colección de pruebas usan explícitamente la superficie del tema y su color de texto correspondiente. El selector de idioma y el panel **Más** ya disponían de colores temáticos. Se conserva la identidad visual de Reqestra en claro y oscuro, sin modificar la lógica HTTP. La web mantiene su sistema CSS independiente; consultar [sistema visual](docs/DESIGN_SYSTEM.md) y [guía web](docs/WEB_SETUP.md). La verificación visual en dispositivo sigue pendiente.
+Android's HTTP method, body type, environment, and test-collection dropdowns explicitly use the theme's surface background and corresponding text colors. The language selector and **More** sheet already used themed colors. Reqestra's identity is preserved in light and dark modes without changing HTTP behavior. The web client maintains its own independent CSS system; see the [design system](docs/DESIGN_SYSTEM.md) and [web guide](docs/WEB_SETUP.md). Visual verification on a real device remains pending.
 
-## Reqestra 3.5.1 — interfaz y entrega
+## Reqestra 3.5.1 — interface and delivery
 
-- **Web:** el botón Donar utiliza un icono de corazón **SVG** de 20 × 20 px,
-  libre de deformaciones tipográficas, y un control de 44 × 44 px en móvil.
-  El modo claro/oscuro utiliza iconos SVG de sol y luna, con descripción
-  accesible traducida al idioma seleccionado. Se equilibró la barra superior
-  en pantallas intermedias.
-- **Android:** Idioma, Donar y Apariencia tienen áreas táctiles independientes,
-  colores del tema y etiquetas verificables. Las pruebas instrumentadas
-  comprueban que no se superponen.
-- **Construcción:** nuevo `scripts/build-termux.sh`, que valida pruebas,
-  compila y copia el APK de depuración a Descargas sin eliminar aplicaciones.
-- Se añadió cobertura de regresión web del botón Donar, los iconos y los
-  seis idiomas. **Android: 3.5.1 (versionCode 10); Web: 3.5.1.**
+- **Web:** The Donate button uses a **20 × 20 px SVG** heart instead of a font-dependent glyph, with a **44 × 44 px** mobile touch target. Light/dark mode uses sun and moon SVG icons with accessible labels translated into the selected language. The top bar is balanced at intermediate screen widths.
+- **Android:** Language, Donate, and Appearance have independent touch targets, themed colors, and testable labels. Instrumentation tests check that they do not overlap.
+- **Build:** New `scripts/build-termux.sh` validates tests, builds, and copies the debug APK to Downloads without uninstalling applications.
+- Web regression tests cover the Donate button, icons, and six languages. **Android: 3.5.1 (versionCode 10); Web: 3.5.1.**
 
-Para actualizar desde Termux:
+To update from Termux:
 
 ```bash
 cd ~/ReqestraMobileHTTP
@@ -38,259 +30,226 @@ termux-setup-storage
 bash scripts/build-termux.sh --open
 ```
 
-El paquete **debug** (`com.imr.reqestra.debug`) se instala separado
-del APK release (`com.imr.reqestra`). No desinstales la app para
-actualizarla: necesitarás una compilación release firmada con la **misma**
-clave que la instalación anterior para conservar sus datos.
+The **debug** package (`com.imr.reqestra.debug`) installs separately from the release APK (`com.imr.reqestra`). Do not uninstall your app to update it: preserving installed release data requires a release build signed with the **same key** as the previous installation.
 
-[Notas de la versión 3.5.1](docs/RELEASE_3.5.1.md).
+See the [3.5.1 release notes](docs/RELEASE_3.5.1.md).
 
-## Corrección de botones superpuestos — sin cambio de versión
+## Overlapping-button fixes — no version change
 
-Android y Web ajustan barras, tarjetas, acciones y selectores para que
-los controles no se superpongan al cambiar de ancho de pantalla.
-Las acciones de la cabecera se mantienen visibles, las filas con botones
-largos se apilan y los menús se desplazan dentro de la zona disponible.
+Android and Web adjust top bars, cards, actions, and selectors to prevent overlapping controls at different screen widths. Header actions stay visible, rows with long buttons stack, and menus scroll within the available area.
 
-Ver la [guía de interfaz responsiva](docs/INTERFAZ_RESPONSIVA.md)
-y su matriz de pruebas. Esta mejora de navegación se incorporó en **3.5.0**; la versión actual es **3.5.1**.
+See the [responsive interface guide](docs/INTERFAZ_RESPONSIVA.md) and its test matrix. These navigation improvements were originally introduced in **3.5.0**; the current version is **3.5.1**.
 
-## Acerca de Reqestra y Ayuda
+## About Reqestra and Help
 
-Android incluye **Acerca de y ayuda** dentro del menú inferior **Más**.
-La Web incorpora **About & Help** en la navegación lateral y en **More**
-cuando se usa desde un teléfono. Ambas pantallas muestran el logotipo,
-la versión actual, una guía de primeros pasos, funciones disponibles,
-recomendaciones de privacidad y enlaces a documentación y problemas.
+Android includes **About & Help** under the bottom **More** menu. The web client provides **About & Help** in the sidebar and under **More** on phones. Both screens show the logo, current version, quick start, available features, privacy guidance, and links to documentation and issues.
 
-La guía extensa está en [docs/GUIA_DE_USO.md](docs/GUIA_DE_USO.md).
-La sección está traducida a los seis idiomas de la interfaz.
-Esta sección de ayuda se incorporó originalmente en **3.5.0**.
+The complete guide is at [docs/GUIA_DE_USO.md](docs/GUIA_DE_USO.md). This interface section is localized into all six supported languages. The help section was originally introduced in **3.5.0**.
 
-## Selector de idioma y traducciones — 3.5
+## Language selector and translations — 3.5
 
-Android y Web incluyen un selector de idioma con la opción activa resaltada
-por colores de marca y una marca ✓ tanto en modo claro como oscuro.
-La web usa HTML inicial inglés y un menú accesible con navegación por
-teclado. Android localiza títulos, indicaciones, menús, errores
-y mensajes de resultado con catálogo local. Los seis idiomas
-conservan el contenido original de las peticiones HTTP.
+Android and Web feature a language selector that highlights the active choice with brand colors and a check mark ✓ in light and dark themes. The web client uses English initial HTML and an accessible, keyboard-navigable menu. Android localizes headings, hints, menus, errors, and results through a local catalog. HTTP request contents remain unchanged across all six languages.
 
-Ver [auditoría de localización](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
+See the [localization audit](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
 
-## Navegación y apariencia móvil — 3.4.1
+## Mobile navigation and appearance — 3.4.1
 
-La cabecera de Android muestra los accesos **🌐 Idioma**, **♥ Donate**
-y **☀️/🌙 Apariencia**. Se eliminó el botón de menú superior repetido:
-el menú **Más** de la barra inferior es el único acceso a las herramientas
-secundarias (Historial, Inspector, Vista previa, Sesiones y Extensiones).
+The Android header includes **🌐 Language**, **♥ Donate**, and **☀️/🌙 Appearance**. The duplicate top-menu button was removed: the bottom-bar **More** menu is the only entry point for secondary tools (History, Inspector, Preview, Sessions, and Extensions).
 
-El menú Más adapta los colores de fondo al tema oscuro/claro, usa tarjetas
-con contraste claro y una respuesta de pulsación discreta sin ripple
-expansivo. El tema sigue al sistema hasta una selección manual, que se
-guarda en el dispositivo. El logotipo sigue siendo el **mismo PNG** en
-Android y Web. Consulta las secciones 6 y 7 de
-[la guía de interfaz](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
+The More sheet adapts its background to dark/light themes, uses clearly contrasted cards, and offers discreet touch feedback without an expansive ripple. The theme follows the system until the user makes a manual selection, which is saved on device. The logo remains the **same PNG** on Android and Web. See sections 6 and 7 of the [interface guide](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
 
-## Identidad visual e idiomas — 3.4
+## Visual identity and languages — 3.4
 
-Reqestra utiliza el mismo monograma **R con órbita turquesa**, aportado por el propietario,
-en el icono Android, la barra superior de Compose, el favicon y la PWA web.
+Reqestra uses the same owner-supplied **R monogram with a turquoise orbit** for the Android icon, Compose top bar, web favicon, and PWA.
 
-La interfaz ofrece **inglés (en), español (es), ruso (ru), chino mandarín simplificado
-(zh), portugués (pt) y francés (fr)**. El idioma inicial corresponde al idioma
-principal del dispositivo si está soportado y, en caso contrario, inglés.
-El selector 🌐 de la barra superior permite cambiarlo manualmente; esta preferencia
-se conserva localmente. Las solicitudes HTTP y sus respuestas no se traducen.
+The interface supports **English (en), Spanish (es), Russian (ru), Simplified Mandarin Chinese (zh), Portuguese (pt), and French (fr)**. On first launch, it uses the device's primary language when supported, otherwise English. The 🌐 selector in the top bar allows manual changes and stores the preference locally. HTTP requests and responses are never translated.
 
-Las extensiones integradas ahora cuentan con una acción **Abrir/Open** que enlaza
-con la herramienta real; GraphQL Schema Explorer, conectores proxy externos y
-complementos remotos siguen claramente señalados como no implementados.
-No se ejecuta código de terceros.
+Built-in extensions have an **Open** action leading to the relevant implemented tool. GraphQL Schema Explorer, external proxy connectors, and remote add-ons remain clearly marked as unimplemented. Third-party code is not executed.
 
-Consulta [la guía de idiomas, iconos y extensiones](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
-Los textos de interfaz se localizan sin enviar secretos a servicios externos;
-algunos mensajes técnicos y cadenas heredadas todavía usan inglés de respaldo y
-necesitan revisión lingüística por hablantes nativos antes de una publicación comercial.
+See the [language, icon, and extension guide](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md). UI text is localized without sending secrets to external services. Some technical messages and legacy strings still rely on English fallback and need review by native speakers before commercial publication.
 
-## Nuevos clientes y donaciones — 3.3
+## New clients and donations — 3.3
 
-**Android:** Kotlin, Jetpack Compose, OkHttp, sesiones por origen y colecciones cifradas con Android Keystore.
+**Android:** Kotlin, Jetpack Compose, OkHttp, per-origin sessions, and Android Keystore-encrypted collections.
 
-**Web:** aplicación responsive y PWA instalable en la carpeta web/, con Estudio, variables, Query, colecciones y entornos cifrados, pruebas de colecciones, exploración acotada, historial, inspector, vista previa aislada, importaciones cURL/OpenAPI y sesiones. No requiere framework ni servicios externos para funcionar en modo navegador.
+**Web:** Responsive, installable PWA under `web/`, with Studio, variables, Query, encrypted collections and environments, collection tests, bounded discovery, history, inspector, isolated preview, cURL/OpenAPI imports, and sessions. Browser mode does not require a framework or external service.
 
-**Donaciones PayPal opcionales:** pantalla Apoyar proyecto en Android y Donar/Ayuda en Web. Se configura un identificador público de botón PayPal alojado; **no hay cuenta receptora preconfigurada**, ni pagos dentro de Reqestra, ni beneficios digitales por donar.
+**Optional PayPal donations:** Support Project screen on Android and Donate/Support on Web. A public hosted PayPal button ID is configured by the owner; **no receiving account is preconfigured**, Reqestra does not process payments, and donating grants no digital benefits.
 
-### Ejecutar la web
+### Run the web client
 
-    cd web
-    npm run check
-    npm test
-    npm start
+```bash
+cd web
+npm run check
+npm test
+npm start
+```
 
-Abre http://127.0.0.1:5173. Requiere Node.js 20+. También puedes publicar la carpeta web/ como sitio estático HTTPS.
+Open http://127.0.0.1:5173. Requires Node.js 20+. You can also publish `web/` as a static HTTPS site.
 
-**Limitación real de paridad:** Fetch del navegador está sujeto a CORS, certificados TLS, cookies HttpOnly y restricciones de headers (Cookie, Host, etc.). Para APIs propias o entornos autorizados puedes iniciar el **gateway local restringido**, desactivado por defecto:
+**Important parity limitation:** Browser Fetch is subject to CORS, TLS certificate rules, HttpOnly cookies, and restricted headers (Cookie, Host, etc.). For your own APIs or authorized environments, you can start the **restricted local gateway**, which is disabled by default:
 
-    cd web
-    REQESTRA_ALLOWED_ORIGINS=https://api.example.com node server.mjs
+```bash
+cd web
+REQESTRA_ALLOWED_ORIGINS=https://api.example.com node server.mjs
+```
 
-Selecciona Gateway en Estudio. El gateway no se debe exponer en Internet: usa loopback, allowlist exacta de orígenes, DNS filtrado e IP fijada, límite de tasa y no sigue redirecciones.
+Select Gateway in Studio. Do not expose the gateway to the Internet: it binds to loopback, requires an exact origin allowlist, filters DNS and pins validated IPs, rate-limits requests, and does not follow redirects.
 
-### Donaciones PayPal
+### PayPal donations
 
-Crea tu propio botón desde https://www.paypal.com/donate/buttons. Configura el valor público hosted_button_id en web/config.js. Para Android configura paypalHostedButtonId en ~/.gradle/gradle.properties antes de compilar. Sin ID, el botón permanece desactivado.
+Create your own button at https://www.paypal.com/donate/buttons. Configure the public `hosted_button_id` in `web/config.js`. On Android, configure `paypalHostedButtonId` in `~/.gradle/gradle.properties` before building. Without an ID, the button is disabled.
 
-### Documentación completa
+### Full documentation
 
-- [Manual de funcionalidades y 20 casos de uso](docs/FEATURES_AND_USE_CASES.md)
-- [Instalación de Web, PWA y gateway local](docs/WEB_SETUP.md)
-- [Configuración PayPal y requisitos](docs/PAYPAL_DONATIONS.md)
-- [Arquitectura, amenazas, límites y protección de secretos](docs/ARCHITECTURE_AND_SECURITY.md)
-- [Plan de pruebas y checklist de publicación](docs/TEST_PLAN.md)
-- [Sistema de diseño Material 3](docs/DESIGN_SYSTEM.md)
-- [Descubrimiento y parametrización Android 3.2](docs/API_DISCOVERY_3_2.md)
+- [Features manual and 20 use cases](docs/FEATURES_AND_USE_CASES.md)
+- [Web, PWA, and local gateway installation](docs/WEB_SETUP.md)
+- [PayPal configuration and requirements](docs/PAYPAL_DONATIONS.md)
+- [Architecture, threats, limits, and secret protection](docs/ARCHITECTURE_AND_SECURITY.md)
+- [Test plan and release checklist](docs/TEST_PLAN.md)
+- [Material 3 design system](docs/DESIGN_SYSTEM.md)
+- [Android 3.2 API discovery and parameterization](docs/API_DISCOVERY_3_2.md)
 
-**La web no se encuentra alojada automáticamente** al crear estos archivos: debes ejecutarla localmente o configurar tu hosting. GitHub Actions Android ha tenido fallos de ejecución antes de arrancar su runner; compila el APK en un entorno con SDK Android 36.
+**The web client is not hosted automatically** by the presence of these files: run it locally or configure your hosting. Android GitHub Actions has previously failed before starting a runner; build the APK in an environment with Android SDK 36.
 
-## Novedades 3.2 — API Discovery Lab
+## What's new in 3.2 — API Discovery Lab
 
-- Pestaña **Query** en Estudio: agrega parámetros estructurados `nombre=valor`, conservando la query existente y codificando los valores.
-- Variables de entorno `{{baseUrl}}` y `{{token}}` en URL, query, headers, cookies y cuerpo, también en colecciones guardadas.
-- **Explorar** desde la navegación principal para analizar rutas que introduzcas y candidatos a parámetros mediante comparaciones con una petición de referencia.
-- Sugerencias pasivas de rutas del último response: JSON `href/url/path/endpoint`, HTML `href` y cabecera `Link`. No inician solicitudes por sí solas.
-- Pruebas de **GET, HEAD y OPTIONS**; POST, PUT, PATCH y DELETE requieren activación adicional y confirmación explícita.
-- Cada exploración está limitada a un mismo origen, **hasta 24 peticiones secuenciales, a 1 por segundo**, sin redirecciones automáticas. No se ejecuta enumeración masiva.
-- Resultados con código HTTP, tamaño, duración, `Allow` y diferencias observadas para parámetros candidatos (heurística; no es evidencia de vulnerabilidad).
+- **Query** tab in Studio: add structured `name=value` parameters, preserving the existing query and encoding values.
+- Environment variables such as `{{baseUrl}}` and `{{token}}` in URL, query, headers, cookies, and body, including saved collections.
+- **Explore** in main navigation: analyze supplied paths and candidate parameters by comparison with baseline requests.
+- Passive path hints from the last response: JSON `href/url/path/endpoint`, HTML `href`, and `Link` headers. They do not initiate requests automatically.
+- Tests for **GET, HEAD, and OPTIONS**; POST, PUT, PATCH, and DELETE require explicit additional enablement and confirmation.
+- Each discovery run is limited to the same origin, **up to 24 sequential requests at one per second**, without automatic redirects. No mass enumeration.
+- Results show HTTP status, size, duration, Allow, and observed differences for candidate parameters (heuristics, not proof of vulnerability).
 
-Consulta [Uso de parametrización y exploración](docs/API_DISCOVERY_3_2.md) antes de probar endpoints.
+Read the [parameterization and discovery guide](docs/API_DISCOVERY_3_2.md) before testing endpoints.
 
-## Diseño visual 3.1 — Studio palette
+## Visual design 3.1 — Studio palette
 
-La interfaz utiliza una paleta Material 3 consistente para modos claro y oscuro: verde esmeralda para acciones y éxito, azul para información, ámbar para advertencias y rojo para errores. Las tarjetas, campos de código, avisos, indicadores HTTP y navegación comparten tokens de color, tipografía y formas.
+The interface uses a consistent Material 3 palette in light and dark themes: emerald for primary actions and success, blue for information, amber for warnings, and red for errors. Cards, code fields, notices, HTTP status indicators, and navigation share color, typography, and shape tokens.
 
-Consulta [la guía del sistema visual](docs/DESIGN_SYSTEM.md) para los códigos hexadecimales y los criterios de contraste y accesibilidad.
+See the [visual design guide](docs/DESIGN_SYSTEM.md) for hex values, contrast guidelines, and accessibility criteria.
 
-## Novedades 3.0
+## What's new in 3.0
 
-- Navegación compacta: Estudio, Colecciones, Pruebas e Historial.
-- Respuesta resumida debajo del editor y acceso al inspector completo.
-- Colecciones y entornos cifrados con Android Keystore, variables tipo `{{baseUrl}}`.
-- Importación de especificaciones OpenAPI 3.x **JSON** con URL base absoluta.
-- Ejecución manual de hasta 20 peticiones secuenciales, assertions de estado/latencia y resultados.
-- Catálogo interno de extensiones con distinción clara entre funcionalidades integradas y planeadas.
-- Formateador de JSON, pestañas horizontales desplazables y tamaños más compactos.
+- Compact navigation: Studio, Collections, Tests, and History.
+- Last-response summary below the editor and access to the full inspector.
+- Android Keystore-encrypted collections and environments, with variables like `{{baseUrl}}`.
+- Import **JSON** OpenAPI 3.x specifications with absolute base URLs.
+- Manually execute up to 20 sequential requests, with status/latency assertions and results.
+- Internal extension catalog distinguishing built-in features from planned ones.
+- JSON formatter, scrollable horizontal tabs, and more compact component sizes.
 
-Consulta [ROADMAP 3.0](docs/ROADMAP_3_0.md) para requisitos, uso, limitaciones y funciones todavía no implementadas.
+See the [3.0 roadmap](docs/ROADMAP_3_0.md) for requirements, usage, limitations, and unimplemented features.
 
-## Funcionalidades
+## Features
 
-### Constructor de requests
+### Request builder
 
-- Métodos `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS` y método personalizado.
-- URL completa editable: esquema, host, puerto, path y query string.
-- Headers repetidos y headers específicos por petición.
-- Header `Host` editable.
-- Editor dedicado de cookies.
-- Cuerpos:
-  - Sin cuerpo.
-  - Texto / Raw.
+- `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`, and custom methods.
+- Fully editable URL: scheme, host, port, path, and query string.
+- Duplicate and request-specific headers.
+- Editable `Host` header.
+- Dedicated cookie editor.
+- Bodies:
+  - No body.
+  - Raw text.
   - JSON.
   - HTML.
   - XML.
   - `application/x-www-form-urlencoded`.
   - GraphQL.
-  - Binario suministrado como Base64.
-- `Content-Type` editable.
-- Seguimiento opcional de redirecciones.
-- Cookies conservadas también durante saltos intermedios de redirección.
-- Timeout configurable entre 1 y 120 segundos.
-- Preferencia HTTP/1.1 para comparar comportamiento con HTTP/2.
-- HTTP sin cifrar mediante activación explícita de laboratorio.
-- Cancelación de la petición activa.
+  - Binary content supplied as Base64.
+- Editable `Content-Type`.
+- Optional redirect following.
+- Cookies retained across intermediate redirect hops.
+- Configurable timeout from 1 to 120 seconds.
+- HTTP/1.1 preference for behavior comparison against HTTP/2.
+- Explicit laboratory opt-in for unencrypted HTTP.
+- Cancel the active request.
 
-### Sesiones opcionales
+### Optional sessions
 
-Reqestra dispone de tres modos:
+Reqestra has three modes:
 
-1. **Sin sesión:** no conserva headers ni cookies entre peticiones.
-2. **Solo memoria:** mantiene la sesión hasta cerrar el proceso de la aplicación.
-3. **Persistente cifrada:** mantiene la sesión entre reinicios.
+1. **No session:** does not retain headers or cookies between requests.
+2. **In memory:** retains session state until the app process exits.
+3. **Encrypted persistent:** retains session state across restarts.
 
-Características de sesión:
+Session properties:
 
-- Headers de sesión guardados **por origen**: esquema, host y puerto.
-- Un `Authorization` configurado para un origen no se aplica a otro dominio.
-- Cookies procesadas según dominio, path, expiración y atributo `Secure`.
-- Cookies de respuestas intermedias se reenvían al siguiente redirect cuando corresponde.
-- Cookies manuales pueden iniciar o sobrescribir valores de sesión.
-- Headers específicos de la petición sobrescriben los headers de sesión del mismo nombre.
-- Persistencia cifrada con AES-GCM y clave administrada por Android Keystore.
-- Backups y transferencia de datos internos deshabilitados.
+- Session headers scoped **per origin**: scheme, host, and port.
+- An `Authorization` header for one origin is never applied to another domain.
+- Cookies follow domain, path, expiration, and `Secure` rules.
+- Cookies from intermediate responses are sent on subsequent redirect hops when applicable.
+- Manual cookies can initialize or override session values.
+- Request-specific headers override matching session headers.
+- AES-GCM encrypted persistence with an Android Keystore-managed key.
+- Backups and internal-data transfer disabled.
 
 ### Inspector
 
-- Request enviado: método, URL, headers y tamaño/cuerpo.
-- Response: status, protocolo, duración, tipo de contenido, headers y cuerpo.
-- Redacción visual de `Authorization`, `Cookie`, `Set-Cookie`, API keys y tokens comunes.
-- Respuestas limitadas a 4 MiB para evitar consumo de memoria descontrolado.
-- Cuerpos enviados limitados a 5 MiB.
+- Sent request: method, URL, headers, and size/body.
+- Response: status, protocol, duration, content type, headers, and body.
+- Visual redaction of `Authorization`, `Cookie`, `Set-Cookie`, common API keys, and tokens.
+- Response reads limited to 4 MiB to prevent excessive memory consumption.
+- Sent bodies limited to 5 MiB.
 
-### Vista previa
+### Preview
 
-- Renderizado local de HTML en WebView aislada.
-- JavaScript, red, archivos, content providers, DOM storage y base de datos deshabilitados.
-- Vista monoespaciada para JSON, XML, GraphQL, Raw y otros cuerpos.
+- Locally rendered HTML in an isolated WebView.
+- JavaScript, network access, files, content providers, DOM storage, and database access disabled.
+- Monospace rendering for JSON, XML, GraphQL, Raw, and other bodies.
 
-### Historial
+### History
 
-El historial conserva un máximo de 50 registros y almacena únicamente:
+History retains up to 50 entries and stores only:
 
-- Método.
-- URL redactada.
-- Código HTTP.
-- Duración.
-- Fecha y hora.
+- Method.
+- Redacted URL.
+- HTTP status.
+- Duration.
+- Date and time.
 
-No guarda headers, cookies, cuerpos ni credenciales.
+It does not store headers, cookies, bodies, or credentials.
 
-## Precedencia de headers y cookies
+## Header and cookie precedence
 
 ### Headers
 
 ```text
-headers de sesión del origen < headers específicos del request
+origin session headers < request-specific headers
 ```
 
 ### Cookies
 
 ```text
-cookies de sesión < Cookie: escrito en headers < editor dedicado de cookies
+session cookies < Cookie header manually entered < dedicated cookie editor
 ```
 
-## Límite técnico deliberado
+## Deliberate technical limits
 
-Reqestra permite editar las partes semánticas de una petición compatibles con OkHttp. Los headers de framing `Content-Length`, `Transfer-Encoding`, `Connection`, `Proxy-Connection`, `Upgrade` y `TE` se calculan o controlan internamente para evitar mensajes incoherentes.
+Reqestra allows editing the semantic parts of HTTP requests supported by OkHttp. Framing headers—`Content-Length`, `Transfer-Encoding`, `Connection`, `Proxy-Connection`, `Upgrade`, and `TE`—are computed or controlled internally to avoid inconsistent messages.
 
-No es un editor de bytes TCP, un motor de request smuggling ni un interceptor de otras aplicaciones.
+It is not a raw TCP-byte editor, request-smuggling engine, or interceptor for other applications.
 
-## Estructura
+## Project structure
 
 ```text
 app/src/main/java/com/imr/reqestra/
 ├── core/
-│   ├── request/          # Composición y precedencia
-│   ├── security/         # Redacción de secretos
-│   └── validation/       # Validación defensiva
+│   ├── request/          # Composition and precedence
+│   ├── security/         # Secret redaction
+│   └── validation/       # Defensive validation
 ├── data/
-│   ├── history/          # Historial minimizado
-│   ├── network/          # Motor OkHttp y CookieJar
-│   └── session/          # Sesión en memoria y persistente cifrada
-├── domain/model/         # Modelos inmutables
-└── presentation/         # Compose, ViewModel, pantallas y tema
+│   ├── history/          # Minimized history
+│   ├── network/          # OkHttp engine and CookieJar
+│   └── session/          # In-memory and encrypted persistent sessions
+├── domain/model/         # Immutable models
+└── presentation/         # Compose, ViewModel, screens, and theme
 ```
 
-## Stack
+## Technology stack
 
 - Kotlin 2.3.21.
 - Jetpack Compose + Material 3.
@@ -301,21 +260,21 @@ app/src/main/java/com/imr/reqestra/
 - compileSdk / targetSdk 36.
 - minSdk 26.
 
-## Compilación y pruebas
+## Building and testing
 
-Requisitos:
+Requirements:
 
-- Android Studio compatible con AGP 8.13.
+- Android Studio compatible with AGP 8.13.
 - JDK 17.
 - Android SDK 36.
 
-El repositorio no almacena binarios generados. En la primera ejecución, `gradlew` o `gradlew.bat` ejecuta `gradle/wrapper/WrapperBootstrap.java`, descarga el JAR oficial de Gradle 8.13 y exige este SHA-256 antes de usarlo:
+The repository does not store generated binaries. On first execution, `gradlew` or `gradlew.bat` runs `gradle/wrapper/WrapperBootstrap.java`, downloads the official Gradle 8.13 JAR, and requires this SHA-256 before use:
 
 ```text
 81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f
 ```
 
-Si el archivo ya existe y coincide, no se realiza ninguna conexión adicional para restaurarlo.
+If the file already exists and matches, no additional connection is made to restore it.
 
 Linux/macOS:
 
@@ -330,20 +289,20 @@ Windows:
 scripts\verify.cmd
 ```
 
-El script ejecuta:
+The script runs:
 
 ```text
 clean → testDebugUnitTest → lintDebug → assembleDebug
 ```
 
-APK generado:
+Generated APK:
 
 ```text
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Consulta `TEST_REPORT.md` para distinguir las comprobaciones ejecutadas en el entorno de entrega de las pruebas Android incluidas para ejecutar con SDK.
+See [TEST_REPORT.md](TEST_REPORT.md) to distinguish checks performed in the original delivery environment from Android tests included for execution with the SDK.
 
-## Uso autorizado
+## Authorized use
 
-Usa Reqestra exclusivamente contra sistemas propios, laboratorios, CTF, auditorías autorizadas o activos incluidos en el alcance de un programa bug bounty.
+Use Reqestra only against systems you own, laboratories, CTFs, authorized audits, or assets explicitly included in the scope of a bug bounty program.
