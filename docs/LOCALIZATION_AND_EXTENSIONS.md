@@ -218,6 +218,6 @@ On desktop, **About & Help** appears in the sidebar; on mobile, under **More**. 
 
 ### Languages and checks
 
-The new labels, paragraphs, and links have translations for English, Spanish, Russian, Simplified Mandarin Chinese, Portuguese, and French. Tests were added for navigation and text availability. See the full [user guide](GUIA_DE_USO.md).
+The new labels, paragraphs, and links have translations for English, Spanish, Russian, Simplified Mandarin Chinese, Portuguese, and French. Tests were added for navigation and text availability. See the full [user guide](USER_GUIDE.md).
 
 The help section was introduced without a version change in **3.5.0**; the current public release is **3.5.1**.

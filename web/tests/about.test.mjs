@@ -28,7 +28,7 @@ test("Android About & Help is available only through the existing More menu",()=
   assert.match(sheet,/onSelect\(AppSection\.ABOUT\)/);
   assert.match(aboutAndroid,/BuildConfig\.VERSION_NAME/);
   assert.match(aboutAndroid,/R\.drawable\.reqestra_brand/);
-  assert.match(aboutAndroid,/GUIA_DE_USO\.md/);
+  assert.match(aboutAndroid,/USER_GUIDE\.md/);
   assert.match(aboutAndroid,/https:\/\/github\.com\/IsdarlinM\/ReqestraMobileHTTP\/issues/);
 });
 
@@ -50,12 +50,12 @@ test("About texts are available in all six app languages",()=>{
 });
 
 test("About help links use known HTTPS repository pages without tracking",()=>{
-  assert.match(html,/docs\/GUIA_DE_USO\.md/);
+  assert.match(html,/docs\/USER_GUIDE\.md/);
   assert.match(html,/docs\/WEB_SETUP\.md/);
   assert.match(html,/ReqestraMobileHTTP\/issues/);
   assert.match(html,/rel="noopener noreferrer"/);
   assert.doesNotMatch(html,/mailto:|analytics\/collect/);
-  assert.ok(load("../../docs/GUIA_DE_USO.md").includes("Guía de uso de Reqestra"));
+  assert.ok(load("../../docs/USER_GUIDE.md").includes("Reqestra User Guide"));
 });
 
 test("About section uses the 3.5.1 release version",()=>{

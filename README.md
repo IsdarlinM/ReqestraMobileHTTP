@@ -38,25 +38,25 @@ See the [3.5.1 release notes](docs/RELEASE_3.5.1.md).
 
 Android and Web adjust top bars, cards, actions, and selectors to prevent overlapping controls at different screen widths. Header actions stay visible, rows with long buttons stack, and menus scroll within the available area.
 
-See the [responsive interface guide](docs/INTERFAZ_RESPONSIVA.md) and its test matrix. These navigation improvements were originally introduced in **3.5.0**; the current version is **3.5.1**.
+See the [responsive interface guide](docs/RESPONSIVE_INTERFACE.md) and its test matrix. These navigation improvements were originally introduced in **3.5.0**; the current version is **3.5.1**.
 
 ## About Reqestra and Help
 
 Android includes **About & Help** under the bottom **More** menu. The web client provides **About & Help** in the sidebar and under **More** on phones. Both screens show the logo, current version, quick start, available features, privacy guidance, and links to documentation and issues.
 
-The complete guide is at [docs/GUIA_DE_USO.md](docs/GUIA_DE_USO.md). This interface section is localized into all six supported languages. The help section was originally introduced in **3.5.0**.
+The complete guide is at [docs/USER_GUIDE.md](docs/USER_GUIDE.md). This interface section is localized into all six supported languages. The help section was originally introduced in **3.5.0**.
 
 ## Language selector and translations — 3.5
 
 Android and Web feature a language selector that highlights the active choice with brand colors and a check mark ✓ in light and dark themes. The web client uses English initial HTML and an accessible, keyboard-navigable menu. Android localizes headings, hints, menus, errors, and results through a local catalog. HTTP request contents remain unchanged across all six languages.
 
-See the [localization audit](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
+See the [localization audit](docs/LOCALIZATION_AND_EXTENSIONS.md).
 
 ## Mobile navigation and appearance — 3.4.1
 
 The Android header includes **🌐 Language**, **♥ Donate**, and **☀️/🌙 Appearance**. The duplicate top-menu button was removed: the bottom-bar **More** menu is the only entry point for secondary tools (History, Inspector, Preview, Sessions, and Extensions).
 
-The More sheet adapts its background to dark/light themes, uses clearly contrasted cards, and offers discreet touch feedback without an expansive ripple. The theme follows the system until the user makes a manual selection, which is saved on device. The logo remains the **same PNG** on Android and Web. See sections 6 and 7 of the [interface guide](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md).
+The More sheet adapts its background to dark/light themes, uses clearly contrasted cards, and offers discreet touch feedback without an expansive ripple. The theme follows the system until the user makes a manual selection, which is saved on device. The logo remains the **same PNG** on Android and Web. See sections 6 and 7 of the [interface guide](docs/LOCALIZATION_AND_EXTENSIONS.md).
 
 ## Visual identity and languages — 3.4
 
@@ -66,7 +66,7 @@ The interface supports **English (en), Spanish (es), Russian (ru), Simplified Ma
 
 Built-in extensions have an **Open** action leading to the relevant implemented tool. GraphQL Schema Explorer, external proxy connectors, and remote add-ons remain clearly marked as unimplemented. Third-party code is not executed.
 
-See the [language, icon, and extension guide](docs/INTERNACIONALIZACION_Y_EXTENSIONS.md). UI text is localized without sending secrets to external services. Some technical messages and legacy strings still rely on English fallback and need review by native speakers before commercial publication.
+See the [language, icon, and extension guide](docs/LOCALIZATION_AND_EXTENSIONS.md). UI text is localized without sending secrets to external services. Some technical messages and legacy strings still rely on English fallback and need review by native speakers before commercial publication.
 
 ## New clients and donations — 3.3
 

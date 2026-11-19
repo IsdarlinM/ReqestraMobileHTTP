@@ -36,7 +36,7 @@ import com.imr.reqestra.presentation.i18n.tr
 
 private const val REPOSITORY_URL = "https://github.com/IsdarlinM/ReqestraMobileHTTP"
 private const val DOCUMENTATION_URL =
-    "https://github.com/IsdarlinM/ReqestraMobileHTTP/blob/main/docs/GUIA_DE_USO.md"
+    "https://github.com/IsdarlinM/ReqestraMobileHTTP/blob/main/docs/USER_GUIDE.md"
 private const val ISSUES_URL =
     "https://github.com/IsdarlinM/ReqestraMobileHTTP/issues"
 

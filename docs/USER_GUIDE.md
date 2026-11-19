@@ -80,6 +80,6 @@ The maintainer must configure a valid public PayPal donation-button identifier. 
 - [Reqestra repository](https://github.com/IsdarlinM/ReqestraMobileHTTP)
 - [Report an issue or request help](https://github.com/IsdarlinM/ReqestraMobileHTTP/issues)
 - [Web installation documentation](WEB_SETUP.md)
-- [Languages and interface](INTERNACIONALIZACION_Y_EXTENSIONS.md)
+- [Languages and interface](LOCALIZATION_AND_EXTENSIONS.md)
 
 Never paste API keys, passwords, session cookies, or personal data into public issue reports. Redact sensitive fields before sharing sample requests.

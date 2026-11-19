@@ -53,7 +53,7 @@ The initial HTML is in English. The 🌐 selector highlights the active language
 
 ## About the application and help
 
-The **About & Help** page is available in the desktop sidebar and under **More** on mobile. It includes a quick-start guide, features and browser limitations, privacy, the current version, and official links to the [user guide](../docs/GUIA_DE_USO.md), web setup, and issue tracker. It never sends HTTP requests automatically.
+The **About & Help** page is available in the desktop sidebar and under **More** on mobile. It includes a quick-start guide, features and browser limitations, privacy, the current version, and official links to the [user guide](../docs/USER_GUIDE.md), web setup, and issue tracker. It never sends HTTP requests automatically.
 
 The help page was introduced in 3.5.0. The current version is **3.5.1**.
 
