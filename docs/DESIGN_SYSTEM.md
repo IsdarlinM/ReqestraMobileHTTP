@@ -1,58 +1,58 @@
-# Reqestra 3.5.1 — sistema visual
+# Reqestra 3.5.1 — Visual Design System
 
-## Objetivo
+## Objective
 
-Presentación consistente en temas claro y oscuro sin alterar reglas HTTP, sesiones ni persistencia.
+Deliver a consistent appearance in light and dark themes without changing HTTP behavior, sessions, or persistence.
 
-## Paleta
+## Palette
 
-| Uso | Oscuro | Claro |
+| Purpose | Dark | Light |
 |---|---|---|
-| Fondo | #07131F | #F3F7FA |
-| Superficie | #102130 | #FFFFFF |
-| Superficie secundaria | #203647 | #E5EDF2 |
-| Acción principal | #34E8C2 | #006B5B |
-| Texto principal | #EAF4F8 | #152B36 |
-| Texto secundario | #B8C8D5 | #506472 |
-| Información | #AED8FF | #225D85 |
-| Advertencia | #FFD38E | #875000 |
+| Background | #07131F | #F3F7FA |
+| Surface | #102130 | #FFFFFF |
+| Secondary surface | #203647 | #E5EDF2 |
+| Primary action | #34E8C2 | #006B5B |
+| Primary text | #EAF4F8 | #152B36 |
+| Secondary text | #B8C8D5 | #506472 |
+| Information | #AED8FF | #225D85 |
+| Warning | #FFD38E | #875000 |
 | Error | #FFB4AE | #B3261E |
 
-Los colores onPrimary, onSurface y onContainer se definen en presentation/theme/Theme.kt.
+The `onPrimary`, `onSurface`, and `onContainer` colors are defined in `presentation/theme/Theme.kt`.
 
-## Contraste y semántica
+## Contrast and semantics
 
-- Principal claro sobre oscuro: 15.12:1.
-- Texto secundario oscuro sobre superficie secundaria oscura: 7.30:1.
-- Acción principal oscura sobre blanco: 6.45:1.
-- Texto secundario claro sobre superficie secundaria clara: 5.20:1.
-- Texto sobre contenedor de éxito oscuro: 8.57:1.
+- Light primary text against dark background: 15.12:1.
+- Dark-theme secondary text against dark secondary surface: 7.30:1.
+- Dark primary action against white: 6.45:1.
+- Light-theme secondary text against light secondary surface: 5.20:1.
+- Text on the dark success container: 8.57:1.
 
-Estos pares verificados superan 4.5:1, pero no sustituyen una auditoría integral de accesibilidad.
+These verified pairs exceed 4.5:1, but they are not a substitute for a comprehensive accessibility audit.
 
-GET y HEAD usan azul; POST, verde; PUT/PATCH, ámbar; DELETE, rojo. Los códigos HTTP 2xx se muestran en verde, 3xx en ámbar y 4xx/5xx en rojo. El texto acompaña siempre al color.
+GET and HEAD use blue; POST uses green; PUT/PATCH use amber; and DELETE uses red. HTTP status codes 2xx appear in green, 3xx in amber, and 4xx/5xx in red. Color is always accompanied by text.
 
-## Componentes
+## Components
 
-- StudioScreenHeader: títulos, rótulos superiores y subtítulos consistentes.
-- StudioSurfaceCard: tarjetas con borde sutil y esquinas de 22 dp.
-- StudioTag y StudioMethodTag: indicadores con color y descripción textual.
-- StatusBanner: información azul y error rojo, con controles accesibles.
-- CodeEditor: fondo suave, monoespaciado legible y borde verde al enfocar.
-- ReqestraApp: barra superior con marca, navegación con selección destacada.
-- WorkspaceScreen: botón principal de enviar visible y resumen HTTP mejorado.
+- `StudioScreenHeader`: consistent headings, overlines, and subtitles.
+- `StudioSurfaceCard`: cards with subtle borders and 22 dp corners.
+- `StudioTag` and `StudioMethodTag`: color-coded indicators with text labels.
+- `StatusBanner`: blue informational and red error states with accessible controls.
+- `CodeEditor`: soft background, legible monospace type, and green focus border.
+- `ReqestraApp`: branded top bar and navigation with a prominent selected state.
+- `WorkspaceScreen`: visible primary Send action and an improved HTTP summary.
 
-## Menús desplegables y selección (revisión 3.5.1)
+## Dropdown menus and selection (3.5.1 review)
 
-- Los menús de método HTTP, tipo de cuerpo, entorno y colección de pruebas fijan `containerColor = MaterialTheme.colorScheme.surface` y texto `onSurface` en ambos temas. La descripción secundaria del método utiliza `onSurfaceVariant`.
-- El menú de idioma ya utiliza `surface` / `onSurface`, y la opción seleccionada `primaryContainer` / `onPrimaryContainer`.
-- El panel inferior **Más** utiliza `background` / `onBackground` y conserva su estilo de tarjetas.
-- Evitar fondos transparentes en menús emergentes, colores hexadecimales en elementos de menú o texto heredado de un contexto de contraste diferente.
-- Para cada botón que abre un menú, comprobar apertura, desplazamiento, selección, cierre y legibilidad en claro y oscuro, incluido tamaño de fuente aumentado.
-- La interfaz web utiliza sus propios tokens CSS; no se deben trasladar valores de Compose directamente al navegador.
+- HTTP method, body type, environment, and test-collection dropdowns explicitly set `containerColor = MaterialTheme.colorScheme.surface` and use `onSurface` for text in both themes. Secondary method descriptions use `onSurfaceVariant`.
+- The language menu already uses `surface` / `onSurface`, and the selected option uses `primaryContainer` / `onPrimaryContainer`.
+- The **More** bottom sheet uses `background` / `onBackground` and preserves its card design.
+- Avoid transparent popup backgrounds, hard-coded hexadecimal menu colors, and inherited text colors from contexts with different contrast requirements.
+- Test opening, scrolling, selection, closing, and legibility in both themes—including increased font size—for every menu trigger.
+- The web interface has its own CSS tokens; do not copy Compose values directly into browser styles.
 
-## Verificación
+## Verification
 
-En Termux, ejecutar ./gradlew :app:assembleDebug :app:testDebugUnitTest.
-Comprobar ambos temas, tamaño de texto aumentado, TalkBack, orientación, URLs largas y todos los estados de petición.
-Las pruebas de compilación Android no se consideran aprobadas hasta que se ejecute el comando local y termine correctamente; GitHub Actions ha tenido errores de arranque de runner.
+In Termux, run `./gradlew :app:assembleDebug :app:testDebugUnitTest`.
+
+Check both themes, larger text, TalkBack, screen rotation, long URLs, and all request states. Android compilation must not be marked successful until the local command completes successfully; GitHub Actions has previously encountered runner startup failures.
