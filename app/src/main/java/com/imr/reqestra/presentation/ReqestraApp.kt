@@ -149,127 +149,135 @@ fun ReqestraApp(
                     }
                 },
                 actions = {
-                    Box {
-                        val currentName = ReqestraLanguages.supported
-                            .firstOrNull { it.code == language }?.name ?: "English"
-                        IconButton(
-                            onClick = { openLanguageMenu = true },
-                            modifier = Modifier
-                                .size(44.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(MaterialTheme.colorScheme.secondaryContainer),
-                        ) {
-                            Icon(
-                                Icons.Outlined.Language,
-                                contentDescription = "${tr("Idioma de la interfaz")}: $currentName",
-                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = openLanguageMenu,
-                            onDismissRequest = { openLanguageMenu = false },
-                            modifier = Modifier
-                                .widthIn(min = 228.dp)
-                                .background(MaterialTheme.colorScheme.surface),
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ) {
-                            Text(
-                                tr("Idioma de la interfaz"),
-                                modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.labelLarge,
-                            )
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                modifier = Modifier.padding(bottom = 4.dp),
-                            )
-                            ReqestraLanguages.supported.forEach { choice ->
-                                val selectedLanguage = language == choice.code
-                                val foreground = if (selectedLanguage)
-                                    MaterialTheme.colorScheme.onPrimaryContainer
-                                else MaterialTheme.colorScheme.onSurface
-                                DropdownMenuItem(
-                                    modifier = Modifier
-                                        .padding(horizontal = 7.dp, vertical = 2.dp)
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(
-                                            if (selectedLanguage)
-                                                MaterialTheme.colorScheme.primaryContainer
-                                            else Color.Transparent,
-                                        ),
-                                    text = {
-                                        Text(
-                                            choice.name,
-                                            color = foreground,
-                                            style = if (selectedLanguage)
-                                                MaterialTheme.typography.titleSmall
-                                            else MaterialTheme.typography.bodyMedium,
-                                        )
-                                    },
-                                    leadingIcon = {
-                                        Text(
-                                            choice.code.uppercase(java.util.Locale.ROOT),
-                                            color = foreground,
-                                            style = MaterialTheme.typography.labelSmall,
-                                        )
-                                    },
-                                    trailingIcon = {
-                                        if (selectedLanguage) {
-                                            Icon(
-                                                Icons.Outlined.Check,
-                                                contentDescription = tr("Seleccionado"),
-                                                tint = foreground,
-                                            )
-                                        }
-                                    },
-                                    onClick = {
-                                        language = choice.code
-                                        preferences.edit().putString("language", choice.code).apply()
-                                        openLanguageMenu = false
-                                    },
+                    // Keep Language, Donate and Theme as three distinct touch targets.
+                    // Explicit spacing works in both compact and expanded layouts.
+                    Row(
+                        modifier = Modifier.padding(end = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box {
+                            val currentName = ReqestraLanguages.supported
+                                .firstOrNull { it.code == language }?.name ?: "English"
+                            IconButton(
+                                onClick = { openLanguageMenu = true },
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                            ) {
+                                Icon(
+                                    Icons.Outlined.Language,
+                                    contentDescription = "${tr("Idioma de la interfaz")}: $currentName",
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                 )
                             }
+                            DropdownMenu(
+                                expanded = openLanguageMenu,
+                                onDismissRequest = { openLanguageMenu = false },
+                                modifier = Modifier
+                                    .widthIn(min = 228.dp)
+                                    .background(MaterialTheme.colorScheme.surface),
+                                containerColor = MaterialTheme.colorScheme.surface,
+                            ) {
+                                Text(
+                                    tr("Idioma de la interfaz"),
+                                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
+                                HorizontalDivider(
+                                    color = MaterialTheme.colorScheme.outlineVariant,
+                                    modifier = Modifier.padding(bottom = 4.dp),
+                                )
+                                ReqestraLanguages.supported.forEach { choice ->
+                                    val selectedLanguage = language == choice.code
+                                    val foreground = if (selectedLanguage)
+                                        MaterialTheme.colorScheme.onPrimaryContainer
+                                    else MaterialTheme.colorScheme.onSurface
+                                    DropdownMenuItem(
+                                        modifier = Modifier
+                                            .padding(horizontal = 7.dp, vertical = 2.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .background(
+                                                if (selectedLanguage)
+                                                    MaterialTheme.colorScheme.primaryContainer
+                                                else Color.Transparent,
+                                            ),
+                                        text = {
+                                            Text(
+                                                choice.name,
+                                                color = foreground,
+                                                style = if (selectedLanguage)
+                                                    MaterialTheme.typography.titleSmall
+                                                else MaterialTheme.typography.bodyMedium,
+                                            )
+                                        },
+                                        leadingIcon = {
+                                            Text(
+                                                choice.code.uppercase(java.util.Locale.ROOT),
+                                                color = foreground,
+                                                style = MaterialTheme.typography.labelSmall,
+                                            )
+                                        },
+                                        trailingIcon = {
+                                            if (selectedLanguage) {
+                                                Icon(
+                                                    Icons.Outlined.Check,
+                                                    contentDescription = tr("Seleccionado"),
+                                                    tint = foreground,
+                                                )
+                                            }
+                                        },
+                                        onClick = {
+                                            language = choice.code
+                                            preferences.edit().putString("language", choice.code).apply()
+                                            openLanguageMenu = false
+                                        },
+                                    )
+                                }
+                            }
                         }
-                    }
-                    if (compactLayout) {
+                        if (compactLayout) {
+                            IconButton(
+                                onClick = { viewModel.selectSection(AppSection.SUPPORT) },
+                                modifier = Modifier.size(44.dp).background(
+                                    MaterialTheme.colorScheme.tertiaryContainer,
+                                    RoundedCornerShape(12.dp),
+                                ),
+                            ) {
+                                Icon(
+                                    Icons.Outlined.FavoriteBorder,
+                                    contentDescription = tr("Donar"),
+                                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                )
+                            }
+                        } else {
+                            FilledTonalButton(
+                                onClick = { viewModel.selectSection(AppSection.SUPPORT) },
+                                modifier = Modifier.heightIn(min = 44.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                                colors = ButtonDefaults.filledTonalButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                ),
+                            ) {
+                                Icon(Icons.Outlined.FavoriteBorder, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(Modifier.width(5.dp))
+                                Text(tr("Donar"), style = MaterialTheme.typography.labelLarge, maxLines = 1)
+                            }
+                        }
                         IconButton(
-                            onClick = { viewModel.selectSection(AppSection.SUPPORT) },
-                            modifier = Modifier.size(44.dp).background(
-                                MaterialTheme.colorScheme.tertiaryContainer,
-                                RoundedCornerShape(12.dp),
-                            ),
+                            onClick = onToggleTheme,
+                            modifier = Modifier.size(44.dp),
                         ) {
                             Icon(
-                                Icons.Outlined.FavoriteBorder,
-                                contentDescription = tr("Donar"),
-                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                imageVector = if (darkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
+                                contentDescription = if (darkTheme) tr("Modo claro") else tr("Modo oscuro"),
+                                tint = MaterialTheme.colorScheme.onSurface,
                             )
                         }
-                    } else {
-                        FilledTonalButton(
-                            onClick = { viewModel.selectSection(AppSection.SUPPORT) },
-                            modifier = Modifier.heightIn(min = 44.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
-                            colors = ButtonDefaults.filledTonalButtonColors(
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            ),
-                        ) {
-                            Icon(Icons.Outlined.FavoriteBorder, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(Modifier.width(5.dp))
-                            Text(tr("Donar"), style = MaterialTheme.typography.labelLarge, maxLines = 1)
-                        }
-                    }
-                    IconButton(
-                        onClick = onToggleTheme,
-                        modifier = Modifier.size(44.dp),
-                    ) {
-                        Icon(
-                            imageVector = if (darkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
-                            contentDescription = if (darkTheme) tr("Modo claro") else tr("Modo oscuro"),
-                            tint = MaterialTheme.colorScheme.onSurface,
-                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

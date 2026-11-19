@@ -65,3 +65,17 @@ test("Layout fixes do not change the public version or remove the donation optio
   assert.match(html,/id="languageTrigger"/);
   assert.match(html,/id="themeToggle"/);
 });
+
+test("Android header leaves visible space between Language, Donate and Theme",()=>{
+  const topbar=android.slice(android.indexOf("topBar = {"),android.indexOf("bottomBar = {"));
+  assert.ok(topbar.includes("actions = {"),"Actions slot must exist");
+  assert.ok(topbar.includes("modifier = Modifier.padding(end = 8.dp)"),"Trailing toolbar inset is required");
+  assert.ok(topbar.includes("horizontalArrangement = Arrangement.spacedBy(10.dp)"),"Actions need 10 dp spacing");
+  const language=topbar.indexOf("openLanguageMenu = true");
+  const donation=topbar.indexOf("selectSection(AppSection.SUPPORT)");
+  const appearance=topbar.indexOf("onClick = onToggleTheme");
+  assert.ok(language>=0 && donation>language && appearance>donation,
+    "Language, Donate and appearance must remain distinct ordered actions");
+  assert.ok(topbar.includes("if (compactLayout) {"),"Compact donation action must remain");
+  assert.ok(topbar.includes("modifier = Modifier.size(44.dp)"),"Minimum touch targets must remain");
+});
