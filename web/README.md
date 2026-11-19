@@ -83,3 +83,7 @@ controles superpuestos.
 
 Los enlaces de pago siguen abriéndose exclusivamente en PayPal, y la
 aplicación no recopila datos financieros.
+
+## Consistencia visual con Android (3.5.1)
+
+La aplicación web conserva su propio sistema de colores CSS y no comparte directamente los tokens de Jetpack Compose. La revisión de los menús desplegables Android (método HTTP, cuerpo, entornos y colecciones de pruebas) está documentada en [`docs/DESIGN_SYSTEM.md`](../docs/DESIGN_SYSTEM.md). Para validar la paridad visual, comprobar los menús web y Android en modos claro y oscuro, con foco de teclado, selección y contraste de texto. Esta nota no implica que se hayan ejecutado pruebas visuales automatizadas en ambas plataformas.
