@@ -1,116 +1,89 @@
-# Reqestra 3.4: idiomas, logotipo y extensiones
+# Reqestra 3.4 — Languages, Logo, and Extensions
 
-## 1. Idiomas compatibles
+## 1. Supported languages
 
-| Código | Idioma | Valor predeterminado en dispositivo |
+| Code | Language | Device default behavior |
 | --- | --- | --- |
-| en | Inglés | Cuando el dispositivo usa inglés o no tiene un idioma compatible |
-| es | Español | Cuando el idioma principal del dispositivo es español |
-| ru | Ruso | Cuando el idioma principal del dispositivo es ruso |
-| zh | Mandarín, escritura simplificada | Cuando el idioma principal comienza por zh (por ejemplo zh-CN) |
-| pt | Portugués | Cuando el idioma principal comienza por pt |
-| fr | Francés | Cuando el idioma principal comienza por fr |
+| en | English | Used when the device is in English or its language is unsupported |
+| es | Spanish | Used when the primary device language is Spanish |
+| ru | Russian | Used when the primary device language is Russian |
+| zh | Simplified Mandarin Chinese | Used when the primary device language begins with zh (e.g., zh-CN) |
+| pt | Portuguese | Used when the primary device language begins with pt |
+| fr | French | Used when the primary device language begins with fr |
 
-El idioma es una **preferencia de interfaz**; no altera cuerpos HTTP, credenciales,
-headers ni respuestas de APIs. El catálogo fuente es local y no usa servicios de
-traducción remotos que puedan recibir datos sensibles.
+Language is an **interface preference**; it does not alter HTTP bodies, credentials, headers, or API responses. Translation catalogs are bundled locally rather than calling remote translation services that could receive sensitive data.
 
-### Selección automática
+### Automatic language selection
 
-- Android: idioma principal desde la configuración del dispositivo,
-  con inglés como respaldo. Las preferencias manuales se guardan
-  en `SharedPreferences("reqestra_ui")`.
-- Web: se lee `navigator.languages[0]` (o `navigator.language`), no los
-  idiomas secundarios. El cambio manual se guarda en `localStorage`
-  bajo `reqestra.locale`.
-- El selector 🌐 de la **barra superior** muestra las seis alternativas.
-- Si el usuario cambia manualmente el idioma, esa selección prevalece sobre
-  la detección automática en aperturas posteriores.
-- Chino utiliza `zh` y muestra caracteres **simplificados**.
-- Si el idioma del sistema no está soportado, se usa inglés, nunca español por defecto.
+- Android: uses the device's primary language with English fallback. Manual choices are stored in `SharedPreferences("reqestra_ui")`.
+- Web: reads `navigator.languages[0]` (or `navigator.language`), not secondary languages. Manual choices are stored under `reqestra.locale` in `localStorage`.
+- The 🌐 selector in the **top bar** offers all six options.
+- A manual choice overrides automatic detection on subsequent launches.
+- Chinese uses the `zh` code and **simplified** characters.
+- Unsupported system languages fall back to English, never Spanish.
 
-### Cobertura actual y calidad
+### Current coverage and quality
 
-Se localizaron los menús principales, encabezados, controles, etiquetas,
-acciones y gran parte de las explicaciones de interfaz. Los mensajes técnicos
-producidos por validadores heredados y algunas descripciones especializadas pueden
-seguir presentándose en inglés de respaldo (o, en Android, una cadena heredada)
-mientras se completa la localización integral. Esto **no** constituye
-certificación de traducción profesional. Para lanzamiento público, se recomienda
-revisión de las seis variantes por hablantes especializados en HTTP/ciberseguridad.
+Primary menus, headings, controls, labels, actions, and much of the explanatory UI are localized. Technical messages from legacy validators and some specialized descriptions may still use English fallbacks (or an older string on Android) until localization is complete. This **does not** constitute professional translation certification. For public launch, specialist native speakers familiar with HTTP/cybersecurity should review all six language variants.
 
-### Archivos
+### Files
 
-- `web/lib/i18n.mjs`: catálogo Web, selección, persistencia y traducción
-  de nodos de interfaz, incluyendo tarjetas creadas dinámicamente.
-- `app/src/main/java/com/imr/reqestra/presentation/i18n/ReqestraLanguages.kt`:
-  catálogo Compose, normalización y traducciones.
-- `app/src/main/res/xml/locales_config.xml`: idiomas declarados ante Android.
-- `app/src/main/java/com/imr/reqestra/presentation/ReqestraApp.kt`:
-  icono del selector 🌐 y persistencia del idioma.
+- `web/lib/i18n.mjs`: web catalogs, language selection, persistence, and UI node translation, including dynamically created cards.
+- `app/src/main/java/com/imr/reqestra/presentation/i18n/ReqestraLanguages.kt`: Compose catalogs, normalization, and translations.
+- `app/src/main/res/xml/locales_config.xml`: Android-declared languages.
+- `app/src/main/java/com/imr/reqestra/presentation/ReqestraApp.kt`: 🌐 selector icon and language persistence.
 
-## 2. Identidad visual consistente
+## 2. Consistent visual identity
 
-El propietario eligió un **monograma R con órbita cian sobre fondo azul oscuro**.
-La copia reducida del PNG original se almacena en:
+The owner selected an **R monogram with a cyan orbit against a dark blue background**. Optimized versions of the original PNG are stored at:
 
-- `app/src/main/res/drawable-nodpi/reqestra_brand.png` — Android launcher,
-  icono redondo y cabecera Compose.
-- `web/icon.png` — cabecera web, favicon, instalador PWA.
+- `app/src/main/res/drawable-nodpi/reqestra_brand.png` — Android launcher, round icon, and Compose header.
+- `web/icon.png` — web header, favicon, and PWA installation.
 
-El original de alta resolución debe conservarse fuera del repositorio si el
-propietario quiere preparar materiales de impresión u otras resoluciones.
-La conversión para aplicaciones está reducida y optimizada; puede haber pérdida
-leve de gradientes respecto al original.
+The high-resolution original should be kept outside the repository if the owner wants printing assets or other resolutions. App-sized assets have been downsized and optimized, with potentially minor gradient differences.
 
-## 3. Extensiones integradas que se pueden abrir
+## 3. Built-in extensions with navigation actions
 
-| Extensión Android | Pantalla real | Estado |
+| Android extension | Actual screen | Status |
 | --- | --- | --- |
-| Collection Manager | Colecciones | Integrada |
-| Environment Variables | Colecciones → entornos | Integrada |
-| Test Assertions | Pruebas | Integrada |
-| cURL Toolkit | Estudio → cURL | Integrada |
-| OpenAPI Importer | Colecciones → importación | Integrada |
-| Query Parameterizer | Estudio → Query | Integrada |
-| Endpoint Explorer | Explorar | Integrada |
-| GraphQL Schema Explorer | Sin pantalla implementada | Planeada |
-| Proxy Connector | Sin implementación | Planeada |
-| AI Assistant | Sin implementación | Planeada |
+| Collection Manager | Collections | Built in |
+| Environment Variables | Collections → Environments | Built in |
+| Test Assertions | Tests | Built in |
+| cURL Toolkit | Studio → cURL | Built in |
+| OpenAPI Importer | Collections → Import | Built in |
+| Query Parameterizer | Studio → Query | Built in |
+| Endpoint Explorer | Explore | Built in |
+| GraphQL Schema Explorer | No implemented screen | Planned |
+| Proxy Connector | Not implemented | Planned |
+| AI Assistant | Not implemented | Planned |
 
-Las extensiones integradas son **módulos internos**, no APK independientes.
-Su botón Abrir lleva a la pantalla correspondiente. Para funciones planeadas,
-no se presenta un botón de ejecución engañoso.
+Built-in extensions are **internal modules**, not separate APKs. Their Open action navigates to the corresponding screen. Planned features are not given misleading execution buttons.
 
 ### Web
 
-Estudio, entornos, colecciones cifradas, pruebas, exploración, importación cURL y
-OpenAPI, sesiones y gateway privado están enlazados desde Extensiones.
-El gateway solo funciona si se configura `REQESTRA_ALLOWED_ORIGINS` en el
-servidor local; abrir la pantalla no activa por sí solo el gateway.
-No se ofrecen extensiones descargables, interceptación de otras apps ni
-manipulación arbitraria de paquetes TCP.
+Studio, environments, encrypted collections, tests, exploration, cURL/OpenAPI imports, sessions, and the private gateway are linked from Extensions. The gateway works only when `REQESTRA_ALLOWED_ORIGINS` is configured on the local server; opening the screen does not activate it. Downloadable extensions, interception of other applications, and arbitrary TCP-packet manipulation are not provided.
 
-## 4. Matriz de comprobación
+## 4. Verification matrix
 
-| Caso | Android | Web | Resultado esperado |
+| Case | Android | Web | Expected result |
 | --- | --- | --- | --- |
-| Dispositivo con es-DO | Sí | Sí | Español al abrir sin preferencia previa |
-| Dispositivo con ru-RU | Sí | Sí | Ruso |
-| Dispositivo con zh-CN | Sí | Sí | Chino simplificado |
-| Dispositivo con pt-BR | Sí | Sí | Portugués |
-| Dispositivo con fr-FR | Sí | Sí | Francés |
-| Dispositivo con it-IT | Sí | Sí | Inglés de respaldo |
-| Selección manual 🌐 | Sí | Sí | Re-render de interfaz y persistencia |
-| Cambiar idioma durante un request | Sí | Sí | No modificar el request/response |
-| Extensiones disponibles | Sí | Sí | Navegación a herramienta |
-| Extensiones futuras | Sí | Sí | Estado planeado; sin ejecución |
-| Logo en cabecera | Sí | Sí | Misma imagen elegida |
-| Logo de aplicación | Sí | PWA | Misma imagen optimizada |
+| Device set to es-DO | Yes | Yes | Spanish on first launch with no saved preference |
+| Device set to ru-RU | Yes | Yes | Russian |
+| Device set to zh-CN | Yes | Yes | Simplified Chinese |
+| Device set to pt-BR | Yes | Yes | Portuguese |
+| Device set to fr-FR | Yes | Yes | French |
+| Device set to it-IT | Yes | Yes | English fallback |
+| Manual 🌐 selection | Yes | Yes | UI rerenders and preference persists |
+| Language changed during a request | Yes | Yes | HTTP request/response unchanged |
+| Available extensions | Yes | Yes | Navigate to working tool |
+| Future extensions | Yes | Yes | Planned state without execution |
+| Header logo | Yes | Yes | Same chosen image |
+| Application icon | Yes | PWA | Same optimized image |
 
-## 5. Comandos de validación
+## 5. Validation commands
 
 ### Web
+
 ```bash
 cd ~/ReqestraMobileHTTP/web
 npm run check
@@ -119,191 +92,110 @@ node server.mjs
 ```
 
 ### Android
+
 ```bash
 cd ~/ReqestraMobileHTTP
 ./gradlew --no-daemon testDebugUnitTest assembleDebug --stacktrace
 ```
 
-Las pruebas unitarias no sustituyen verificaciones visuales en dispositivos,
-CORS real, accesibilidad ni la validación de gradientes del logo.
-La actualización a GitHub no demuestra por sí sola que el APK esté compilado.
+Unit tests do not replace visual checks on devices, real CORS testing, accessibility testing, or logo gradient review. Updating GitHub does not itself prove that an APK was built.
 
-
-## 6. Navegación y visibilidad de las donaciones
+## 6. Navigation and donation visibility
 
 ### Android
 
-La barra superior muestra el logotipo PNG junto al nombre de Reqestra. A la
-derecha aparecen el selector 🌐, el botón **Donate/Donar** y un nuevo control
-☀️/🌙 para cambiar entre tema claro y oscuro. Ya no hay un botón superior
-de menú duplicado.
+The top bar shows the PNG logo beside the Reqestra name. On the right are the 🌐 language selector, **Donate** button, and ☀️/🌙 appearance control for switching between light and dark themes. The duplicate top-menu button has been removed.
 
-- En teléfonos estrechos, el acceso se representa como un botón táctil de
-  **corazón** con descripción accesible localizada.
-- En pantallas más anchas, muestra el **corazón y el texto Donate/Donar**
-  traducido al idioma de interfaz.
-- En ambos casos, el botón conduce a la pantalla informativa de apoyo al proyecto,
-  donde el usuario elige explícitamente abrir la página oficial PayPal.
-  No inicia pagos ni cambia permisos por sí solo.
+- On narrow phones, Donate appears as a tappable **heart** icon with a localized accessible description.
+- On wider screens, it shows the **heart and localized Donate text**.
+- Both variants lead to the Support Project information screen, where the user explicitly chooses whether to open PayPal's official page. They do not initiate payment or change permissions automatically.
 
-La barra inferior tiene **cinco** destinos: Estudio, Colecciones, Pruebas,
-Explorar y Más. Los cuatro primeros abren funciones principales y Más
-despliega una hoja inferior con filas de iconos, títulos y descripciones
-para Historial, Inspector, Vista previa, Sesiones y Extensiones. **Más es el
-único botón que abre esta hoja**. El apoyo al proyecto ya dispone de un
-acceso permanente en la cabecera, por lo que no aparece duplicado en la hoja.
+The bottom bar has **five** destinations: Studio, Collections, Tests, Explore, and More. The first four open primary features. More opens a bottom sheet with icon, title, and description rows for History, Inspector, Preview, Sessions, and Extensions. **More is the only button that opens this sheet**. Project support already has a permanent top-bar action and is not duplicated in the sheet.
 
-La etiqueta y la función semántica seleccionada de cada pestaña se
-actualizan con el destino activo. Las etiquetas largas pueden usar
-puntos suspensivos visuales en pantallas pequeñas, pero el botón conserva
-su descripción de accesibilidad.
+The selected label and accessibility semantics update with the active destination. Long labels may be visually ellipsized on small screens, but controls retain their accessible descriptions.
 
 ### Web
 
-La barra superior muestra permanentemente un botón contrastado
-**Donate/Donar** con icono ♥, incluso en la página principal. Se
-encuentra junto al selector de idiomas y al control de apariencia.
-En pantallas muy estrechas se conserva un botón de corazón de 44 px
-con nombre accesible, para evitar que se solape con el logotipo.
-El botón abre la sección **Support/Apoyar proyecto**, no PayPal directamente.
+The top bar permanently displays a contrasting **Donate** button, including on the home screen, beside the language and appearance controls. On narrow displays, a 44 px heart button with an accessible name prevents overlap with the logo. It opens **Support Project**, not PayPal directly.
 
-El sitio web mantiene el menú lateral de escritorio y cinco
-accesos inferiores para dispositivos móviles; se añadieron
-iconos a las acciones de navegación móvil.
+The web app retains desktop sidebar navigation and five mobile bottom-navigation destinations. Icons were added to mobile navigation actions.
 
-### Seguridad, voluntariedad y configuración
+### Security, voluntary donations, and configuration
 
-- La aportación es opcional y **no activa funciones**.
-- Solo la pantalla de apoyo ofrece el enlace saliente de pago,
-  con el dominio oficial de PayPal, si existe una ID pública válida.
-- El \`hosted_button_id\` configurado por el propietario proviene de
-  un enlace de administración; se debe **verificar por separado**
-  la página pública y la cuenta beneficiaria antes de publicar.
-- El botón no recopila números de tarjeta ni credenciales en Reqestra.
+- Contributions are optional and **never activate features**.
+- Only the support screen offers an outbound link to PayPal's official domain when a valid public button ID is configured.
+- The owner's `hosted_button_id` candidate originated from an administrative link; **verify the public donation page and receiving account separately** before publication.
+- Reqestra does not collect card numbers or PayPal credentials.
 
-### Comprobación rápida
+### Quick check
 
-1. Abre Android y Web en inglés y español; revisa el texto del botón.
-2. Comprueba teléfonos de 320, 360 y 420 dp/px para detectar
-   desbordamientos de cabecera y navegación.
-3. En Android pulsa Más en la barra inferior; comprueba que la cabecera no
-   contiene un segundo botón para abrir el mismo menú.
-4. Abre cada una de las cinco herramientas secundarias y confirma
-   que la pantalla correspondiente se presenta.
-5. Pulsa Donate/Donar: debe abrir la pantalla de apoyo sin lanzar
-   un pago automáticamente.
-6. Comprueba PayPal solo tras verificar el destinatario.
+1. Open Android and web clients in English and Spanish; inspect the button labels.
+2. Test 320, 360, and 420 dp/px phones for header or navigation overflow.
+3. On Android, select More in the bottom bar; verify there is no second top-bar control opening the same sheet.
+4. Open all five secondary tools and confirm the intended screen appears.
+5. Select Donate; it should open the support screen without initiating payment.
+6. Verify the PayPal recipient before testing the public destination.
 
-## 7. Apariencia clara y oscura y respuesta táctil — Android 3.4.1
+## 7. Light/dark appearance and touch feedback — Android 3.4.1
 
-La paleta Reqestra utiliza azules marinos y superficies de azul petróleo en
-oscuro, y un fondo azul grisáceo muy claro con tarjetas blancas en modo claro.
-El menú **Más** presenta una hoja inferior con fondo del tema,
-tarjetas individuales, iconos sobre superficies turquesa y separadores discretos.
-Se evita mezclar diferentes paletas de Material3 que reduzcan la coherencia.
+Reqestra's dark palette uses navy and petroleum-blue surfaces. Light mode uses an extremely pale blue-gray background with white cards. The **More** bottom sheet follows the current theme, with individual cards, icons on turquoise surfaces, and discreet separators. Mixing inconsistent Material 3 palettes is avoided.
 
-### Selector ☀️ / 🌙
+### ☀️ / 🌙 selector
 
-- El nuevo botón de la cabecera muestra la acción **Light mode/Modo claro**
-  cuando el tema activo es oscuro y **Dark mode/Modo oscuro** cuando es claro.
-- Al iniciarse por primera vez, la aplicación sigue el tema del sistema.
-- Tras cambiarlo manualmente, la elección se conserva en
-  `SharedPreferences("reqestra_ui")` bajo la clave `theme_mode`,
-  sin alterar las preferencias de idioma ni de trabajo.
-- Las barras de estado y navegación del dispositivo también actualizan
-  el contraste de sus iconos.
-- Los nombres accesibles del botón se ofrecen en los seis idiomas de interfaz.
-- La web conserva su control de apariencia independiente.
+- The top-bar action offers **Light mode** while dark mode is active and **Dark mode** while light mode is active.
+- On first launch, the app follows the system theme.
+- After a manual change, the selection is saved under the `theme_mode` key in `SharedPreferences("reqestra_ui")`, without modifying language or workspace settings.
+- Device status and navigation bars also adjust icon contrast.
+- The control's accessible names are available in all six interface languages.
+- The web client has an independent appearance setting.
 
-### Respuesta táctil
+### Touch feedback
 
-La barra inferior y los elementos de la hoja Más evitan el efecto expansivo
-de ripple al tocar: muestran en su lugar una variación **discreta del
-color de fondo mientras el botón está presionado**. Siguen siendo
-elementos accionables, con etiquetas, áreas táctiles amplias y
-semántica accesible. Los controles generales y los campos de formulario
-siguen los comportamientos estándar de Material3.
+Bottom navigation and More-sheet rows avoid the expanding ripple effect on touch. Instead, they display a **subtle background-color change while pressed**. They remain actionable, labeled, have generous touch targets, and preserve accessible semantics. General controls and form fields use standard Material 3 behavior.
 
-### Logotipo PNG
+### PNG logo
 
-Se comprobó que `app/src/main/res/drawable-nodpi/reqestra_brand.png`
-y `web/icon.png` contienen **los mismos bytes PNG**. El manifiesto
-Android utiliza `@drawable/reqestra_brand` y la web lo carga tanto
-en la cabecera y favicon como en su manifiesto PWA. No se sustituye
-la identidad de marca ni se genera un segundo logotipo distinto.
+The files `app/src/main/res/drawable-nodpi/reqestra_brand.png` and `web/icon.png` were verified to contain **identical PNG bytes**. The Android manifest uses `@drawable/reqestra_brand`; the web uses that image in its header, favicon, and PWA manifest. There is no replacement branding or second generated logo.
 
-### Matriz de pruebas adicionales
+### Additional test matrix
 
-| Acción | Resultado esperado |
+| Action | Expected result |
 | --- | --- |
-| Abrir con sistema oscuro, sin preferencia | Aparece el tema oscuro |
-| Abrir con sistema claro, sin preferencia | Aparece el tema claro |
-| Pulsar ☀️ en oscuro | Cambia a claro y conserva la elección |
-| Pulsar 🌙 en claro | Cambia a oscuro y conserva la elección |
-| Rotar o reiniciar Android | Tema manual persiste |
-| Cambiar de idioma | Cambia el texto accesible de apariencia |
-| Pulsar Más | Abre un único menú inferior |
-| Pulsar una fila del menú | Navega sin ripple amplio |
-| Pulsar un tab inferior | Marca el tab activo, sin efecto de puntero |
-| Pulsar Donar | Abre la pantalla de apoyo, sin pagar automáticamente |
-| Abrir Web y Android | Mantienen exactamente el mismo PNG |
+| Open with dark system theme and no saved preference | Dark theme appears |
+| Open with light system theme and no saved preference | Light theme appears |
+| Tap ☀️ in dark mode | Switch to light and retain choice |
+| Tap 🌙 in light mode | Switch to dark and retain choice |
+| Rotate or restart Android | Manual theme persists |
+| Change interface language | Appearance accessibility text changes |
+| Tap More | Open a single bottom sheet |
+| Tap a menu row | Navigate without a large ripple |
+| Tap a bottom tab | Highlight active tab without pointer effect |
+| Tap Donate | Open support screen without automatic payment |
+| Open web and Android | Both use the same PNG |
 
+## 8. Localization audit and language selector — 3.5.0
 
+### Android selector
 
-## 8. Auditoría de localización y selector de idiomas — 3.5.0
+The 🌐 dropdown follows Material 3 and Reqestra's palette in light and dark modes. It displays a localized **Interface language** heading, a code (EN, ES, RU, ZH, PT, or FR), the native-language name, and a check mark for the selected option. The active row uses `primaryContainer` with `onPrimaryContainer` text, which both adjust to the theme. Selection is announced for accessibility and persisted locally.
 
-### Selector de Android
+### Web selector
 
-El menú desplegable 🌐 sigue el diseño de Material 3 y la paleta de Reqestra
-en claro y oscuro. Muestra un encabezado localizado «Idioma de la interfaz»,
-el código (EN, ES, RU, ZH, PT o FR), el nombre nativo y una marca de
-verificación para la opción elegida. La fila activa usa el color
-`primaryContainer` y el texto `onPrimaryContainer`, que cambian
-con el tema. La selección se anuncia para accesibilidad y persiste
-en las preferencias locales.
+A visible native `select` was replaced by an accessible menu with `aria-expanded`, `role="listbox"`, and `aria-selected` rows. The active option has a ✓ check mark, border, and accent background in both themes. Keyboard, Escape, arrows, outside clicks, and focus restoration on close are supported. The earlier selector remains hidden only for internal compatibility.
 
-### Selector de Web
+### Strings and coverage
 
-Se reemplazó el `select` nativo visible por un menú accesible con
-`aria-expanded`, `role="listbox"` y filas `aria-selected`.
-La opción activa presenta una marca ✓, borde y fondo de acento tanto
-en modo claro como oscuro. Se soportan teclado, Escape, flechas,
-clic exterior y foco de retorno al cerrar. El selector anterior
-permanece oculto solo para conservar compatibilidad interna.
+- The six languages are **en, es, ru, zh (simplified), pt, and fr**.
+- The **web** catalog contains 328 static keys in all six languages, all nonempty, plus templates for dynamic messages with names or numbers. A total of 165 initial HTML labels and attributes were changed from Spanish to English while preserving the option to retranslate into Spanish or other languages.
+- The **Android app** centralizes 384 localized strings plus templates for dynamic testing, networking, and validation messages. Hard-coded text was corrected in Collections, Discovery, Automation, Inspector, Sessions, Preview, and Extensions. UI status notices use the catalog before display.
+- Localization applies to the **interface and application messages**, not user-generated content, URLs, headers, variable values, or HTTP bodies. Arbitrary messages returned by servers or external libraries remain unchanged except for recognized local error strings.
+- Tests cover translation values, six languages, dynamic messages, highlighted language selection, and English initial text.
 
-### Cadenas y cobertura
+### Areas requiring checks on real devices
 
-- Los seis idiomas son: **en, es, ru, zh (simplificado), pt y fr**.
-- La **web** contiene un catálogo de 328 claves estáticas en los seis
-  idiomas, todas con entradas no vacías, además de plantillas para
-  mensajes dinámicos con números o nombres. Se convirtieron 165 textos
-  y atributos del HTML inicial de español a inglés, manteniendo la
-  posibilidad de traducirlos nuevamente al español u otro idioma.
-- La **aplicación Android** centraliza 384 cadenas localizadas,
-  más plantillas para mensajes dinámicos de pruebas, red y validación.
-  Se corrigieron textos fijos en pantallas como Colecciones,
-  Descubrimiento, Automatización, Inspector, Sesiones, Vista previa
-  y Extensiones. Los avisos del estado de la UI pasan ahora por
-  el catálogo antes de mostrarse.
-- Las traducciones se aplican a la **interfaz y mensajes propios**,
-  no al contenido generado por usuarios, URLs, encabezados,
-  valores de variables ni cuerpos HTTP. Los mensajes arbitrarios
-  devueltos por servidores o librerías externas también se dejan
-  intactos salvo coincidencias con errores locales reconocidos.
-- Se añadieron pruebas para valores de traducción, seis idiomas,
-  respuestas dinámicas, idioma resaltado y texto inicial inglés.
+Coverage unit tests verify that keys are present, **not** professional linguistic quality or readability at every screen size. For international release, manually test navigation and alerts in all six languages, particularly long Russian, French, and Portuguese labels. Review TalkBack, VoiceOver, browser screen readers, and web-menu focus restoration.
 
-### Aspectos que requieren revisión en dispositivos reales
-
-Una prueba unitaria de cobertura garantiza que las claves estén
-presentes, **no** la calidad idiomática profesional ni que todo
-control se vea bien en todos los tamaños. Para publicar una versión
-internacional, probar manualmente la navegación y las alertas en
-los seis idiomas, especialmente los textos extensos en ruso, francés
-y portugués. Revisar también accesibilidad con TalkBack, VoiceOver
-y lectores del navegador, así como el retorno del foco en el menú Web.
-
-### Comprobación
+### Verification
 
 ```bash
 cd ~/ReqestraMobileHTTP
@@ -314,32 +206,18 @@ cd ..
 ./gradlew --no-daemon :app:testDebugUnitTest :app:assembleDebug
 ```
 
-## 9. Acerca de Reqestra y Ayuda — sin cambio de versión
+## 9. About Reqestra and Help — no version change
 
 ### Android
 
-Desde **Más** en la barra inferior se puede abrir la pantalla
-**Acerca de y ayuda**. Reutiliza el estilo del proyecto, la misma imagen
-PNG corporativa y la versión obtenida de `BuildConfig.VERSION_NAME`.
-Incluye primeros pasos, herramientas integradas, privacidad y seguridad,
-más botones para abrir la guía, reportar problemas o consultar el código
-en GitHub mediante HTTPS.
+Use **More** in bottom navigation to open **About & Help**. It reuses the project styling, the same corporate PNG, and the version from `BuildConfig.VERSION_NAME`. It includes a quick start, built-in tools, privacy and security guidance, and buttons to open the user guide, report issues, or view GitHub source code via HTTPS.
 
 ### Web
 
-En escritorio, **About & Help** se encuentra en la navegación lateral;
-en móviles, dentro de **More**. Contiene los mismos conceptos, describe
-la limitación CORS propia de navegadores y ofrece accesos a Estudio,
-Extensiones, documentación y problemas. Los enlaces se abren en otra
-pestaña con protección `noopener noreferrer`. La página es informativa
-y no envía peticiones de red hasta que se sigue un enlace externo.
+On desktop, **About & Help** appears in the sidebar; on mobile, under **More**. It covers the same topics, describes browser CORS limits, and links to Studio, Extensions, documentation, and issues. Links open in a separate tab protected by `noopener noreferrer`. The page is informational and does not send network requests until an external link is followed.
 
-### Idiomas y comprobación
+### Languages and checks
 
-Las etiquetas, párrafos y enlaces nuevos cuentan con traducciones
-para inglés, español, ruso, chino mandarín simplificado, portugués
-y francés. Se añadieron pruebas sobre navegación y disponibilidad
-de los textos. La guía completa está en
-[GUIA_DE_USO.md](GUIA_DE_USO.md).
+The new labels, paragraphs, and links have translations for English, Spanish, Russian, Simplified Mandarin Chinese, Portuguese, and French. Tests were added for navigation and text availability. See the full [user guide](GUIA_DE_USO.md).
 
-La versión pública de Android y Web permanece **3.5.0**.
+The help section was introduced without a version change in **3.5.0**; the current public release is **3.5.1**.
