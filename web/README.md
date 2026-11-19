@@ -1,4 +1,4 @@
-# Reqestra Web 3.5
+# Reqestra Web 3.5.1
 
 Cliente web multilingüe de Reqestra: Estudio HTTP, query/variables, colecciones cifradas, OpenAPI/cURL, sesiones por origen, pruebas, exploración acotada, historial, inspector, vista previa HTML aislada y donaciones PayPal configurables.
 
@@ -69,5 +69,17 @@ y limitaciones del navegador, privacidad, versión y enlaces oficiales
 a la [guía de uso](../docs/GUIA_DE_USO.md), la configuración Web y
 el repositorio de problemas. No envía solicitudes HTTP automáticamente.
 
-La versión sigue siendo **3.5.0**; solo se renovó la caché interna
-de la PWA para propagar los cambios visuales.
+La sección de ayuda llegó en la 3.5.0. La versión actual es **3.5.1**.
+
+## Encabezado accesible 3.5.1
+
+El botón Donar contiene un SVG de corazón con geometría y dimensiones fijas;
+no utiliza el glifo ♥, que dependía de la fuente del navegador. En teléfonos
+muestra un icono de 20 px centrado en una superficie de 44 × 44 px.
+El botón de apariencia tiene iconos SVG de sol/luna y una descripción
+accesible traducida a los seis idiomas, sin ocultar el acceso a donaciones.
+Los estados del navegador se ocultan en pantallas intermedias para evitar
+controles superpuestos.
+
+Los enlaces de pago siguen abriéndose exclusivamente en PayPal, y la
+aplicación no recopila datos financieros.

@@ -192,3 +192,50 @@ main{width:100%;max-width:1420px;margin:0 auto;padding:31px clamp(18px,3.3vw,45p
 }
 /* Reset legacy widths on the hidden native locale selector. */
 .language-control select[hidden]{display:none!important}
+
+/* 3.5.1 — fixed-geometry SVG actions; theme-safe, finger-safe controls. */
+.topbar-right{align-items:center;flex-wrap:nowrap;gap:10px}
+.donate-cta{
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:0 0 auto;gap:9px;height:44px;min-height:44px;min-width:44px;
+  padding:0 15px;box-sizing:border-box;
+  line-height:1;border:1px solid transparent;border-radius:13px;
+  color:var(--accent-dark);background:var(--accent);font-size:13px;font-weight:800;
+  box-shadow:0 2px 8px color-mix(in srgb,var(--accent) 18%,transparent)
+}
+.donate-cta-icon{
+  display:block!important;inline-size:20px;block-size:20px;min-inline-size:20px;
+  flex:0 0 20px;max-inline-size:20px;max-block-size:20px;
+  overflow:visible;vertical-align:middle;pointer-events:none
+}
+.donate-cta-label{display:inline-block;white-space:nowrap;line-height:1.15}
+.donate-cta:active{transform:translateY(0);box-shadow:none}
+.donate-cta[aria-current="page"]{outline:2px solid var(--accent);outline-offset:3px}
+.heart .donate-cta-icon{inline-size:28px;block-size:28px;min-inline-size:28px;
+  max-inline-size:28px;max-block-size:28px;flex-basis:28px}
+.theme-switch{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;
+  min-width:44px;min-height:44px;padding:0;transition:background .14s,border-color .14s}
+.theme-switch:hover{border-color:var(--accent);background:var(--accent-panel)}
+.theme-icon{display:block;width:20px;height:20px;pointer-events:none}
+.theme-icon-sun{display:block}.theme-icon-moon{display:none}
+[data-theme="light"] .theme-icon-sun{display:none}
+[data-theme="light"] .theme-icon-moon{display:block}
+@media(min-width:751px) and (max-width:1150px){
+  /* The sidebar leaves too little space for two status pills and three actions. */
+  .topbar-right .pill{display:none}
+}
+@media(max-width:750px){
+  .topbar-right{gap:8px}
+}
+@media(max-width:480px){
+  .donate-cta{width:44px;min-width:44px;height:44px;padding:0;gap:0}
+  .donate-cta-label{display:none}
+  .topbar-right{gap:6px}
+}
+@media(max-width:340px){
+  .topbar-right{gap:4px}
+}
+@media(prefers-reduced-motion:reduce){
+  .donate-cta,.theme-switch{transition:none}
+  .donate-cta:hover{transform:none}
+}

@@ -110,14 +110,24 @@ for(const id of Object.keys(fields)){
   const field=$(id);
   field.addEventListener(field.tagName==="SELECT"||field.type==="checkbox"?"change":"input",()=>syncDraft(id));
 }
+// Keep the actionable name of the appearance control in the current language.
+function refreshAppearanceControl(){
+  const dark=document.documentElement.dataset.theme!=="light";
+  const label=t(dark?"Modo claro":"Modo oscuro");
+  const button=$("themeToggle");
+  button.setAttribute("aria-label",label);
+  button.title=label;
+}
 $("themeToggle").addEventListener("click",()=>{
   const next=document.documentElement.dataset.theme==="light"?"dark":"light";
   document.documentElement.dataset.theme=next;
   localStorage.setItem("reqestra.theme",next);
+  refreshAppearanceControl();
 });
 const preferred=localStorage.getItem("reqestra.theme");
 if(["light","dark"].includes(preferred))document.documentElement.dataset.theme=preferred;
 else document.documentElement.dataset.theme=matchMedia("(prefers-color-scheme:light)").matches?"light":"dark";
+refreshAppearanceControl();
 function sessionHeadersForOrigin(draft=state.draft){
   let origin;
   try {origin=new URL(parametrizeDraft(draft,activeVariables()).url).origin;}
@@ -446,9 +456,12 @@ async function checkGateway(){
 }
 initI18n(()=>{
   renderAll();
-  // Changing the selected language updates visible and newly created sections.
+  // Translate the theme action as well as the newly rendered screen.
+  refreshAppearanceControl();
   translateDom();
 });
+// The initial locale is resolved inside initI18n, including the device language.
+refreshAppearanceControl();
 renderAll();
 ui.nav("studio");
 translateDom();

@@ -63,6 +63,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
@@ -140,7 +141,7 @@ fun ReqestraApp(
                             )
                             if (!compactLayout) {
                                 Text(
-                                    "HTTP STUDIO  •  3.5",
+                                    "HTTP STUDIO  •  3.5.1",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -163,6 +164,7 @@ fun ReqestraApp(
                                 onClick = { openLanguageMenu = true },
                                 modifier = Modifier
                                     .size(44.dp)
+                                    .testTag("action-language")
                                     .clip(RoundedCornerShape(12.dp))
                                     .background(MaterialTheme.colorScheme.secondaryContainer),
                             ) {
@@ -241,10 +243,10 @@ fun ReqestraApp(
                         if (compactLayout) {
                             IconButton(
                                 onClick = { viewModel.selectSection(AppSection.SUPPORT) },
-                                modifier = Modifier.size(44.dp).background(
-                                    MaterialTheme.colorScheme.tertiaryContainer,
-                                    RoundedCornerShape(12.dp),
-                                ),
+                                modifier = Modifier.size(44.dp)
+                                    .testTag("action-donate")
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(MaterialTheme.colorScheme.tertiaryContainer),
                             ) {
                                 Icon(
                                     Icons.Outlined.FavoriteBorder,
@@ -255,7 +257,7 @@ fun ReqestraApp(
                         } else {
                             FilledTonalButton(
                                 onClick = { viewModel.selectSection(AppSection.SUPPORT) },
-                                modifier = Modifier.heightIn(min = 44.dp),
+                                modifier = Modifier.heightIn(min = 44.dp).testTag("action-donate"),
                                 shape = RoundedCornerShape(12.dp),
                                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                                 colors = ButtonDefaults.filledTonalButtonColors(
@@ -270,12 +272,15 @@ fun ReqestraApp(
                         }
                         IconButton(
                             onClick = onToggleTheme,
-                            modifier = Modifier.size(44.dp),
+                            modifier = Modifier.size(44.dp)
+                                .testTag("action-theme")
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
                         ) {
                             Icon(
                                 imageVector = if (darkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
                                 contentDescription = if (darkTheme) tr("Modo claro") else tr("Modo oscuro"),
-                                tint = MaterialTheme.colorScheme.onSurface,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }

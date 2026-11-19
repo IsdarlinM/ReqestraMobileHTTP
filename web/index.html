@@ -17,7 +17,7 @@
   <a class="skip" href="#content">Skip to content</a>
   <div class="shell">
     <aside class="sidebar" aria-label="Navigation">
-      <div class="brand"><img class="brand-image" src="./icon.png" alt="Reqestra logo"><div><strong>Reqestra</strong><small>HTTP STUDIO · WEB 3.5</small></div></div>
+      <div class="brand"><img class="brand-image" src="./icon.png" alt="Reqestra logo"><div><strong>Reqestra</strong><small>HTTP STUDIO · WEB 3.5.1</small></div></div>
       <div class="side-caption">WORKSPACE</div>
       <nav class="side-nav" aria-label="Sections">
         <button data-section="studio" class="active">⌘   Studio</button>
@@ -44,7 +44,12 @@
           <span id="engineStatus" class="pill muted">Browser engine</span>
           <button id="donateNav" type="button" data-section="support"
                   class="donate-cta" aria-label="Donate" title="Donate">
-            <span aria-hidden="true" class="donate-cta-icon">♥</span>
+            <svg class="donate-cta-icon" viewBox="0 0 24 24" width="20" height="20"
+                 xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" focusable="false">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/>
+            </svg>
             <span class="donate-cta-label">Donate</span>
           </button>
           <div class="language-control" id="languageControl">
@@ -59,7 +64,19 @@
                  aria-label="Interface language" hidden></div>
             <select id="languageSelect" hidden aria-label="Interface language"></select>
           </div>
-          <button id="themeToggle" class="icon-button" aria-label="Switch appearance">◐</button>
+          <button id="themeToggle" type="button" class="icon-button theme-switch" aria-label="Switch appearance" title="Switch appearance">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" width="20" height="20"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>
+            </svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" width="20" height="20"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 aria-hidden="true" focusable="false">
+              <path d="M20.985 12.486A9 9 0 0 1 11.514 3.015 9 9 0 1 0 20.985 12.486Z"/>
+            </svg>
+          </button>
         </div>
       </header>
       <main id="content">
@@ -209,7 +226,7 @@
             <img src="./icon.png" width="76" height="76" alt="Reqestra logo" class="about-logo">
             <div class="about-identity-copy">
               <h2>Reqestra HTTP Studio</h2>
-              <p>Version <strong>3.5.0</strong> · Android & Web</p>
+              <p>Version <strong>3.5.1</strong> · Android & Web</p>
               <p>Explore HTTP workflows without surrendering control of your requests.</p>
             </div>
           </div>
@@ -260,7 +277,12 @@
           </div>
         </section>
         <section id="support" class="page" aria-labelledby="supportTitle"><div class="eyebrow">SUPPORT THE PROJECT</div><h1 id="supportTitle">Voluntary donations</h1><p class="lead">Reqestra works without donations; no features require a contribution.</p>
-          <article class="panel narrow"><div class="heart">♥</div><h2>Help improve Reqestra</h2>
+          <article class="panel narrow"><div class="heart"><svg class="donate-cta-icon"
+              viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true" focusable="false">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/>
+            </svg></div><h2>Help improve Reqestra</h2>
             <p>If you choose to donate, payment is handled entirely by PayPal. Reqestra never collects card details or financial information.</p>
             <a id="donateLink" class="button primary full" href="https://www.paypal.com/donate/buttons" target="_blank" rel="noopener noreferrer" aria-disabled="true">Donate with PayPal ↗</a>
             <p id="donateHelp" class="help">The owner must configure the public PayPal button ID before enabling donations.</p>
@@ -268,7 +290,7 @@
           </article>
         </section>
       </main>
-      <footer class="footer"><span>Reqestra Studio · 3.5.0</span><span>Local client · Authorized use only · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Source code</a></span></footer>
+      <footer class="footer"><span>Reqestra Studio · 3.5.1</span><span>Local client · Authorized use only · <a href="https://github.com/IsdarlinM/ReqestraMobileHTTP" target="_blank" rel="noopener noreferrer">Source code</a></span></footer>
     </div>
   </div>
   <nav class="mobile-nav" aria-label="Main sections">

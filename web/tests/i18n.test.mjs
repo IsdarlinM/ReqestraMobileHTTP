@@ -65,3 +65,12 @@ test("HTML source is in English and includes accessible language menu",()=>{
   assert.doesNotMatch(html,/>Guardar petición actual</);
   assert.match(html,/>Save current request</);
 });
+
+test("appearance actions are localized in all six interface languages",()=>{
+  assert.equal(t("Modo claro","en"),"Light mode");
+  assert.equal(t("Modo oscuro","es"),"Modo oscuro");
+  assert.equal(t("Modo claro","ru"),"Светлая тема");
+  assert.equal(t("Modo oscuro","zh"),"深色模式");
+  assert.equal(t("Modo oscuro","pt"),"Modo escuro");
+  assert.equal(t("Modo claro","fr"),"Mode clair");
+});

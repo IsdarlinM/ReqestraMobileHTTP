@@ -58,10 +58,10 @@ test("About help links use known HTTPS repository pages without tracking",()=>{
   assert.ok(load("../../docs/GUIA_DE_USO.md").includes("Guía de uso de Reqestra"));
 });
 
-test("The release version remains unchanged",()=>{
+test("About section uses the 3.5.1 release version",()=>{
   const gradle=load("../../app/build.gradle.kts");
   const pkg=JSON.parse(load("../package.json"));
-  assert.equal(pkg.version,"3.5.0");
-  assert.match(gradle,/versionName = "3\.5\.0"/);
+  assert.equal(pkg.version,"3.5.1");
+  assert.match(gradle,/versionName = "3\.5\.1"/);
   assert.match(aboutAndroid,/BuildConfig\.VERSION_NAME/);
 });

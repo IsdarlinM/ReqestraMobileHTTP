@@ -55,12 +55,12 @@ test("Android places potentially conflicting buttons on separate lines",()=>{
   assert.match(discovery,/modifier = Modifier.weight\(1f\)/);
 });
 
-test("Layout fixes do not change the public version or remove the donation option",()=>{
+test("Responsive controls keep the 3.5.1 version and donation option",()=>{
   const gradle=read("../../app/build.gradle.kts");
   const pkg=JSON.parse(read("../package.json"));
   const html=read("../index.html");
-  assert.match(gradle,/versionName = "3\.5\.0"/);
-  assert.equal(pkg.version,"3.5.0");
+  assert.match(gradle,/versionName = "3\.5\.1"/);
+  assert.equal(pkg.version,"3.5.1");
   assert.match(html,/id="donateNav"/);
   assert.match(html,/id="languageTrigger"/);
   assert.match(html,/id="themeToggle"/);

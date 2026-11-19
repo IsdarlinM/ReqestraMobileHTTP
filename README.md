@@ -1,14 +1,45 @@
-# Reqestra 3.5 — Android y Web
+# Reqestra 3.5.1 — Android y Web
 
 **Reqestra** es un banco de trabajo HTTP para **Android nativo y navegadores web** orientado a desarrollo, depuración de APIs y pruebas de seguridad autorizadas. Permite construir, modificar, enviar e inspeccionar peticiones completas sin limitar el editor al HTML.
 
 ```text
 Reqestra
 Mobile HTTP Workbench
-imr :: v3.5.0
+imr :: v3.5.1
 ```
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
+
+## Reqestra 3.5.1 — interfaz y entrega
+
+- **Web:** el botón Donar utiliza un icono de corazón **SVG** de 20 × 20 px,
+  libre de deformaciones tipográficas, y un control de 44 × 44 px en móvil.
+  El modo claro/oscuro utiliza iconos SVG de sol y luna, con descripción
+  accesible traducida al idioma seleccionado. Se equilibró la barra superior
+  en pantallas intermedias.
+- **Android:** Idioma, Donar y Apariencia tienen áreas táctiles independientes,
+  colores del tema y etiquetas verificables. Las pruebas instrumentadas
+  comprueban que no se superponen.
+- **Construcción:** nuevo `scripts/build-termux.sh`, que valida pruebas,
+  compila y copia el APK de depuración a Descargas sin eliminar aplicaciones.
+- Se añadió cobertura de regresión web del botón Donar, los iconos y los
+  seis idiomas. **Android: 3.5.1 (versionCode 10); Web: 3.5.1.**
+
+Para actualizar desde Termux:
+
+```bash
+cd ~/ReqestraMobileHTTP
+git pull --ff-only origin main
+termux-setup-storage
+bash scripts/build-termux.sh --open
+```
+
+El paquete **debug** (`com.imr.reqestra.debug`) se instala separado
+del APK release (`com.imr.reqestra`). No desinstales la app para
+actualizarla: necesitarás una compilación release firmada con la **misma**
+clave que la instalación anterior para conservar sus datos.
+
+[Notas de la versión 3.5.1](docs/RELEASE_3.5.1.md).
 
 ## Corrección de botones superpuestos — sin cambio de versión
 
@@ -18,7 +49,7 @@ Las acciones de la cabecera se mantienen visibles, las filas con botones
 largos se apilan y los menús se desplazan dentro de la zona disponible.
 
 Ver la [guía de interfaz responsiva](docs/INTERFAZ_RESPONSIVA.md)
-y su matriz de pruebas. La versión permanece **3.5.0**.
+y su matriz de pruebas. Esta mejora de navegación se incorporó en **3.5.0**; la versión actual es **3.5.1**.
 
 ## Acerca de Reqestra y Ayuda
 
@@ -30,7 +61,7 @@ recomendaciones de privacidad y enlaces a documentación y problemas.
 
 La guía extensa está en [docs/GUIA_DE_USO.md](docs/GUIA_DE_USO.md).
 La sección está traducida a los seis idiomas de la interfaz.
-**No se ha cambiado el número de versión** por esta mejora.
+Esta sección de ayuda se incorporó originalmente en **3.5.0**.
 
 ## Selector de idioma y traducciones — 3.5
 

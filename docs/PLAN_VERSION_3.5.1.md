@@ -1,10 +1,10 @@
-# Plan propuesto para Reqestra 3.5.1
+# Alcance de Reqestra 3.5.1
 
-Este documento describe una **versión de mantenimiento propuesta**, no una
-versión publicada. El número actual de Android y Web sigue siendo **3.5.0**.
-Las funcionalidades que requieran cambios mayores se trasladarán a 3.6.
+La versión **3.5.1** aplica correcciones de alto impacto visual,
+accesibilidad y entrega. Las demás iniciativas permanecen como propuestas,
+no se consideran implementadas automáticamente.
 
-## Corrección inmediata ya incluida en el código, sin subir la versión
+## Separación de controles y accesibilidad
 
 - La barra superior Android distribuye **Idioma 🌐**, **Donar ♥** y
   **Apariencia ☀/🌙** en una fila con `Arrangement.spacedBy(10.dp)`.
@@ -13,7 +13,7 @@ Las funcionalidades que requieran cambios mayores se trasladarán a 3.6.
 - A la espera de verificación mediante compilación y prueba física;
   la comprobación estática se encuentra en `web/tests/layout.test.mjs`.
 
-## Prioridades para cerrar 3.5.1
+## Prioridades restantes y comprobación
 
 | Prioridad | Mejora | Criterio de aceptación |
 | --- | --- | --- |
@@ -51,5 +51,22 @@ Comprueba el APK Android en 320, 360 y 420 dp con los seis idiomas,
 ambos temas y tamaño de fuente aumentado. Las pruebas estáticas no
 pueden demostrar la ausencia de superposición en todos los dispositivos.
 
-**Nota:** no se modifica `versionName` ni `versionCode` hasta que se
-complete y verifique la versión 3.5.1.
+**Estado:** se actualizó `versionName` a **3.5.1** y `versionCode`
+a **10**. Para validar una instalación release se requiere firmar con la
+misma clave que su versión anterior; el APK debug es otro paquete.
+
+## Cambios ya incorporados en el código 3.5.1
+
+- Donar web utiliza SVG para evitar distorsión; fondo y borde compatibles
+  con los temas claro y oscuro, con diseño adaptado al ancho del dispositivo.
+- La apariencia en Web ahora usa iconos SVG de sol y luna, y nombres de acción
+  accesibles traducidos en los seis idiomas.
+- Acciones de la barra superior Android claramente separadas,
+  identificables por pruebas instrumentadas, con un estilo visual coherente.
+- Script de compilación Termux que exige pruebas unitarias completadas,
+  verifica el APK y lo copia a Descargas con su nombre de versión.
+- Tests web para el diseño del botón de apoyo y el control de apariencia.
+
+La causa de los fallos previos de GitHub Actions parece externa a los scripts,
+porque los trabajos no obtuvieron un runner. No se declara CI reparado ni se
+afirma haber construido un APK hasta que las pruebas reales terminen.

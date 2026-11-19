@@ -325,7 +325,11 @@ const metadataRows = [
   ["You will be taken to PayPal's official site. No payments are processed within Reqestra.","You will be taken to PayPal's official site. No payments are processed within Reqestra.","Вы перейдёте на официальный сайт PayPal. Reqestra не обрабатывает платежи.","您将跳转到 PayPal 官方网站。Reqestra 不处理付款。","Você será redirecionado ao site oficial do PayPal. Nenhum pagamento é processado no Reqestra.","Vous serez redirigé vers le site officiel de PayPal. Aucun paiement n’est traité par Reqestra."],
 ];
 const brandRows = [
-  ["HTTP STUDIO · WEB 3.5","HTTP STUDIO · WEB 3.5","HTTP-СТУДИЯ · WEB 3.5","HTTP 工作台 · WEB 3.5","ESTÚDIO HTTP · WEB 3.5","STUDIO HTTP · WEB 3.5"],
+  ["HTTP STUDIO · WEB 3.5.1","HTTP STUDIO · WEB 3.5.1","HTTP-СТУДИЯ · WEB 3.5.1","HTTP 工作台 · WEB 3.5.1","ESTÚDIO HTTP · WEB 3.5.1","STUDIO HTTP · WEB 3.5.1"],
+];
+const appearanceRows = [
+  ["Modo claro","Light mode","Светлая тема","浅色模式","Modo claro","Mode clair"],
+  ["Modo oscuro","Dark mode","Тёмная тема","深色模式","Modo escuro","Mode sombre"],
 ];
 const aboutHelpRows = [
   ["Acerca de y ayuda","About & Help","О приложении и помощь","关于与帮助","Sobre e ajuda","À propos et aide"],
@@ -433,7 +437,7 @@ const extraLocales = new Map([
   ["Recepción de respuesta", ["Получен ответ","接收响应","Recebimento da resposta","Réception de la réponse"]],
 ]);
 const catalogs = Object.fromEntries(LOCALES.map(l=>[l.code,new Map()]));
-for(const [es,en,ru,zh,pt,fr] of [...rows,...additionalRows,...completeRows,...validationRows,...coreRows,...metadataRows,...brandRows,...aboutHelpRows]){
+for(const [es,en,ru,zh,pt,fr] of [...rows,...additionalRows,...completeRows,...validationRows,...coreRows,...metadataRows,...brandRows,...aboutHelpRows,...appearanceRows]){
   for(const [code,value] of [["en",en],["es",es],["ru",ru],["zh",zh],["pt",pt],["fr",fr]])
     catalogs[code].set(es,value);
 }
