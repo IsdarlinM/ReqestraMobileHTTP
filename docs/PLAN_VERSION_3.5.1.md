@@ -1,44 +1,37 @@
-# Alcance de Reqestra 3.5.1
+# Reqestra 3.5.1 Scope
 
-La versión **3.5.1** aplica correcciones de alto impacto visual,
-accesibilidad y entrega. Las demás iniciativas permanecen como propuestas,
-no se consideran implementadas automáticamente.
+Version **3.5.1** delivers high-impact fixes for visual design, accessibility, and distribution. Other initiatives remain proposals and are not considered implemented automatically.
 
-## Separación de controles y accesibilidad
+## Control spacing and accessibility
 
-- La barra superior Android distribuye **Idioma 🌐**, **Donar ♥** y
-  **Apariencia ☀/🌙** en una fila con `Arrangement.spacedBy(10.dp)`.
-- Añade `padding(end = 8.dp)`, evita botones pegados al borde y conserva
-  objetivos táctiles de **44 dp** y el menú de seis idiomas.
-- A la espera de verificación mediante compilación y prueba física;
-  la comprobación estática se encuentra en `web/tests/layout.test.mjs`.
+- The Android top bar places **Language 🌐**, **Donate ♥**, and **Appearance ☀/🌙** in one row with `Arrangement.spacedBy(10.dp)`.
+- It adds `padding(end = 8.dp)`, keeps buttons away from the edge, and preserves **44 dp** touch targets and the six-language menu.
+- Build and physical-device verification are still required; static checks reside in `web/tests/layout.test.mjs`.
 
-## Prioridades restantes y comprobación
+## Remaining priorities and acceptance criteria
 
-| Prioridad | Mejora | Criterio de aceptación |
+| Priority | Improvement | Acceptance criteria |
 | --- | --- | --- |
-| P0 | Validación visual de la barra superior | Idioma, Donar y Tema claramente separados a 320, 360, 390, 420 y 600 dp, en ambos temas y seis idiomas, sin tocarse ni recortarse |
-| P0 | Restaurar CI Android y Web | Cada ejecución de GitHub Actions termina con pruebas ejecutadas, no fallos previos a la asignación del ejecutor; se obtiene APK de prueba |
-| P0 | Actualización de APK documentada correctamente | Distinguir `applicationIdSuffix=".debug"` del APK release; confirmar firma, versionCode y el proceso para actualizar sin perder datos |
-| P1 | Pruebas automáticas de UI Compose | Validar pulsación independiente, accesibilidad y apertura de Idioma, Donar y Apariencia, incluida pantalla estrecha |
-| P1 | Pruebas web adaptativas | Ejecutar pruebas visuales en anchos 320–1440 px, menús abiertos, temas e idiomas; detectar solapamientos reales |
-| P1 | Internacionalización | Probar etiquetas largas en ruso/francés/portugués, normalización de idioma del sistema y avisos de validación, sin traducir respuestas HTTP ni datos del usuario |
-| P1 | Robustez de operaciones HTTP | Comprobar cancelación, timeout, errores TLS, redireccionamientos entre orígenes, respuestas grandes y preservación de datos cifrados |
-| P1 | Donaciones seguras | Verificar que la URL pública de PayPal y el beneficiario son correctos, sin usar el enlace de administración como destino de pago |
-| P2 | Accesibilidad | Asegurar lectura de etiquetas, orden de enfoque, contraste y tamaños de fuente 150 %/200 % |
-| P2 | Rendimiento y experiencia | Optimizar respuestas JSON grandes, estados de carga y navegación sin perder el borrador |
+| P0 | Visual verification of top bar | Language, Donate, and Theme remain separate at 320, 360, 390, 420, and 600 dp in both themes and six languages, without clipping or overlap |
+| P0 | Restore Android and web CI | Every GitHub Actions run executes tests rather than failing before runner assignment; a test APK is produced |
+| P0 | Document APK upgrades correctly | Distinguish `applicationIdSuffix=".debug"` from the release APK; verify signing, versionCode, and data-preserving upgrades |
+| P1 | Automated Compose UI tests | Check independent taps, accessibility, and opening of Language, Donate, and Appearance, including narrow screens |
+| P1 | Adaptive web tests | Run visual checks at 320–1440 px with open menus, themes, and languages; detect actual collisions |
+| P1 | Internationalization | Test long Russian/French/Portuguese labels, system-language normalization, and validation notices without translating HTTP responses or user data |
+| P1 | HTTP robustness | Check cancellation, timeouts, TLS errors, cross-origin redirects, large responses, and preservation of encrypted data |
+| P1 | Secure donations | Verify the public PayPal URL and beneficiary; never use an administrative URL as the payment destination |
+| P2 | Accessibility | Verify screen-reader labels, focus order, contrast, and 150%/200% font sizes |
+| P2 | Performance and UX | Optimize large JSON responses, loading states, and navigation without losing drafts |
 
-## Fuera del alcance de esta versión de mantenimiento
+## Out of scope for this maintenance release
 
-- Soporte para extensiones remotas ejecutables.
-- Sincronización en la nube entre Android y Web.
-- Sistema de cuentas, pagos dentro de Reqestra o nuevas capacidades
-  que modifiquen el modelo de datos.
+- Executable remote extensions.
+- Cloud synchronization between Android and web.
+- Accounts, in-app payments, or new features that change the data model.
 
-Estos cambios deben analizarse como mejoras para 3.6 o superior,
-con diseño y revisión de seguridad específicos.
+Such features require separate design and security review for 3.6 or later.
 
-## Validación reproducible en Termux
+## Reproducible Termux validation
 
 ```bash
 cd ~/ReqestraMobileHTTP
@@ -47,26 +40,16 @@ cd web && npm run check && npm test && cd ..
 ./gradlew --no-daemon --console=plain :app:testDebugUnitTest :app:assembleDebug
 ```
 
-Comprueba el APK Android en 320, 360 y 420 dp con los seis idiomas,
-ambos temas y tamaño de fuente aumentado. Las pruebas estáticas no
-pueden demostrar la ausencia de superposición en todos los dispositivos.
+Check the Android APK at 320, 360, and 420 dp with all six languages, both themes, and larger text. Static tests cannot prove the absence of overlap on every device.
 
-**Estado:** se actualizó `versionName` a **3.5.1** y `versionCode`
-a **10**. Para validar una instalación release se requiere firmar con la
-misma clave que su versión anterior; el APK debug es otro paquete.
+**Status:** `versionName` was updated to **3.5.1** and `versionCode` to **10**. A release upgrade requires the same signing key as the previous version; the debug APK is a separate package.
 
-## Cambios ya incorporados en el código 3.5.1
+## Changes already implemented in 3.5.1
 
-- Donar web utiliza SVG para evitar distorsión; fondo y borde compatibles
-  con los temas claro y oscuro, con diseño adaptado al ancho del dispositivo.
-- La apariencia en Web ahora usa iconos SVG de sol y luna, y nombres de acción
-  accesibles traducidos en los seis idiomas.
-- Acciones de la barra superior Android claramente separadas,
-  identificables por pruebas instrumentadas, con un estilo visual coherente.
-- Script de compilación Termux que exige pruebas unitarias completadas,
-  verifica el APK y lo copia a Descargas con su nombre de versión.
-- Tests web para el diseño del botón de apoyo y el control de apariencia.
+- Web Donate uses SVG to avoid distortion, with theme-compatible background and border and width-responsive layout.
+- Web appearance uses sun/moon SVG icons with accessible action names translated into six languages.
+- Android top-bar actions are visibly separated, identifiable by instrumentation tests, and styled consistently.
+- A Termux build script requires completed unit tests, verifies the APK, and copies it to Downloads using the versioned filename.
+- Web tests cover the support button and appearance control.
 
-La causa de los fallos previos de GitHub Actions parece externa a los scripts,
-porque los trabajos no obtuvieron un runner. No se declara CI reparado ni se
-afirma haber construido un APK hasta que las pruebas reales terminen.
+Previous GitHub Actions failures appear to have occurred before runners were assigned. CI is not declared repaired, and no APK build is claimed until actual tests complete.
