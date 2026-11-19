@@ -152,12 +152,11 @@ fun WorkspaceScreen(
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
         ) {
             Column(modifier = Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Text(tr("REQUEST WORKBENCH"), style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.primary)
                         Text(tr("Nueva petición"), style = MaterialTheme.typography.titleLarge)
@@ -186,7 +185,7 @@ fun WorkspaceScreen(
                         )
                     }
                 }
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
                         onClick = onSend, enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
@@ -194,7 +193,11 @@ fun WorkspaceScreen(
                         Icon(Icons.Outlined.Send, contentDescription = null)
                         Text(tr(" Enviar petición"))
                     }
-                    OutlinedButton(onClick = onLoadBody, enabled = !isLoading) {
+                    OutlinedButton(
+                        onClick = onLoadBody,
+                        enabled = !isLoading,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                    ) {
                         Icon(Icons.Outlined.CloudDownload, contentDescription = null)
                         Text(tr(" Cargar respuesta"))
                     }
@@ -205,17 +208,24 @@ fun WorkspaceScreen(
                                 curlNotice = null
                             }
                             .onFailure { curlNotice = it.message ?: "No se pudo exportar." }
-                    }, enabled = !isLoading) { Text(tr("Copiar cURL redactado")) }
+                    }, enabled = !isLoading, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                        Text(tr("Copiar cURL redactado"))
+                    }
                     OutlinedButton(onClick = {
                         curlInput = ""
                         curlNotice = null
                         curlDialogOpen = true
-                    }, enabled = !isLoading) { Text(tr("Importar cURL")) }
+                    }, enabled = !isLoading, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                        Text(tr("Importar cURL"))
+                    }
                     if (curlNotice != null && !curlDialogOpen) {
                         Text(tr(curlNotice.orEmpty()), color = MaterialTheme.colorScheme.error)
                     }
                     if (isLoading) {
-                        OutlinedButton(onClick = onCancel) {
+                        OutlinedButton(
+                            onClick = onCancel,
+                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                        ) {
                             Icon(Icons.Outlined.Cancel, contentDescription = null)
                             Text(tr(" Cancelar"))
                         }
@@ -310,8 +320,11 @@ fun WorkspaceScreen(
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
                     Text(tr("ÚLTIMA RESPUESTA"), style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically) {
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
                         StudioTag(
                             "HTTP ${response.statusCode} · ${response.durationMs} ms",
                             when (response.statusCode) {

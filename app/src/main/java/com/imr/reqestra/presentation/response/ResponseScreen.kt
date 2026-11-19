@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.imr.reqestra.domain.model.ParsedHeader
 import com.imr.reqestra.domain.model.ResponseSnapshot
@@ -68,10 +69,18 @@ fun ResponseScreen(
 
         StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Column(modifier = Modifier.weight(1f)) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Column {
                         Text(tr("Request enviado"), style = MaterialTheme.typography.titleMedium)
-                        Text("${response.request.method} ${response.request.url}", color = MaterialTheme.colorScheme.primary)
+                        Text(
+                            "${response.request.method} ${response.request.url}",
+                            color = MaterialTheme.colorScheme.primary,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis,
+                        )
                     }
                     OutlinedButton(onClick = {
                         val text = buildString {
@@ -80,7 +89,7 @@ fun ResponseScreen(
                             if (response.request.bodyBytes > 0) append('\n').append(response.request.body)
                         }
                         clipboard.setText(AnnotatedString(text))
-                    }) {
+                    }, modifier = Modifier.align(Alignment.End)) {
                         Icon(Icons.Outlined.ContentCopy, contentDescription = null)
                         Text(tr(" Copiar"))
                     }
@@ -125,7 +134,7 @@ fun ResponseScreen(
 
         StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(tr("Headers de respuesta"), style = MaterialTheme.typography.titleMedium)
                     OutlinedButton(onClick = {
                         clipboard.setText(AnnotatedString(response.headers.joinToString("\n") { "${it.name}: ${it.value}" }))
@@ -141,12 +150,15 @@ fun ResponseScreen(
 
         StudioSurfaceCard {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Column {
                         Text(tr("Cuerpo de respuesta"), style = MaterialTheme.typography.titleMedium)
                         if (response.bodyTruncated) Text(tr("Contenido truncado a 4 MiB."), color = MaterialTheme.colorScheme.error)
                     }
-                    OutlinedButton(onClick = { clipboard.setText(AnnotatedString(response.body)) }) {
+                    OutlinedButton(
+                        onClick = { clipboard.setText(AnnotatedString(response.body)) },
+                        modifier = Modifier.align(Alignment.End),
+                    ) {
                         Icon(Icons.Outlined.ContentCopy, contentDescription = null)
                         Text(tr(" Copiar"))
                     }

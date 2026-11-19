@@ -42,14 +42,18 @@ fun HistoryScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             StudioScreenHeader(
                 title = tr("Historial local"),
                 subtitle = tr("Método, URL redactada, estado y duración."),
                 eyebrow = tr("ACTIVIDAD"),
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(),
             )
-            OutlinedButton(onClick = onClear, enabled = entries.isNotEmpty()) {
+            OutlinedButton(
+                onClick = onClear,
+                enabled = entries.isNotEmpty(),
+                modifier = Modifier.align(Alignment.End),
+            ) {
                 Icon(Icons.Outlined.DeleteSweep, contentDescription = null)
                 Text(tr(" Limpiar"))
             }
@@ -67,10 +71,12 @@ fun HistoryScreen(
                     StudioSurfaceCard(modifier = Modifier.fillMaxWidth().clickable { onReuse(entry) }) {
                         Row(modifier = Modifier.padding(14.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                                     StudioMethodTag(entry.method)
-                                    Text("HTTP ${entry.statusCode}")
-                                    Text("${entry.durationMs} ms", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(
+                                        "HTTP ${entry.statusCode} · ${entry.durationMs} ms",
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
                                 }
                                 Text(entry.url, maxLines = 2, overflow = TextOverflow.Ellipsis)
                                 Text(formatTimestamp(entry.timestampEpochMs), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

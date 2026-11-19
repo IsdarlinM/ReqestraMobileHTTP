@@ -152,13 +152,19 @@ fun CollectionsScreen(
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(tr("Entornos y variables"), style = MaterialTheme.typography.titleMedium)
                     Box {
-                        OutlinedButton(onClick = { environmentMenu = true }) {
-                            Text("${tr("Entorno activo")}: ${workspace.activeEnvironment} ▾")
+                        OutlinedButton(
+                            onClick = { environmentMenu = true },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                "${tr("Entorno activo")}: ${workspace.activeEnvironment} ▾",
+                                maxLines = 2, overflow = TextOverflow.Ellipsis,
+                            )
                         }
                         DropdownMenu(expanded = environmentMenu, onDismissRequest = { environmentMenu = false }) {
                             workspace.environments.forEach { entry ->
                                 DropdownMenuItem(
-                                    text = { Text(entry.name) },
+                                    text = { Text(entry.name, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                                     onClick = { environmentMenu = false; onSelectEnvironment(entry.name) },
                                 )
                             }
@@ -218,26 +224,41 @@ fun CollectionsScreen(
         }
         items(workspace.requests, key = { it.id }) { saved ->
             StudioSurfaceCard(Modifier.fillMaxWidth()) {
-                Row(
+                Column(
                     modifier = Modifier.padding(14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(saved.name, style = MaterialTheme.typography.titleMedium)
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            Text(
+                                saved.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
                             StudioMethodTag(saved.draft.method.wireName)
-                            Text(saved.collection, style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(
+                                saved.collection,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            Text(saved.draft.url, maxLines = 2, overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.bodySmall)
                         }
-                        Text(saved.draft.url, maxLines = 1, overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodySmall)
+                        IconButton(onClick = { deleteTarget = saved }) {
+                            Icon(Icons.Outlined.DeleteOutline, contentDescription = "${tr("Eliminar")} ${saved.name}")
+                        }
                     }
-                    TextButton(onClick = { onLoad(saved.id) }) { Text(tr("Abrir")) }
-                    IconButton(onClick = { deleteTarget = saved }) {
-                        Icon(Icons.Outlined.DeleteOutline, contentDescription = "${tr("Eliminar")} ${saved.name}")
-                    }
+                    TextButton(
+                        onClick = { onLoad(saved.id) },
+                        modifier = Modifier.align(Alignment.End),
+                    ) { Text(tr("Abrir")) }
                 }
             }
         }

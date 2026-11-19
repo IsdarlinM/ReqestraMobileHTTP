@@ -76,8 +76,11 @@ fun DiscoveryScreen(
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(checked = ownsScope, onCheckedChange = { ownsScope = it })
-                        Text(tr("Confirmo que tengo autorización para probar este origen."),
-                            style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            tr("Confirmo que tengo autorización para probar este origen."),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
                     }
                 }
             },
@@ -180,8 +183,11 @@ fun DiscoveryScreen(
                                 if (!it) methods = methods - DiscoveryPlanner.modifyingMethods
                             },
                         )
-                        Text(tr("Habilitar métodos que pueden modificar datos"),
-                            style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            tr("Habilitar métodos que pueden modificar datos"),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
                     }
                     if (allowModifying) {
                         for (method in listOf(

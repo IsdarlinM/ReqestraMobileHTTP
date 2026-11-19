@@ -96,7 +96,9 @@ fun ReqestraApp(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var openMenu by remember { mutableStateOf(false) }
     var openLanguageMenu by remember { mutableStateOf(false) }
-    val compactLayout = LocalConfiguration.current.screenWidthDp < 420
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val compactLayout = screenWidthDp < 600
+    val iconOnlyBrand = screenWidthDp < 390
     val context = LocalContext.current
     val preferences = remember(context) {
         context.getSharedPreferences("reqestra_ui", android.content.Context.MODE_PRIVATE)
@@ -119,16 +121,23 @@ fun ReqestraApp(
             TopAppBar(
                 title = {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.reqestra_brand),
                             contentDescription = "Reqestra logo",
-                            modifier = Modifier.size(32.dp).clip(RoundedCornerShape(10.dp)),
+                            modifier = Modifier.size(if (iconOnlyBrand) 28.dp else 32.dp)
+                                .clip(RoundedCornerShape(10.dp)),
                         )
-                        Column {
-                            Text("Reqestra", style = MaterialTheme.typography.titleMedium, maxLines = 1)
+                        if (!iconOnlyBrand) Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                "Reqestra",
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
                             if (!compactLayout) {
                                 Text(
                                     "HTTP STUDIO  •  3.5",
@@ -146,7 +155,7 @@ fun ReqestraApp(
                         IconButton(
                             onClick = { openLanguageMenu = true },
                             modifier = Modifier
-                                .size(46.dp)
+                                .size(44.dp)
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(MaterialTheme.colorScheme.secondaryContainer),
                         ) {
@@ -254,7 +263,7 @@ fun ReqestraApp(
                     }
                     IconButton(
                         onClick = onToggleTheme,
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(44.dp),
                     ) {
                         Icon(
                             imageVector = if (darkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
@@ -458,7 +467,7 @@ private fun RowScope.SectionItem(
                     if (selected) palette.primaryContainer else Color.Transparent,
                     RoundedCornerShape(12.dp),
                 )
-                .padding(horizontal = 15.dp, vertical = 6.dp),
+                .padding(horizontal = if (LocalConfiguration.current.screenWidthDp < 360) 7.dp else 12.dp, vertical = 6.dp),
             contentAlignment = Alignment.Center,
         ) {
             CompositionLocalProvider(

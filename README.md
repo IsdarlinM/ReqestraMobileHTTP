@@ -10,6 +10,16 @@ imr :: v3.5.0
 
 El nombre combina **request** y **orchestration**: una superficie única para componer y controlar el ciclo completo de una petición.
 
+## Corrección de botones superpuestos — sin cambio de versión
+
+Android y Web ajustan barras, tarjetas, acciones y selectores para que
+los controles no se superpongan al cambiar de ancho de pantalla.
+Las acciones de la cabecera se mantienen visibles, las filas con botones
+largos se apilan y los menús se desplazan dentro de la zona disponible.
+
+Ver la [guía de interfaz responsiva](docs/INTERFAZ_RESPONSIVA.md)
+y su matriz de pruebas. La versión permanece **3.5.0**.
+
 ## Acerca de Reqestra y Ayuda
 
 Android incluye **Acerca de y ayuda** dentro del menú inferior **Más**.

@@ -98,12 +98,18 @@ fun SessionScreen(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Button(onClick = onSave, enabled = mode != SessionMode.NONE) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(
+                            onClick = onSave, enabled = mode != SessionMode.NONE,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
                             Icon(Icons.Outlined.Save, contentDescription = null)
                             Text(tr(" Guardar"))
                         }
-                        OutlinedButton(onClick = onClear, enabled = mode != SessionMode.NONE) {
+                        OutlinedButton(
+                            onClick = onClear, enabled = mode != SessionMode.NONE,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
                             Icon(Icons.Outlined.DeleteForever, contentDescription = null)
                             Text(tr(" Limpiar sesión"))
                         }

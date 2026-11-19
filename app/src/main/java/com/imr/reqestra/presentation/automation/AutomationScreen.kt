@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.imr.reqestra.presentation.components.StatusBanner
 import com.imr.reqestra.core.automation.RunReport
@@ -74,12 +75,19 @@ fun AutomationScreen(
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(tr("Ejecutor de colecciones"), style = MaterialTheme.typography.titleMedium)
                     Box {
-                        OutlinedButton(onClick = { menuOpen = true }, enabled = collections.isNotEmpty() && !isLoading) {
-                            Text(if (chosen.isEmpty()) tr("Crear una colección primero") else "${tr("Colección")}: $chosen ▾")
+                        OutlinedButton(
+                            onClick = { menuOpen = true },
+                            enabled = collections.isNotEmpty() && !isLoading,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                if (chosen.isEmpty()) tr("Crear una colección primero") else "${tr("Colección")}: $chosen ▾",
+                                maxLines = 2, overflow = TextOverflow.Ellipsis,
+                            )
                         }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             collections.forEach { collection ->
-                                DropdownMenuItem(text = { Text(collection) }, onClick = {
+                                DropdownMenuItem(text = { Text(collection, maxLines = 2, overflow = TextOverflow.Ellipsis) }, onClick = {
                                     chosen = collection
                                     menuOpen = false
                                 })
