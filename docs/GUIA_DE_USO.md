@@ -1,118 +1,85 @@
-# Guía de uso de Reqestra
+# Reqestra User Guide
 
-Esta guía explica cómo utilizar **Reqestra HTTP Studio** en Android y en la Web.
-La aplicación está dirigida a trabajar con solicitudes HTTP(S), colecciones,
-variables, pruebas y exploración de servicios **para los que tienes autorización**.
+This guide explains how to use **Reqestra HTTP Studio** on Android and the web.
+The application is intended for HTTP(S) requests, collections, variables, tests, and service discovery **on systems you are authorized to access**.
 
-> La interfaz se ofrece en inglés, español, ruso, mandarín simplificado,
-> portugués y francés. Esta documentación se mantiene en español.
+> The interface is available in English, Spanish, Russian, Simplified Mandarin Chinese, Portuguese, and French. This documentation is maintained in English.
 
-## 1. Primera solicitud
+## 1. Your first request
 
-1. Abre **Estudio / Studio**.
-2. Escribe la URL completa de un servicio HTTP(S), por ejemplo
-   `https://example.com`.
-3. Selecciona el método HTTP (GET, POST, PUT, PATCH, DELETE, etc.).
-4. Añade parámetros de consulta, encabezados, cookies o cuerpo si corresponde.
-5. Pulsa **Enviar / Send** y espera al resultado.
-6. Abre **Inspector / Response** para revisar estado, encabezados y contenido.
-   **Vista previa / Preview** muestra el cuerpo en un entorno limitado.
+1. Open **Studio**.
+2. Enter the complete HTTP(S) URL of a service, for example `https://example.com`.
+3. Select the HTTP method (GET, POST, PUT, PATCH, DELETE, etc.).
+4. Add query parameters, headers, cookies, or a body as needed.
+5. Select **Send** and review the result.
+6. Open **Inspector / Response** to inspect status, headers, and content. **Preview** displays the body in a restricted environment.
 
-**Precaución:** los métodos POST, PUT, PATCH y DELETE pueden cambiar o eliminar
-datos del servidor. No los uses sin comprender sus consecuencias.
+**Caution:** POST, PUT, PATCH, and DELETE may change or delete server data. Do not use them without understanding their effects.
 
-## 2. Colecciones, entornos y variables
+## 2. Collections, environments, and variables
 
-En **Colecciones / Collections** puedes guardar solicitudes y organizar
-entornos. En un valor se pueden usar referencias como `{{baseUrl}}`.
-Define previamente estas variables en el entorno apropiado y evita guardar
-secretos en texto plano fuera del espacio cifrado.
+Under **Collections**, save requests and manage environments. Values can reference variables such as `{{baseUrl}}`. Define these variables in the relevant environment first, and avoid storing secrets as plaintext outside the encrypted workspace.
 
-En Android los datos de sesión pueden mantenerse en memoria o cifrarse,
-según el modo seleccionado. En Web, el espacio persistente puede cifrarse
-localmente mediante una contraseña; el modo temporal no conserva el
-contenido tras recargar.
+On Android, session data can be held in memory or encrypted, depending on the selected mode. On the web, a persistent workspace can be encrypted locally with a password; temporary mode does not retain content after a reload.
 
-No existe sincronización automática del espacio de trabajo entre Android
-y la Web.
+There is no automatic workspace synchronization between Android and the web.
 
-## 3. Pruebas y exploración
+## 3. Tests and discovery
 
-**Pruebas / Tests** permite ejecutar secuencialmente solicitudes guardadas
-y comprobar estado HTTP y latencia. Las pruebas ejecutan solicitudes reales.
+**Tests** runs saved requests sequentially and checks HTTP status and latency. These tests issue real network requests.
 
-**Explorar / Explore** identifica rutas candidatas y compara respuestas con
-límites, confirmación explícita y comprobaciones de origen. Las diferencias
-son indicios que requieren revisión manual: no prueban por sí solas la
-existencia de una vulnerabilidad.
+**Explore** identifies candidate paths and compares responses with limits, explicit confirmation, and origin checks. Differences are clues requiring manual review; they do not by themselves establish a vulnerability.
 
-## 4. Restricciones de Web y Android
+## 4. Web and Android constraints
 
-| Característica | Android | Web |
+| Feature | Android | Web |
 | --- | --- | --- |
-| Solicitudes HTTP(S) | Cliente nativo | Cliente de navegador, sujeto a CORS |
-| Encabezados restringidos | Controlados por el motor de red | Algunos no pueden configurarse desde JavaScript |
-| Cookies | Modos de sesión locales | El navegador puede gestionar cookies HttpOnly |
-| Guardado de trabajo | Local, según la función | Temporal o cifrado local, según el modo |
-| Complementos externos | No se ejecutan paquetes remotos | No se ejecuta código remoto de plugins |
+| HTTP(S) requests | Native client | Browser client subject to CORS |
+| Restricted headers | Controlled by the networking engine | Some cannot be set from JavaScript |
+| Cookies | Local session modes | Browser may manage HttpOnly cookies |
+| Saving work | Local, according to feature | Temporary or locally encrypted, depending on mode |
+| External add-ons | Remote packages are not executed | Remote plugin code is not executed |
 
-Para utilizar el **gateway local** en Web, configura
-`REQESTRA_ALLOWED_ORIGINS` en el servidor. Consulta
-[la configuración de Web](WEB_SETUP.md). No se recomienda desactivar
-protecciones del navegador para evitar CORS.
+To use the **local gateway** on the web, configure `REQESTRA_ALLOWED_ORIGINS` on the server; see [Web setup](WEB_SETUP.md). Disabling browser security to bypass CORS is not recommended.
 
-## 5. Solución de problemas
+## 5. Troubleshooting
 
-**«URL no válida»**
+**"Invalid URL"**
 
-Verifica que la dirección empieza por `http://` o `https://`
-y que no contiene credenciales incrustadas.
+Make sure the address begins with `http://` or `https://` and contains no embedded credentials.
 
-**El navegador informa de CORS**
+**Browser reports a CORS error**
 
-El servidor de destino debe permitir solicitudes del origen de tu sitio.
-El gateway opcional requiere la lista explícita de orígenes autorizados.
-Android no usa la misma política CORS del navegador.
+The destination server must allow requests from your site's origin. The optional gateway requires an explicit allowlist of authorized origins. Android is not subject to the same browser CORS policy.
 
-**La solicitud agota el tiempo de espera**
+**Request times out**
 
-Comprueba conectividad, DNS, certificado TLS y la duración configurada.
-No desactives TLS por defecto.
+Check connectivity, DNS, the TLS certificate, and the configured timeout. Do not disable TLS by default.
 
-**No se sustituyen las variables**
+**Variables are not substituted**
 
-Comprueba el nombre exacto de la variable, el entorno activo y
-las referencias `{{nombre}}`.
+Check the exact variable name, active environment, and references such as `{{name}}`.
 
-**No aparecen mis solicitudes guardadas**
+**Saved requests do not appear**
 
-En Web, comprueba si utilizaste modo temporal o el espacio cifrado.
-Sin la contraseña original no es posible recuperar los datos cifrados.
-Revisa también que estás utilizando el mismo navegador y origen.
+On the web, check whether you used temporary mode or the encrypted workspace. Encrypted data cannot be recovered without the original password. Also verify that you are using the same browser and origin.
 
-**El botón de donación está deshabilitado**
+**Donation button is disabled**
 
-El administrador debe configurar un identificador público válido del
-botón de donación de PayPal. Las donaciones son voluntarias y nunca
-desbloquean funcionalidades.
+The maintainer must configure a valid public PayPal donation-button identifier. Donations are voluntary and never unlock features.
 
-## 6. Idiomas, apariencia y menú
+## 6. Languages, appearance, and navigation
 
-- Utiliza 🌐 para elegir el idioma. El elegido queda resaltado y se conserva
-  en la configuración local.
-- Cambia entre tema claro y oscuro desde el control de apariencia.
-- En Android, pulsa **Más / More** en la barra inferior para abrir Historial,
-  Inspector, Vista previa, Sesiones, Extensiones y **Acerca de y ayuda**.
-- En Web, **About & Help** está en el menú lateral de escritorio y en
-  **More** del menú inferior en pantallas pequeñas.
+- Use 🌐 to select a language. The selected option is highlighted and saved locally.
+- Use the appearance control to switch between light and dark themes.
+- On Android, select **More** in the bottom bar to access History, Inspector, Preview, Sessions, Extensions, and **About & Help**.
+- On the web, **About & Help** appears in the desktop sidebar and under **More** on smaller screens.
 
-## 7. Ayuda y código fuente
+## 7. Help and source code
 
-- [Repositorio de Reqestra](https://github.com/IsdarlinM/ReqestraMobileHTTP)
-- [Informar de un error o pedir ayuda](https://github.com/IsdarlinM/ReqestraMobileHTTP/issues)
-- [Documentación de instalación web](WEB_SETUP.md)
-- [Idiomas e interfaz](INTERNACIONALIZACION_Y_EXTENSIONS.md)
+- [Reqestra repository](https://github.com/IsdarlinM/ReqestraMobileHTTP)
+- [Report an issue or request help](https://github.com/IsdarlinM/ReqestraMobileHTTP/issues)
+- [Web installation documentation](WEB_SETUP.md)
+- [Languages and interface](INTERNACIONALIZACION_Y_EXTENSIONS.md)
 
-No pegues claves API, contraseñas, cookies de sesión ni datos personales en
-reportes públicos. Si necesitas compartir un ejemplo de solicitud, redacta
-antes los campos sensibles.
+Never paste API keys, passwords, session cookies, or personal data into public issue reports. Redact sensitive fields before sharing sample requests.
