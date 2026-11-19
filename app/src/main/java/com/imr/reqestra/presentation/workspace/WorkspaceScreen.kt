@@ -451,12 +451,16 @@ private fun MethodSelector(selected: HttpMethodOption, onSelected: (HttpMethodOp
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
         )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+        ) {
             HttpMethodOption.entries.forEach { method ->
                 DropdownMenuItem(
                     text = {
                         Column {
-                            Text(method.wireName)
+                            Text(method.wireName, color = MaterialTheme.colorScheme.onSurface)
                             Text(
                                 when (method.bodyPolicy) {
                                     BodyPolicy.FORBIDDEN -> "Sin body"
@@ -464,6 +468,7 @@ private fun MethodSelector(selected: HttpMethodOption, onSelected: (HttpMethodOp
                                     BodyPolicy.OPTIONAL -> "Body opcional"
                                 },
                                 style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     },
@@ -487,9 +492,13 @@ private fun BodyModeSelector(selected: BodyMode, onSelected: (BodyMode) -> Unit)
             label = { Text(tr("Tipo de cuerpo")) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
         )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+        ) {
             BodyMode.entries.forEach { mode ->
-                DropdownMenuItem(text = { Text(tr(mode.label)) }, onClick = { onSelected(mode); expanded = false })
+                DropdownMenuItem(text = { Text(tr(mode.label), color = MaterialTheme.colorScheme.onSurface) }, onClick = { onSelected(mode); expanded = false })
             }
         }
     }
