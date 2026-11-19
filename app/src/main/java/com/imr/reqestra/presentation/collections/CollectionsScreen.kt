@@ -161,10 +161,14 @@ fun CollectionsScreen(
                                 maxLines = 2, overflow = TextOverflow.Ellipsis,
                             )
                         }
-                        DropdownMenu(expanded = environmentMenu, onDismissRequest = { environmentMenu = false }) {
+                        DropdownMenu(
+                            expanded = environmentMenu,
+                            onDismissRequest = { environmentMenu = false },
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ) {
                             workspace.environments.forEach { entry ->
                                 DropdownMenuItem(
-                                    text = { Text(entry.name, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                                    text = { Text(entry.name, color = MaterialTheme.colorScheme.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                                     onClick = { environmentMenu = false; onSelectEnvironment(entry.name) },
                                 )
                             }
