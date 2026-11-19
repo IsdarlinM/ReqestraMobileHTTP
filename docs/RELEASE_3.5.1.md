@@ -1,51 +1,32 @@
-# Reqestra 3.5.1 — Diseño, accesibilidad y actualización
+# Reqestra 3.5.1 — Design, Accessibility, and Upgrades
 
-Versión de mantenimiento de **Reqestra HTTP Studio** en Android y Web.
-No introduce sistemas de cuentas, nuevos pagos, ni ejecución de extensiones
-remotas. La versión mantiene el trabajo local y el mismo flujo de donaciones
-externas por PayPal.
+This maintenance release of **Reqestra HTTP Studio** covers Android and web. It does not introduce accounts, new payment systems, or remote extension execution. Work remains local, and voluntary donations continue through external PayPal pages.
 
-## Mejoras implementadas
+## Implemented improvements
 
 ### Web
 
-- Se reemplaza el carácter tipográfico `♥` del botón superior de
-  donaciones por un SVG vectorial con `viewBox="0 0 24 24"` y tamaño
-  **20 × 20 px** fijo. Esto evita variaciones en forma y proporción
-  entre fuentes y dispositivos.
-- En pantallas pequeñas el botón es cuadrado de **44 × 44 px**, sin
-  deformar el icono ni invadir Idioma y Apariencia.
-- El control de tema ahora utiliza iconos SVG de sol/luna, coherentes
-  con los colores y bordes de Reqestra. Su nombre de acción accesible
-  cambia con el tema y se traduce en los **seis idiomas**.
-- La barra superior oculta etiquetas secundarias de estado en
-  pantallas intermedias donde resultaban invasivas.
-- Se actualiza la caché de la PWA para servir los estilos nuevos.
+- The top donation button replaces the typographic `♥` character with a vector SVG using `viewBox="0 0 24 24"` and a fixed **20 × 20 px** size, avoiding variations across fonts and devices.
+- On small screens, the button has a **44 × 44 px** square touch target without distorting the icon or overlapping Language and Appearance.
+- The theme control uses sun/moon SVG icons consistent with Reqestra's palette and borders. Its accessible action name changes with the theme and is translated into **six languages**.
+- The top bar hides secondary status labels at intermediate widths where they caused crowding.
+- The PWA cache is updated to serve the new styles.
 
 ### Android
 
-- La barra superior mantiene **10 dp** entre Idioma, Donar y Apariencia,
-  conserva el objetivo táctil de **44 dp** e incorpora un fondo y
-  una forma consistentes para los tres controles.
-- Se añaden etiquetas de prueba a estos botones para detectar
-  solapamientos con pruebas instrumentadas Compose.
-- La identidad corporativa PNG y la navegación inferior existentes
-  permanecen sin cambios de comportamiento.
+- The top bar preserves **10 dp** spacing among Language, Donate, and Appearance, **44 dp** touch targets, and consistent backgrounds and shapes.
+- Test tags are added to these buttons to detect overlap in Compose instrumentation tests.
+- Existing PNG branding and bottom navigation remain behaviorally unchanged.
 
-### Entrega
+### Delivery
 
 - Android: `versionName 3.5.1`, `versionCode 10`.
-- Web: versión `3.5.1`; se amplía `npm run check` para incluir
-  el archivo de internacionalización.
-- Script `scripts/build-termux.sh`: ejecuta pruebas unitarias,
-  compila, comprueba que el APK no esté vacío y lo copia a
-  `~/storage/downloads/Reqestra-3.5.1-debug.apk`.
-- Pruebas web para verificar tamaño del SVG, flujo de donaciones,
-  soporte de temas, etiquetas accesibles y traducciones.
-- Pruebas instrumentadas Android para constatar que los controles
-  Idioma, Donar y Apariencia están visibles y no se superponen.
+- Web: version `3.5.1`; `npm run check` also checks the internationalization file.
+- `scripts/build-termux.sh` runs unit tests, builds the project, checks that the APK is nonempty, and copies it to `~/storage/downloads/Reqestra-3.5.1-debug.apk`.
+- Web tests check SVG dimensions, donation flow, theme support, accessible labels, and translations.
+- Android instrumentation tests check that Language, Donate, and Appearance controls are visible and do not overlap.
 
-## Cómo compilar en Termux
+## Building in Termux
 
 ```bash
 termux-setup-storage
@@ -57,27 +38,15 @@ cd ..
 bash scripts/build-termux.sh --open
 ```
 
-**Advertencia importante sobre instalación:** el APK de depuración usa
-`applicationId=com.imr.reqestra.debug`, mientras que la versión
-de producción utiliza `com.imr.reqestra`. Por ello el debug
-**no reemplaza una instalación release** ni recupera sus datos.
-Actualizar release sin pérdida requiere el mismo application ID y
-la misma clave de firma del APK existente; no desinstales la versión
-anterior para «forzar» la instalación.
+**Important installation warning:** the debug APK uses `applicationId=com.imr.reqestra.debug`, while the production app uses `com.imr.reqestra`. Therefore, a debug build **cannot replace an installed release build** or recover its data. Updating a release without data loss requires the same application ID and signing key. Do not uninstall the previous version just to force installation.
 
-## Comprobaciones recomendadas antes de distribuir
+## Recommended checks before distribution
 
-1. Revisar las barras superiores y el menú de donaciones en Web a
-   **320, 360, 390, 480, 750, 1024 y 1440 px**.
-2. Repetir en modo claro y oscuro, en los seis idiomas.
-3. Comprobar el contraste y el orden del foco por teclado y TalkBack.
-4. Confirmar que el botón de donaciones lleva a la sección informativa y
-   que el enlace final abre `www.paypal.com` con el beneficiario correcto.
-5. Validar Android en pantallas reducidas, con fuentes aumentadas
-   y ambas apariencias.
-6. Ejecutar pruebas y compilación completas en Termux o en un runner de CI.
+1. Inspect the web top bars and donation menu at **320, 360, 390, 480, 750, 1024, and 1440 px**.
+2. Repeat with both themes and all six languages.
+3. Verify contrast, keyboard focus order, and TalkBack.
+4. Confirm that Donate leads to the information screen and that the final link opens `www.paypal.com` with the correct beneficiary.
+5. Test Android on narrow screens, with larger fonts and both themes.
+6. Run all tests and builds in Termux or a CI runner.
 
-**Limitaciones conocidas:** GitHub Actions había fallado previamente
-antes de asignar un runner. Las pruebas de código no sustituyen la
-verificación visual en dispositivos físicos. La identidad del
-beneficiario de PayPal debe comprobarla el propietario de la cuenta.
+**Known limitations:** GitHub Actions previously failed before runner assignment. Code tests do not replace visual verification on physical devices. The account owner must verify the PayPal beneficiary's identity.
