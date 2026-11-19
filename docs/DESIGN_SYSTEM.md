@@ -1,4 +1,4 @@
-# Reqestra 3.1 — sistema visual
+# Reqestra 3.5.1 — sistema visual
 
 ## Objetivo
 
@@ -41,6 +41,15 @@ GET y HEAD usan azul; POST, verde; PUT/PATCH, ámbar; DELETE, rojo. Los códigos
 - CodeEditor: fondo suave, monoespaciado legible y borde verde al enfocar.
 - ReqestraApp: barra superior con marca, navegación con selección destacada.
 - WorkspaceScreen: botón principal de enviar visible y resumen HTTP mejorado.
+
+## Menús desplegables y selección (revisión 3.5.1)
+
+- Los menús de método HTTP, tipo de cuerpo, entorno y colección de pruebas fijan `containerColor = MaterialTheme.colorScheme.surface` y texto `onSurface` en ambos temas. La descripción secundaria del método utiliza `onSurfaceVariant`.
+- El menú de idioma ya utiliza `surface` / `onSurface`, y la opción seleccionada `primaryContainer` / `onPrimaryContainer`.
+- El panel inferior **Más** utiliza `background` / `onBackground` y conserva su estilo de tarjetas.
+- Evitar fondos transparentes en menús emergentes, colores hexadecimales en elementos de menú o texto heredado de un contexto de contraste diferente.
+- Para cada botón que abre un menú, comprobar apertura, desplazamiento, selección, cierre y legibilidad en claro y oscuro, incluido tamaño de fuente aumentado.
+- La interfaz web utiliza sus propios tokens CSS; no se deben trasladar valores de Compose directamente al navegador.
 
 ## Verificación
 
