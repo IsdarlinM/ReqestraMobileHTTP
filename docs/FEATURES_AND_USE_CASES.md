@@ -1,130 +1,130 @@
-# Reqestra 3.3 — Manual de funcionalidades y casos de uso
+# Reqestra 3.3 — Features and Use Cases
 
-**Estado:** cliente Android nativo (Kotlin/Jetpack Compose) y cliente web instalable (HTML/CSS/JavaScript). Ambos comparten la finalidad de construir, enviar, inspeccionar y probar solicitudes HTTP contra sistemas bajo autorización. No son un proxy de interceptación, un navegador sin restricciones, un motor de bytes TCP ni un escáner masivo.
+**Status:** Native Android client (Kotlin/Jetpack Compose) and installable web client (HTML/CSS/JavaScript). Both let users compose, send, inspect, and test HTTP requests against authorized systems. Neither is an interception proxy, an unrestricted browser, a raw TCP-byte engine, or a mass scanner.
 
-## Índice
+## Contents
 
-1. [Correspondencia Android / Web](#1-correspondencia-android--web)
-2. [Navegación y pantallas](#2-navegación-y-pantallas)
-3. [Constructor HTTP y parametrización](#3-constructor-http-y-parametrización)
-4. [Sesiones, secretos y persistencia](#4-sesiones-secretos-y-persistencia)
-5. [Colecciones, importaciones e historial](#5-colecciones-importaciones-e-historial)
-6. [Pruebas automatizadas](#6-pruebas-automatizadas)
-7. [Exploración de rutas y parámetros](#7-exploración-de-rutas-y-parámetros)
-8. [Inspector y vista previa](#8-inspector-y-vista-previa)
-9. [Donaciones con PayPal](#9-donaciones-con-paypal)
-10. [Casos de uso paso a paso](#10-casos-de-uso-paso-a-paso)
-11. [Límites conocidos y funcionalidades futuras](#11-límites-conocidos-y-funcionalidades-futuras)
+1. [Android / Web feature parity](#1-android--web-feature-parity)
+2. [Navigation and screens](#2-navigation-and-screens)
+3. [HTTP request builder and parameterization](#3-http-request-builder-and-parameterization)
+4. [Sessions, secrets, and persistence](#4-sessions-secrets-and-persistence)
+5. [Collections, imports, and history](#5-collections-imports-and-history)
+6. [Automated tests](#6-automated-tests)
+7. [Path and parameter discovery](#7-path-and-parameter-discovery)
+8. [Inspector and preview](#8-inspector-and-preview)
+9. [PayPal donations](#9-paypal-donations)
+10. [Step-by-step use cases](#10-step-by-step-use-cases)
+11. [Known limitations and future features](#11-known-limitations-and-future-features)
 
-## 1. Correspondencia Android / Web
+## 1. Android / Web feature parity
 
-| Capacidad | Android 3.3 | Web directo | Web gateway privado |
+| Capability | Android 3.3 | Direct web | Private web gateway |
 | --- | --- | --- | --- |
-| GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS | Sí | Sí, sujeto a Fetch/CORS | Sí, con allowlist |
-| Método HTTP personalizado | Sí | Condicionado al navegador | No, whitelist de siete métodos |
-| Query estructurada, repetida y codificada | Sí | Sí | Sí |
-| Variables en URL/headers/query/cookies/body | Sí | Sí | Sí |
-| Content-Type editable | Sí | Sí, sujeto a CORS | Sí |
-| Headers arbitrarios permitidos | Semántica OkHttp | Restringidos por navegador | Headers permitidos por Node, sin framing ni Host |
-| Header Host personalizado | Android | No | No |
-| Cookies manuales | Sí | No | Sí, en petición |
-| Cookies de sesión persistentes | Keystore | Políticas del navegador; no gestionables por JavaScript | No hay jar HTTP persistente automático |
-| Headers de sesión por origen | Sí | Sí; persistencia web cifrada bajo contraseña | Sí |
-| Redirecciones | Configurables y controladas por cliente | Fetch, con restricciones/opacidad | No se siguen |
-| Timeout/cancelación | Sí | Sí | Sí |
-| HTTP sin TLS de laboratorio | Opt-in + config Android | Depende de origen, mixed content y navegador | Opt-in + allowlist |
-| Preferencia HTTP/1.1 | Sí | No | No configurable |
-| Cuerpos RAW/JSON/HTML/XML/Form/GraphQL/Base64 | Sí | Sí | Sí |
-| Inspector de status/headers/body | Sí | Solo headers expuestos por CORS | Headers de respuesta transmitidos por gateway |
-| Vista previa HTML aislada | WebView sin JavaScript ni red | Iframe con sandbox/CSP | La misma vista |
-| Colecciones locales, 120 peticiones | Sí | Sí | Sí |
-| Entornos locales, 12 | Sí | Sí | Sí |
-| Importación OpenAPI 3 JSON, 50 operaciones | Sí | Sí | Sí |
-| Importación cURL | Sí | Subconjunto simple | Subconjunto simple |
-| cURL redactado | Sí | Sí | Sí |
-| Pruebas secuenciales, 20 por colección | Sí | Sí | Sí |
-| Exploración, máximo 24 peticiones a 1/segundo | Sí | Sí, sujeto a CORS | Sí, solo allowlist |
-| GET/HEAD/OPTIONS y métodos mutantes opt-in | Sí | Sí | Sí |
-| Historial local redactado, 50 | Sí | Sí | Sí |
-| Almacenamiento confidencial | Android Keystore/AES-GCM | AES-GCM WebCrypto, PBKDF2 con contraseña | En navegador; gateway no almacena |
-| Pago externo PayPal voluntario | Sí, configurable | Sí, configurable | Igual que web |
-| Sincronización automática móvil/web | No | No | No |
+| GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS | Yes | Yes, subject to Fetch/CORS | Yes, with allowlist |
+| Custom HTTP method | Yes | Browser-dependent | No, seven-method allowlist |
+| Structured, repeated, encoded query | Yes | Yes | Yes |
+| Variables in URL/headers/query/cookies/body | Yes | Yes | Yes |
+| Editable Content-Type | Yes | Yes, subject to CORS | Yes |
+| Allowed arbitrary headers | OkHttp semantics | Browser restrictions | Node-permitted headers; no framing or Host |
+| Custom Host header | Android only | No | No |
+| Manual cookies | Yes | No | Yes, per request |
+| Persistent session cookies | Keystore | Browser policies; not managed by JavaScript | No automatic persistent HTTP cookie jar |
+| Origin-scoped session headers | Yes | Yes, encrypted password-based web persistence | Yes |
+| Redirects | Client-configured and controlled | Fetch, with restrictions/opaque results | Not followed |
+| Timeout/cancellation | Yes | Yes | Yes |
+| Laboratory HTTP without TLS | Opt-in + Android configuration | Depends on origin, mixed content, browser | Opt-in + allowlist |
+| Prefer HTTP/1.1 | Yes | No | Not configurable |
+| RAW/JSON/HTML/XML/Form/GraphQL/Base64 bodies | Yes | Yes | Yes |
+| Status/headers/body inspector | Yes | Headers exposed by CORS only | Response headers relayed by gateway |
+| Isolated HTML preview | WebView without JavaScript or network | Sandbox/CSP iframe | Same preview |
+| Local collections, up to 120 requests | Yes | Yes | Yes |
+| Up to 12 local environments | Yes | Yes | Yes |
+| OpenAPI 3 JSON import, up to 50 operations | Yes | Yes | Yes |
+| cURL import | Yes | Simple subset | Simple subset |
+| Redacted cURL export | Yes | Yes | Yes |
+| Sequential tests, up to 20 per collection | Yes | Yes | Yes |
+| Discovery, up to 24 requests at one per second | Yes | Yes, subject to CORS | Yes, allowlisted only |
+| GET/HEAD/OPTIONS with state-changing methods opt-in | Yes | Yes | Yes |
+| Redacted local history, up to 50 entries | Yes | Yes | Yes |
+| Confidential storage | Android Keystore/AES-GCM | WebCrypto AES-GCM with PBKDF2 password | Browser-based; gateway stores nothing |
+| Voluntary external PayPal donation | Yes, configurable | Yes, configurable | Same as web |
+| Automatic mobile/web synchronization | No | No | No |
 
-**Importante:** la versión web proporciona el mismo conjunto de pantallas y los flujos centrales; no puede reproducir íntegramente algunas capacidades de OkHttp por restricciones del navegador. El gateway privado cubre CORS y cookies manuales para los orígenes que configures, pero **no** equivale a un proxy abierto ni a un interceptor de bajo nivel.
+**Important:** The web client covers the same main screens and workflows, but browser restrictions prevent full parity with OkHttp. The private gateway can address CORS and manual-cookie restrictions for explicitly configured origins; it is **not** an open proxy or low-level interceptor.
 
-## 2. Navegación y pantallas
+## 2. Navigation and screens
 
-### Estudio
+### Studio
 
-Editor de URL, método, query, headers, cookies, tipo de cuerpo, datos, timeout y redirecciones. Botones de enviar, cancelar, formatear JSON, importar cURL y copiar cURL redactado. Presenta un resumen de la última respuesta. En la web, el usuario elige motor directo o gateway privado.
+Editors for URL, method, query, headers, cookies, body type, body content, timeout, and redirects. Actions include Send, Cancel, Format JSON, Import cURL, and Copy Redacted cURL. The most recent response is summarized on screen. The web client lets users choose direct Fetch or the private gateway.
 
-### Colecciones
+### Collections
 
-Guardar una solicitud con nombre y colección; cargarla, eliminarla, importar operaciones OpenAPI y administrar entornos y variables. Los datos de los dos clientes **no** se sincronizan automáticamente.
+Save named requests into collections, load and delete them, import OpenAPI operations, and manage environments and variables. Data from the two clients is **not** synchronized automatically.
 
-### Pruebas
+### Tests
 
-Escoger colección, código HTTP esperado y máximo de latencia. Ejecutar una por una las solicitudes guardadas, mostrando PASS/FAIL y el error de red si existe.
+Choose a collection, expected HTTP status, and maximum latency. Execute stored requests one by one, displaying PASS/FAIL and any network errors.
 
-### Explorar
+### Explore
 
-Candidatos de rutas absolutas, nombres de parámetros de consulta, sugerencias pasivas de la última respuesta, selección de métodos HTTP y confirmación de autorización. Presenta el resultado individual por intento.
+Specify candidate absolute paths, query parameter names, passive suggestions from the last response, HTTP methods, and an explicit authorization confirmation. Individual attempts have separate results.
 
-### Historial
+### History
 
-Método, URL con parámetros redactados, status, duración y fecha. Límite de 50 entradas. La URL redactada puede requerir editar tokens o parámetros al reutilizar.
+Method, URL with sensitive query values redacted, status, duration, and timestamp. Maximum 50 entries. Redacted URLs may require restoring tokens or parameter values before reuse.
 
 ### Inspector
 
-Petición preparada, status, headers disponibles, protocolo reportado, duración, cuerpo y marcador de truncamiento. No es un analizador de tráfico de otras apps.
+Prepared request, status, available headers, reported protocol, duration, body, and truncation marker. Not a traffic analyzer for other applications.
 
-### Vista previa
+### Preview
 
-Android usa WebView aislada. Web usa iframe con sandbox y CSP restrictiva en modo HTML, o texto monoespaciado en otros modos. No representa el contenido como un navegador de Internet normal.
+Android uses an isolated WebView. The web client uses a sandboxed iframe with restrictive CSP for HTML and a monospace text view for other types. Neither behaves as an unrestricted Internet browser.
 
-### Sesiones
+### Sessions
 
-Android: sin sesión, temporal en memoria o persistente cifrada, con cookies/headers por origen. Web: sin sesión, memoria o persistente para **headers** cifrados; cookies gestionadas por el navegador según CORS y sus políticas. El gateway no mantiene jar de cookies automáticamente.
+Android: disabled, temporary in-memory, or encrypted persistent sessions with cookies and headers scoped to an origin. Web: disabled, in-memory, or encrypted persistent **headers**; browser cookies remain subject to CORS and browser policies. The gateway has no automatic cookie jar.
 
-### Extensiones
+### Extensions
 
-Inventario de funciones integradas y previstas; no se descargan ni ejecutan plugins de terceros.
+Catalog of built-in and planned features; third-party plugins are not downloaded or executed.
 
-### Donaciones
+### Donations
 
-Acceso voluntario a PayPal desde la pantalla Apoyar proyecto (Android: menú de herramientas; Web: Donar / Ayuda).
+Voluntary PayPal access from **Support Project** (Android tools menu; web Donate / Support).
 
-## 3. Constructor HTTP y parametrización
+## 3. HTTP request builder and parameterization
 
-### 3.1 URL completa
+### 3.1 Complete URL
 
-El cliente acepta una URL HTTP o HTTPS absoluta con host. Se puede incluir esquema, puerto, ruta y query. Se rechazan credenciales embebidas en la URL y fragmentos. HTTP sin cifrar requiere activación de laboratorio y puede seguir bloqueado por Android o el navegador.
+The client accepts absolute HTTP or HTTPS URLs with a host, including scheme, port, path, and query. Credentials embedded in URLs and URL fragments are rejected. Plain HTTP requires laboratory opt-in and can still be blocked by Android or the browser.
 
-Ejemplo:
+Example:
 
     https://api.example.com:8443/v1/users?page=1
 
-### 3.2 Métodos
+### 3.2 Methods
 
-GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE; Android permite además método custom. Los cuerpos GET y HEAD se rechazan para evitar ambigüedad. POST/PUT/PATCH pueden enviar un cuerpo vacío. El motor web local admite solo los siete métodos estándar mencionados.
+GET, HEAD, OPTIONS, POST, PUT, PATCH, and DELETE; Android also supports custom methods. GET and HEAD bodies are rejected to avoid ambiguity. POST/PUT/PATCH can send an empty body. The local web engine supports only the seven standard methods listed.
 
-### 3.3 Parámetros Query estructurados
+### 3.3 Structured query parameters
 
-Escribe una pareja por línea. Se añaden a la query existente y cada valor se codifica; pueden existir nombres repetidos.
+Enter one name/value pair per line. New parameters are appended to the existing query, and each value is encoded. Duplicate names are allowed.
 
     page=2
     filter={{searchTerm}}
     tag=red
     tag=blue
 
-Límite: 40 entradas estructuradas por solicitud. Las variables se sustituyen antes de construir la URL.
+Limit: 40 structured entries per request. Variables are resolved before URL construction.
 
-### 3.4 Variables por entorno
+### 3.4 Environment variables
 
-Se crean en Colecciones → Entornos; el nombre usa letras, números y guión bajo y empieza por letra. La sintaxis es doble llave. Se expanden URL, Query, headers, cookies, Content-Type y body.
+Create variables under Collections → Environments. Names use letters, digits, and underscores, starting with a letter. References use double braces. Variables expand in URL, Query, headers, cookies, Content-Type, and body.
 
     baseUrl = https://api.example.com
-    token = [valor privado]
+    token = [private value]
     searchTerm = developer
 
 URL:
@@ -141,222 +141,222 @@ Body:
 
     {"search":"{{searchTerm}}"}
 
-Si falta una variable, la solicitud no se envía. No hay evaluación de expresiones ni acceso a variables de entorno del sistema.
+Requests with missing variables are not sent. Variables are not executable expressions and cannot access system environment variables.
 
-### 3.5 Headers y precedencia
+### 3.5 Headers and precedence
 
-Se escriben con el formato Nombre: Valor. Android combina headers de sesión del origen con los específicos; estos últimos prevalecen. En web se respeta esa precedencia, pero no todos los headers pueden ser establecidos desde JavaScript. Los campos Connection/Content-Length/Transfer-Encoding/Upgrade/TE se reservan al motor. El motor web gateway también reserva Host.
+Use `Name: Value` syntax. Android combines origin-scoped session headers with request-specific headers; request-specific values take precedence. The web client follows this precedence but cannot set every header in JavaScript. Connection/Content-Length/Transfer-Encoding/Upgrade/TE are reserved for the transport engine. The web gateway also reserves Host.
 
 ### 3.6 Cookies
 
-Android administra cookies de sesión con ámbito de dominio, ruta, expiración y Secure. Los valores del editor pueden prevalecer sobre la sesión.
+Android manages session cookies according to domain, path, expiration, and Secure. Explicit editor values can override session cookies.
 
-En web directo, JavaScript no puede imponer el header Cookie ni leer cookies HttpOnly; el usuario puede escoger un modo que permite enviar cookies que gestione el navegador. El gateway permite enviar cookies manuales declaradas en el editor, pero no mantiene automáticamente una jar de cookies de respuestas previas.
+In direct browser mode, JavaScript cannot set the Cookie header or read HttpOnly cookies. Users may enable browser-managed cookie sending when permitted. The gateway supports manually entered cookies on each request but does not automatically keep cookies from earlier responses.
 
-### 3.7 Tipos de cuerpo
+### 3.7 Body types
 
-Sin cuerpo, Raw, JSON, HTML, XML, application/x-www-form-urlencoded, GraphQL y binario como Base64. Content-Type es editable. El tamaño máximo de cuerpo enviado es 5 MiB y el máximo recibido para inspección es 4 MiB. En la web se usa UTF-8 para cuerpos de texto; el modo Base64 se decodifica a bytes.
+No body, Raw, JSON, HTML, XML, application/x-www-form-urlencoded, GraphQL, and binary data encoded as Base64. Content-Type is editable. Maximum outgoing body: 5 MiB; maximum inspected response: 4 MiB. The web client uses UTF-8 for text bodies and decodes Base64 into bytes.
 
-### 3.8 Otras opciones
+### 3.8 Other settings
 
-Timeout 1-120 segundos, cancelación de solicitud y seguimiento opcional de redirecciones. La configuración de HTTP/1.1 se respeta solo en Android. Los navegadores pueden presentar respuestas de redirección como opaqueredirect si no se permite seguirlas.
+Timeouts from 1 to 120 seconds, request cancellation, and optional redirect following. HTTP/1.1 preference applies only to Android. Browsers may return `opaqueredirect` for redirects that are not followed.
 
-### 3.9 Redacción
+### 3.9 Redaction
 
-Los headers sensibles y los valores de query se redactan al registrar resultados y compartir cURL; un cuerpo puede contener secretos y **no se considera automáticamente redactado al mostrarlo en el Inspector**. No compartas manualmente cuerpos sensibles.
+Sensitive headers and query values are redacted in recorded results and shared cURL. A response body may contain secrets and **is not automatically redacted when shown in Inspector**. Do not manually share sensitive response bodies.
 
-## 4. Sesiones, secretos y persistencia
+## 4. Sessions, secrets, and persistence
 
 ### Android
 
-Los datos de colecciones, entornos y sesiones persistentes se cifran con AES-GCM y claves protegidas por Android Keystore. No se exportan automáticamente; backup de datos internos deshabilitado. Sin sesión no se persisten cookies. Los headers de sesión se aíslan por origen.
+Collections, environments, and persistent sessions are encrypted with AES-GCM and Android Keystore-protected keys. They are not exported automatically; app-data backup is disabled. No-session mode does not persist cookies. Session headers are isolated by origin.
 
 ### Web
 
-El espacio web comienza **temporal**. Crear un espacio cifrado requiere una contraseña de al menos diez caracteres. El navegador deriva una clave mediante PBKDF2-SHA256 (260 000 iteraciones) y guarda datos cifrados con AES-256-GCM en localStorage. La contraseña y la clave de descifrado se mantienen solo en memoria de la pestaña. Cuando se cierra o se bloquea, hay que volver a desbloquear.
+The web workspace starts in **temporary** mode. Creating an encrypted vault requires a password of at least ten characters. The browser derives a key using PBKDF2-SHA256 (260,000 iterations) and saves AES-256-GCM ciphertext in localStorage. The password and decryption key remain in tab memory and must be supplied again after locking or closing.
 
-Se guardan cifrados: solicitudes, variables, headers persistentes, borrador y registro redactado de historial. No se guardan respuestas completas. Los respaldos son archivos JSON **cifrados**, no contienen el texto plano de las variables.
+Encrypted content includes saved requests, variables, persistent headers, the current draft, and redacted history. Full responses are not stored. Backup JSON files are **encrypted** and do not expose plaintext variables.
 
-**No hay recuperación de contraseña, sincronización cloud, cuentas de usuario ni compartición automática entre dispositivos.** La protección depende también del navegador y del equipo; una extensión maliciosa, XSS o malware con acceso a la sesión desbloqueada pueden leer datos en memoria.
+**There is no password recovery, cloud synchronization, user-account system, or automatic sharing between devices.** Protection also relies on a trustworthy browser and device; malicious extensions, XSS, or malware with access to an unlocked session can read in-memory data.
 
-## 5. Colecciones, importaciones e historial
+## 5. Collections, imports, and history
 
-- Máximo 120 peticiones guardadas y 12 entornos.
-- Guardar una petición almacena la plantilla sin resolver variables; el entorno activo determina sus valores al enviar.
-- Se importan OpenAPI 3.x JSON con base HTTP(S) absoluta y hasta 50 operaciones por importación; YAML, referencias remotas y autenticación OpenAPI avanzada no se resuelven.
-- El importador cURL de Android admite un subconjunto de opciones POSIX; el web importa un subconjunto simple y no ejecuta comandos de shell.
-- El exportador cURL web resuelve las variables y redacta los valores de query, headers sensibles y body. No se exportan credenciales.
-- Historial local de hasta 50 registros por cliente, sin cuerpos ni secretos.
+- Up to 120 saved requests and 12 environments.
+- Saved requests retain unexpanded templates; the active environment provides values at send time.
+- Import OpenAPI 3.x JSON with an absolute HTTP(S) base URL and up to 50 operations per import; YAML, remote references, and advanced OpenAPI authentication are unsupported.
+- Android's cURL importer supports a subset of POSIX options; the web importer handles a simpler subset without executing shell commands.
+- The web cURL exporter resolves variables and redacts query values, sensitive headers, and bodies. Credentials are not exported.
+- Up to 50 redacted local history entries per client, with no bodies or secrets.
 
-## 6. Pruebas automatizadas
+## 6. Automated tests
 
-Una colección de 1 a 20 peticiones puede ejecutarse manualmente de forma **secuencial**, con un intervalo de un segundo entre solicitudes. El usuario define status esperado (100-599) y máximo de latencia (1-120000 ms). Cada resultado incluye status, duración, verificaciones y errores. Una petición fallida no bloquea las siguientes, salvo cancelación.
+A collection of 1–20 requests can be run manually and **sequentially**, with a one-second gap between requests. The user sets an expected status (100–599) and maximum latency (1–120,000 ms). Every result includes status, duration, assertions, and errors. An unsuccessful request does not block later requests unless execution is cancelled.
 
-La ejecución no limita las operaciones a métodos seguros; asegúrate de que no creará, actualizará o borrará datos salvo que esa sea tu intención explícita.
+The runner does not limit collection operations to safe methods. Ensure tests do not create, update, or delete data unless explicitly intended.
 
-## 7. Exploración de rutas y parámetros
+## 7. Path and parameter discovery
 
-1. Configura en Estudio una URL de **origen autorizado** y, opcionalmente, variables y headers.
-2. En Explorar escribe hasta ocho rutas absolutas, como /health o /api/v1.
-3. Añade hasta ocho nombres de parámetros candidatos, como include, filter o page.
-4. Selecciona GET, HEAD u OPTIONS. Para POST/PUT/PATCH/DELETE activa el control adicional de métodos mutantes.
-5. Confirma tener autorización sobre el origen y acepta la ejecución.
-6. Revisa cada intento: método, ruta, status, duración, tamaño y, si existe, header Allow.
+1. Set a URL from an **authorized origin** in Studio, optionally with variables and headers.
+2. In Explore, enter up to eight absolute paths such as `/health` or `/api/v1`.
+3. Add up to eight candidate parameter names such as `include`, `filter`, or `page`.
+4. Select GET, HEAD, or OPTIONS. To use POST/PUT/PATCH/DELETE, enable the extra control for state-changing methods.
+5. Confirm that you are authorized for the origin and approve execution.
+6. Review each attempt: method, path, status, duration, response size, and Allow header when present.
 
-Hay como máximo **24 solicitudes** por ejecución, **1 por segundo**, con timeout acotado. Se conserva el esquema, host y puerto; no se admiten rutas con secuencias de traversal ni destinos ajenos y no se siguen redirecciones durante el descubrimiento.
+A run is capped at **24 requests**, **one per second**, with bounded timeouts. Scheme, host, and port are preserved; path traversal sequences and off-origin destinations are rejected. Discovery does not follow redirects.
 
-### Pistas pasivas
+### Passive hints
 
-La última respuesta puede contener enlaces HTML, valores JSON href/url/path/endpoint o headers Link. Se muestran candidatos del mismo origen; agregar una pista al formulario **no envía tráfico por sí solo**.
+The last response may contain HTML links, JSON href/url/path/endpoint values, or Link headers. Same-origin candidates are displayed; adding a hint to the form **does not send traffic**.
 
-### Parámetros candidatos u ocultos
+### Candidate or hidden parameters
 
-Para cada nombre propuesto se compara status y tamaño de la respuesta con el baseline sin el parámetro añadido. Una diferencia es solo una **pista heurística**: contenido dinámico, errores, CDN o parámetros ignorados pueden producir variaciones. No se realizan fuzzing masivo, recursión, subdominios ni ataque contra autenticación.
+For each proposed parameter name, status and response length are compared with a baseline request lacking that parameter. A difference is merely a **heuristic hint**: dynamic content, errors, CDNs, and ignored parameters may produce variations. There is no mass fuzzing, recursion, subdomain discovery, or authentication attack.
 
-## 8. Inspector y vista previa
+## 8. Inspector and preview
 
-Se inspeccionan datos de la solicitud preparada, status, protocolo disponible, tiempo, headers y un cuerpo truncado a 4 MiB. En web los headers expuestos dependen de CORS. El preview HTML usa sandbox sin permisos y CSP que bloquea scripts y recursos remotos; no sirve para validar el comportamiento de páginas externas completas.
+The inspector displays the prepared request, status, available protocol, duration, headers, and a response body truncated at 4 MiB. On the web, available headers depend on CORS. HTML preview runs in a permissionless sandbox with CSP blocking scripts and remote resources; it is not designed to validate complete third-party web pages.
 
-## 9. Donaciones con PayPal
+## 9. PayPal donations
 
-PayPal aloja la página de contribución y procesa el pago. La app sólo genera una URL fija a paypal.com con identificador público de botón configurado por el propietario. No hay formularios de tarjeta, backend de cobro, webhooks de transacción, recibos ni almacenamiento de datos financieros de PayPal en Reqestra. El botón permanece desactivado cuando falta la configuración.
+PayPal hosts the contribution page and processes the payment. The app only constructs a fixed paypal.com URL using a public hosted-button ID provided by the owner. Reqestra has no card forms, payment backend, transaction webhooks, receipts, or PayPal financial-data storage. The button is disabled without configuration.
 
-**La donación es siempre opcional, 100 % voluntaria y no concede funciones, insignias ni beneficios digitales.** Las políticas de Google Play y los requisitos de PayPal deben revisarse antes de publicar la app (véase docs/PAYPAL_DONATIONS.md).
+**Donations are always optional, entirely voluntary, and do not grant features, badges, or digital benefits.** Review Google Play policies and PayPal requirements before publication (see [PayPal donations](PAYPAL_DONATIONS.md)).
 
-## 10. Casos de uso paso a paso
+## 10. Step-by-step use cases
 
-### UC-01 — Enviar un GET simple
+### UC-01 — Send a simple GET
 
-- Actor: desarrollador.
-- Preparación: API propia o de prueba que permita GET.
-- Acción: Estudio → URL completa → GET → Enviar petición.
-- Resultado esperado: status, duración y cuerpo visible en resumen e Inspector.
-- Fallos: TLS, DNS, bloqueo CORS, URL inválida o timeout.
+- Actor: developer.
+- Prerequisite: own or test API permitting GET.
+- Action: Studio → full URL → GET → Send Request.
+- Expected: status, duration, and body visible in the summary and Inspector.
+- Possible failures: TLS, DNS, CORS restriction, invalid URL, or timeout.
 
-### UC-02 — Consultar con token por entorno
+### UC-02 — Use an environment token
 
-- Actor: desarrollador o QA.
-- Acción: Colecciones → crea token; Estudio → Authorization: Bearer {{token}}.
-- Resultado: token insertado en memoria al ejecutar; historial redactado.
-- Seguridad: evita compartir capturas del contenido de respuesta.
+- Actor: developer or QA.
+- Action: Collections → create a token variable; Studio → `Authorization: Bearer {{token}}`.
+- Result: token injected in memory at execution time; redacted history.
+- Security: avoid sharing screenshots of response content.
 
-### UC-03 — Filtrar registros con query
+### UC-03 — Filter records using query parameters
 
-- URL de partida: https://api.example.com/v1/users?active=true.
-- Query: page=2 y filter={{searchTerm}}.
-- Resultado: ambas parejas se agregan sin perder active=true y con escape URL correcto.
+- Starting URL: `https://api.example.com/v1/users?active=true`.
+- Query: `page=2` and `filter={{searchTerm}}`.
+- Result: both pairs added while preserving `active=true` and URL-encoding values correctly.
 
-### UC-04 — Enviar POST JSON a un entorno de pruebas
+### UC-04 — Send JSON POST to a test environment
 
-- Método POST; body JSON; Content-Type application/json.
-- Los datos se envían solo al pulsar Enviar.
-- El usuario verifica si la API crea realmente un recurso; Reqestra no deshace cambios.
+- Method POST; JSON body; Content-Type application/json.
+- Data is sent only when Send is selected.
+- Users must verify whether the API creates a resource; Reqestra does not undo changes.
 
-### UC-05 — Reutilizar una petición en varios entornos
+### UC-05 — Reuse a request across environments
 
-- Guarda plantilla en una colección; crea entornos Local y QA con baseUrl distinto.
-- Cambia entorno y ejecuta la petición guardada.
-- No se copian secretos ni se sincronizan cuentas entre equipos.
+- Save a template in a collection; create Local and QA environments with different `baseUrl` values.
+- Switch environments and run the saved request.
+- Secrets are not automatically copied or synchronized across devices.
 
-### UC-06 — Importar y auditar una colección OpenAPI
+### UC-06 — Import and review an OpenAPI collection
 
-- Pega especificación JSON v3 con servers[0].url HTTP(S) absoluto.
-- Importa; revisa operaciones generadas; ejecuta solo las autorizadas.
-- La importación no resuelve automáticamente refs externos ni esquemas complejos.
+- Paste a v3 JSON specification containing an absolute HTTP(S) `servers[0].url`.
+- Import it, review the generated operations, and execute only authorized ones.
+- The import does not resolve external references or complex schemas automatically.
 
-### UC-07 — Migrar una llamada cURL compatible
+### UC-07 — Migrate a compatible cURL request
 
-- Pega un comando cURL simple en Estudio y pulsa Importar.
-- Comprueba método, URL, headers y body antes de enviar.
-- Rechaza opciones de TLS inseguro y no ejecuta shell.
+- Paste a simple cURL command into Studio and select Import.
+- Check method, URL, headers, and body before sending.
+- Insecure TLS options are rejected; shell commands are not executed.
 
-### UC-08 — Compartir una petición sin secretos
+### UC-08 — Share a request without secrets
 
-- Usa Copiar cURL redactado.
-- Comprueba que la query, el body y los headers confidenciales están ocultos.
-- No sustituyas esto por copiar a mano el Inspector con contenido real.
+- Use Copy Redacted cURL.
+- Verify that query values, body data, and confidential headers are hidden.
+- Do not replace this with a manual copy of Inspector containing real data.
 
-### UC-09 — Validar código HTTP y latencia
+### UC-09 — Check HTTP status and latency
 
-- Guarda 1-20 peticiones en una colección.
-- Indica 200 y límite 2000 ms, por ejemplo.
-- Ejecuta pruebas y revisa PASS/FAIL individualmente.
+- Save 1–20 requests in a collection.
+- For example, set expected status 200 and maximum latency 2,000 ms.
+- Run tests and examine each PASS/FAIL result.
 
-### UC-10 — Enumerar pocas rutas autorizadas
+### UC-10 — Enumerate a few authorized paths
 
-- Escoge URL de API de tu laboratorio.
-- Propón /health y /api/v1, confirma el permiso y ejecuta.
-- Revisa 200/401/403/404/405 manualmente; no concluyas vulnerabilidad sin evidencia.
+- Choose a URL for your own lab API.
+- Propose `/health` and `/api/v1`, confirm authorization, and run.
+- Manually examine 200/401/403/404/405; do not assert vulnerabilities without evidence.
 
-### UC-11 — Revisar un candidato a parámetro desconocido
+### UC-11 — Inspect a candidate unknown parameter
 
-- Introduce include y compara con baseline.
-- Si cambia status o tamaño, revisa el contenido y reproduce manualmente.
-- No se consideran hallazgos confirmados solo por diferir en bytes.
+- Enter `include` and compare with the baseline.
+- If status or size changes, inspect the content and reproduce manually.
+- Byte differences alone are not confirmed findings.
 
-### UC-12 — Comparar métodos HTTP
+### UC-12 — Compare HTTP methods
 
-- Selecciona GET, HEAD y OPTIONS por defecto.
-- Habilita métodos de escritura solo en un ambiente con datos desechables y con confirmación.
-- La cabecera Allow es informativa; el control de autorización debe comprobarse por separado.
+- Use GET, HEAD, and OPTIONS by default.
+- Enable writing methods only in an environment with disposable data and explicit confirmation.
+- The Allow header is informational; authorization must be tested separately.
 
-### UC-13 — Cancelar una petición lenta
+### UC-13 — Cancel a slow request
 
-- Establece timeout dentro de 1-120 segundos.
-- Ejecuta y pulsa Cancelar.
-- El cliente interrumpe la operación actual; el servidor podría haberla procesado ya.
+- Set a timeout within 1–120 seconds.
+- Run and select Cancel.
+- The client interrupts the current operation, but the server may already have processed it.
 
-### UC-14 — Utilizar headers de sesión por origen
+### UC-14 — Use origin-scoped session headers
 
-- En Sesiones configura headers y selecciona memoria o persistente.
-- Envía a la misma URL de origen.
-- No deben reenviarse a un dominio diferente. En Web la persistencia requiere almacén desbloqueado.
+- Configure headers under Sessions and choose memory or persistent mode.
+- Send to the same origin.
+- Headers must not be forwarded to another domain. Web persistence requires an unlocked vault.
 
-### UC-15 — Trabajar sin guardar secretos
+### UC-15 — Work without saving secrets
 
-- Abre Web sin crear un almacén y utiliza el modo temporal.
-- Al recargar, los borradores y secretos temporales se pierden.
-- Usa un espacio cifrado si quieres persistirlos.
+- Open the web client without creating a vault and use temporary mode.
+- Reloading loses temporary drafts and secrets.
+- Create an encrypted vault if you need persistence.
 
-### UC-16 — Recuperar una colección cifrada web
+### UC-16 — Recover an encrypted web collection
 
-- Desbloquea y descarga el respaldo cifrado.
-- En otro navegador importa el archivo y utiliza la misma contraseña.
-- Este flujo no importa automáticamente datos Android Keystore.
+- Unlock the vault and download an encrypted backup.
+- Import the file in another browser using the same password.
+- Android Keystore data is not imported automatically.
 
-### UC-17 — Diagnosticar un fallo de CORS
+### UC-17 — Diagnose a CORS failure
 
-- Envía una petición desde Web directo a una API que no habilita tu origen.
-- Aparece error Fetch/CORS; no lo interpretes como fallo de autenticación.
-- Usa Android o el gateway local con allowlist del origen, si está autorizado.
+- Send a direct web request to an API that does not allow your origin.
+- Fetch/CORS error appears; do not assume authentication failure.
+- Use Android or the allowlisted local gateway if authorized.
 
-### UC-18 — Previsualizar HTML aislado
+### UC-18 — Preview HTML in isolation
 
-- En Estudio elige body HTML y pega una plantilla.
-- Abre Vista previa: se muestra en sandbox sin ejecutar scripts ni cargar recursos remotos.
-- No se usa para navegar websites ajenos.
+- In Studio, choose an HTML body and paste a template.
+- Open Preview: the sandbox renders it without scripts or remote resources.
+- It is not intended for browsing third-party websites.
 
-### UC-19 — Instalar la web como PWA
+### UC-19 — Install the web client as a PWA
 
-- Sirve la carpeta web por localhost o HTTPS.
-- Instálala desde el navegador compatible.
-- La caché sólo conserva la interfaz, no resultados de API ni credenciales.
+- Serve the web folder using localhost or HTTPS.
+- Install it from a compatible browser.
+- The cache stores only the UI shell, not API results or credentials.
 
-### UC-20 — Donar voluntariamente al proyecto
+### UC-20 — Donate voluntarily
 
-- Administrador configura su botón alojado por PayPal.
-- Usuario abre Donar/Ayuda o Apoyar proyecto y decide abrir PayPal.
-- Los pagos ocurren fuera de Reqestra, sin desbloquear privilegios ni funciones.
+- Maintainer configures a hosted PayPal button.
+- User opens Donate/Support or Support Project and chooses whether to visit PayPal.
+- Payment occurs outside Reqestra, without unlocking privileges or features.
 
-## 11. Límites conocidos y funcionalidades futuras
+## 11. Known limitations and future features
 
-- Sin servidor de sincronización, cuentas, permisos multiusuario ni colaboración real-time.
-- Sin proxy de interceptación, sniffing de red, inspector WebSocket, SSE ni generación de tráfico de alto volumen.
-- Web directo sujeto a CORS, cookies HttpOnly, headers prohibidos, restricciones mixed-content y redirecciones opacas.
-- Gateway opcional exclusivo para loopback con allowlist de orígenes, no apto para publicar sin una arquitectura de autenticación adicional.
-- Las donaciones no tienen confirmación de pago dentro de la app ni suscripciones/beneficios.
-- OpenAPI sólo JSON v3, sin YAML ni resolución remota.
-- No hay importación de HAR/Postman completa ni OAuth2 PKCE automatizado.
-- La compilación Android y las pruebas web deben ejecutarse en un entorno con Android SDK/Node; un commit no equivale a un build verificado.
+- No synchronization server, accounts, multiuser permissions, or real-time collaboration.
+- No interception proxy, network sniffing, WebSocket inspector, SSE, or high-volume traffic generator.
+- Direct web mode is subject to CORS, HttpOnly cookies, forbidden headers, mixed-content restrictions, and opaque redirects.
+- Optional gateway is loopback-only with an origin allowlist; it is unsuitable for public deployment without an additional authentication architecture.
+- Donations do not have in-app payment confirmation, subscriptions, or rewards.
+- OpenAPI support is limited to v3 JSON, without YAML or remote reference resolution.
+- No complete HAR/Postman import or automated OAuth2 PKCE.
+- Android builds and web tests require an Android SDK/Node environment; a commit is not a verified build.
 
-Para configuración, véanse **docs/WEB_SETUP.md**, **docs/PAYPAL_DONATIONS.md**, **docs/ARCHITECTURE_AND_SECURITY.md** y **docs/TEST_PLAN.md**.
+For setup and architecture, see [Web setup](WEB_SETUP.md), [PayPal donations](PAYPAL_DONATIONS.md), [Architecture and security](ARCHITECTURE_AND_SECURITY.md), and [Test plan](TEST_PLAN.md).
