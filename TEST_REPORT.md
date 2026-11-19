@@ -1,90 +1,90 @@
 # Reqestra v2.0.0 — Test Report
 
-Fecha de validación: 25 de julio de 2026.
+Validation date: July 25, 2026.
 
-## Comprobaciones ejecutadas en el entorno de entrega
+## Checks performed in the delivery environment
 
-### Núcleo Kotlin puro
+### Pure Kotlin core
 
-Se compiló y ejecutó con `kotlinc` el conjunto formado por modelos, validación, redacción, composición y `CoreValidation.kt`.
+The models, validation, redaction, composition, and `CoreValidation.kt` were compiled and executed with `kotlinc`.
 
-Resultado: **21/21 comprobaciones superadas**.
+Result: **21/21 checks passed**.
 
-Cobertura funcional:
+Functional coverage:
 
-- HTTPS aceptado.
-- HTTP bloqueado por defecto y permitido con opt-in.
-- Credenciales en URL rechazadas.
-- Fragmentos URL rechazados.
-- `Host` editable.
-- Headers de framing bloqueados.
-- Inyección CRLF rechazada.
-- Métodos personalizados válidos e inválidos.
-- Política de cuerpo para GET y POST.
-- Decodificación Base64 y rechazo de Base64 inválido.
-- Parsing y caracteres de cookies.
-- Precedencia de headers y cookies.
-- Redacción de headers y query params sensibles.
-- Timeout fuera de rango rechazado.
+- HTTPS accepted.
+- HTTP blocked by default and allowed with explicit opt-in.
+- URL credentials rejected.
+- URL fragments rejected.
+- Editable `Host` header.
+- Framing headers blocked.
+- CRLF injection rejected.
+- Valid and invalid custom methods.
+- GET and POST body policies.
+- Base64 decoding and rejection of invalid Base64.
+- Cookie parsing and allowed characters.
+- Header and cookie precedence.
+- Redaction of sensitive headers and query parameters.
+- Out-of-range timeouts rejected.
 
-Salida completa: `validation/core-validation.txt`.
+Complete output: `validation/core-validation.txt`.
 
-### Compilación de contratos
+### Contract compilation
 
-Se compiló con `kotlinc` contra stubs estrictamente limitados a las firmas utilizadas:
+Compiled with `kotlinc` against strictly limited stubs corresponding to the interfaces used:
 
-- Motor de red + `CookieJar` + repositorio de sesión: **OK**.
-- Repositorio Android + cifrado + serialización: **OK**.
-- ViewModel + repositorios + motor de red: **OK**.
+- Network engine + `CookieJar` + session repository: **OK**.
+- Android repository + encryption + serialization: **OK**.
+- ViewModel + repositories + network engine: **OK**.
 
-Estas comprobaciones detectan errores Kotlin y discrepancias en las firmas utilizadas, pero no sustituyen una compilación Android real.
+These checks detect Kotlin errors and signature mismatches, but cannot replace a real Android build.
 
-### Validaciones estáticas
+### Static checks
 
-- XML Android bien formado.
-- Paquetes Kotlin coherentes con `com.imr.reqestra`.
-- Imports `Modifier.weight` comprobados.
-- Delimitadores Kotlin/KTS balanceados.
-- Sin referencias activas al nombre o package anterior.
-- Sintaxis del script Linux comprobada con `sh -n`.
-- `WrapperBootstrap.java` compilado con JDK 17.
-- Bootstrap probado contra el JAR oficial de Gradle 8.13.
-- SHA-256 exigido: `81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f`.
-- Integridad final del ZIP comprobada con `unzip -t`.
+- Well-formed Android XML.
+- Kotlin packages consistent with `com.imr.reqestra`.
+- Checked `Modifier.weight` imports.
+- Balanced Kotlin/KTS delimiters.
+- No active references to the previous name or package.
+- Linux script syntax checked with `sh -n`.
+- `WrapperBootstrap.java` compiled with JDK 17.
+- Bootstrap tested against the official Gradle 8.13 JAR.
+- Required SHA-256: `81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f`.
+- Final ZIP integrity verified with `unzip -t`.
 
-## Pruebas Android incluidas
+## Included Android tests
 
 ### Unit tests
 
-- `RequestValidatorTest`: URL, cleartext, Host, framing, custom methods, Base64 y cookies.
+- `RequestValidatorTest`: URL, cleartext, Host, framing, custom methods, Base64, and cookies.
 - `HttpEngineTest`:
-  - Request editado con header/body.
-  - Cookie conservada entre peticiones.
-  - Cookie recibida en un redirect enviada al siguiente salto.
+  - Edited request with headers/body.
+  - Cookie preserved between requests.
+  - Cookie received during a redirect sent on the next hop.
 - `InMemorySessionRepositoryTest`:
-  - Headers aislados por origen.
-  - Modo sin sesión no persiste headers.
+  - Headers isolated by origin.
+  - No-session mode does not persist headers.
 
-### Instrumented test
+### Instrumentation test
 
-- `MainActivityTest`: inicio de la aplicación y renderizado de la pantalla principal.
+- `MainActivityTest`: app startup and main-screen rendering.
 
-## Limitación del entorno
+## Environment limitations
 
-El entorno de entrega no dispone de Android SDK y su terminal no pudo resolver `services.gradle.org`. Por ello no fue posible ejecutar aquí:
+The delivery environment did not have Android SDK, and its terminal could not resolve `services.gradle.org`. Consequently, it could not execute:
 
-- `testDebugUnitTest` mediante Gradle.
+- Gradle `testDebugUnitTest`.
 - Android Lint.
 - `assembleDebug`.
-- Test instrumentado en emulador/dispositivo.
+- Instrumentation tests on an emulator or device.
 
-El intento está registrado en `validation/gradle-attempt.txt`. Ejecuta en Android Studio/SDK 36:
+The attempt is recorded in `validation/gradle-attempt.txt`. Run the following with Android Studio/SDK 36:
 
 ```bash
 ./scripts/verify.sh
 ```
 
-O en Windows:
+Or on Windows:
 
 ```cmd
 scripts\verify.cmd
