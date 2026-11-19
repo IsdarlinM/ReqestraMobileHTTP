@@ -85,9 +85,13 @@ fun AutomationScreen(
                                 maxLines = 2, overflow = TextOverflow.Ellipsis,
                             )
                         }
-                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        DropdownMenu(
+                            expanded = menuOpen,
+                            onDismissRequest = { menuOpen = false },
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ) {
                             collections.forEach { collection ->
-                                DropdownMenuItem(text = { Text(collection, maxLines = 2, overflow = TextOverflow.Ellipsis) }, onClick = {
+                                DropdownMenuItem(text = { Text(collection, color = MaterialTheme.colorScheme.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis) }, onClick = {
                                     chosen = collection
                                     menuOpen = false
                                 })
