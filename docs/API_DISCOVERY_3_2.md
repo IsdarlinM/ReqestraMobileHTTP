@@ -1,60 +1,60 @@
-# Reqestra 3.2.0 — Parametrización y exploración controlada
+# Reqestra 3.2.0 — Parameterization and Controlled API Discovery
 
-## Parámetros, variables y headers
+## Parameters, variables, and headers
 
-En Estudio, introduce una URL completa o una plantilla, por ejemplo:
+In Studio, enter a complete URL or a template, for example:
 
     {{baseUrl}}/v1/users
 
-En Colecciones > Entornos crea las variables `baseUrl` y `token` con sus valores. En la pestaña Query del Estudio escribe parámetros de consulta, uno por línea:
+Under Collections > Environments, create the `baseUrl` and `token` variables and assign their values. In Studio's Query tab, enter one query parameter per line:
 
     page=2
     filter={{filter}}
     expand=roles,permissions
 
-La URL original conserva su query; los parámetros nuevos se añaden en orden y sus valores se codifican (espacios, & y =). Se permiten hasta 40 parámetros estructurados por petición. Se pueden usar nombres duplicados intencionalmente, como tag=x y tag=y.
+The original URL retains its existing query string. New parameters are appended in order, and values are encoded (including spaces, `&`, and `=`). Up to 40 structured parameters are supported per request. Duplicate names such as `tag=x` and `tag=y` are allowed intentionally.
 
-El editor Headers también acepta variables: `Authorization: Bearer {{token}}`, `X-Tenant: {{tenant}}`. Lo mismo se aplica a cookies manuales, body y Content-Type. Las variables se resuelven inmediatamente antes del envío, no al guardar la petición. Las peticiones guardadas se conservan cifradas por Android Keystore.
+The Headers editor also supports variables: `Authorization: Bearer {{token}}` and `X-Tenant: {{tenant}}`. The same applies to manual cookies, the body, and Content-Type. Variables are resolved just before sending, not when saving a request. Saved requests are encrypted using Android Keystore.
 
-Copiar cURL redactado usa la petición resuelta, incluida la query estructurada, pero elimina los valores confidenciales del comando exportado. La importación cURL no ejecuta scripts.
+Copying a redacted cURL command uses the resolved request, including its structured query, but removes confidential values from the exported command. Importing cURL does not execute scripts.
 
-## Explorar API
+## Explore APIs
 
-1. En Estudio configura la URL, el entorno, los headers y los parámetros normales.
-2. Abre Explorar. La URL del Estudio define el origen (esquema, host y puerto) para todo el análisis.
-3. Opcionalmente introduce rutas absolutas, una por línea, como `/health` o `/api/v1`. Hasta 8.
-4. Opcionalmente escribe nombres de parámetros candidatos para la URL actual, por ejemplo `include` o `page`. Hasta 8.
-5. Opcionalmente incorpora pistas pasivas extraídas de la última respuesta (JSON href/url/path/endpoint, enlaces HTML o cabeceras Link). Estas pistas no se ejecutan automáticamente.
-6. Elige los métodos. GET, HEAD y OPTIONS están disponibles por defecto. POST, PUT, PATCH y DELETE requieren habilitación manual expresa.
-7. Confirma autorización para el origen y pulsa Ejecutar. Puedes cancelar en cualquier momento.
+1. In Studio, configure the URL, environment, headers, and normal query parameters.
+2. Open Explore. The Studio URL defines the origin (scheme, host, and port) for the entire analysis.
+3. Optionally enter absolute paths, one per line, such as `/health` or `/api/v1` (maximum 8).
+4. Optionally enter candidate parameter names for the current URL, such as `include` or `page` (maximum 8).
+5. Optionally include passive hints extracted from the last response (JSON href/url/path/endpoint, HTML links, or Link headers). These hints are not requested automatically.
+6. Choose methods. GET, HEAD, and OPTIONS are available by default. POST, PUT, PATCH, and DELETE require explicit manual enablement.
+7. Confirm authorization for the origin and select Run. You can cancel at any time.
 
-La ejecución se limita a 24 peticiones HTTP secuenciales, 1 por segundo, sin seguir redirecciones, sin usar sesiones persistentes y con timeout de hasta 15 segundos por petición. Se conserva el mismo esquema/host/puerto de origen. El cliente reutiliza los headers y cookies introducidos manualmente en Estudio, por lo que solo debes probar servicios donde tengas autorización para utilizar esas credenciales.
+Execution is limited to 24 sequential HTTP requests at one per second, without following redirects, without using persistent sessions, and with a timeout of up to 15 seconds per request. The same scheme, host, and port are retained. The client reuses headers and cookies entered manually in Studio; only test services where you are authorized to use those credentials.
 
-Los resultados muestran estado HTTP, duración aproximada, bytes de respuesta y cabecera Allow si está presente. Para parámetros candidatos compara código y longitud de la respuesta con una petición de referencia. Una diferencia es una **observación heurística**, no prueba que el parámetro sea oculto, haya fuga de datos, ni que exista una vulnerabilidad.
+Results show HTTP status, approximate duration, response bytes, and the Allow header if present. Candidate parameters are compared with a baseline request by status code and response length. A difference is a **heuristic observation**, not proof of a hidden parameter, data leakage, or a vulnerability.
 
-## Seguridad y límites
+## Security and limits
 
-- Sin listas integradas de fuerza bruta, descubrimiento recursivo, detección de subdominios ni escaneo de redes.
-- El origen se valida antes de cada petición; no se prueban redirecciones a destinos ajenos.
-- No se leen secretos del sistema ni se envían contenidos a servicios externos de análisis.
-- Los métodos que pueden modificar recursos están desactivados por defecto y requieren otra confirmación.
-- El usuario debe verificar los límites de su programa bug bounty, entorno de laboratorio o API propia.
-- Las respuestas pueden ser dinámicas: un cambio de bytes no confirma un parámetro oculto.
-- La selección de métodos no equivale a una prueba completa de controles de autorización; revisar manualmente 401/403/405.
-- El comportamiento 'seguro' de GET/HEAD/OPTIONS depende de implementaciones correctas del servidor.
+- No built-in brute-force wordlists, recursive discovery, subdomain detection, or network scanning.
+- Origins are validated before every request; redirects to unrelated destinations are not tested.
+- No system secrets are read or sent to external analysis services.
+- Potentially state-changing methods are disabled by default and require another confirmation.
+- Users must verify the scope limits of their bug bounty program, lab, or own API.
+- Responses may be dynamic: a byte-count difference does not confirm a hidden parameter.
+- Method selection is not a complete authorization-control test; manually review 401/403/405.
+- The safety of GET/HEAD/OPTIONS depends on correct server implementations.
 
-## Arquitectura
+## Architecture
 
-- `core/variables/RequestParameterizer.kt`: expansión de plantillas y query codificada.
-- `core/discovery/EndpointExplorer.kt`: planificación, restricciones de origen, extracción pasiva y ejecución secuencial.
-- `presentation/discovery/DiscoveryScreen.kt`: interfaz y confirmación de consentimiento.
-- `presentation/MainViewModel.kt`: coordinación y cancelación.
-- `data/workspace/WorkspaceStore.kt`: persistencia del texto de query de colecciones sin alterar los archivos guardados de versiones anteriores.
+- `core/variables/RequestParameterizer.kt`: template expansion and encoded query construction.
+- `core/discovery/EndpointExplorer.kt`: planning, origin restrictions, passive extraction, and sequential execution.
+- `presentation/discovery/DiscoveryScreen.kt`: UI and consent confirmation.
+- `presentation/MainViewModel.kt`: coordination and cancellation.
+- `data/workspace/WorkspaceStore.kt`: persistence of collection query text without changing older saved files.
 
-## Verificar versión
+## Verify the version
 
     git pull --ff-only origin main
     grep 'versionName =' app/build.gradle.kts
     ./gradlew --no-daemon testDebugUnitTest assembleDebug --stacktrace
 
-La compilación no debe declararse aprobada hasta ejecutar Gradle con SDK Android 36 en Termux o Android Studio. El workflow de GitHub Actions en ejecuciones anteriores falló antes de obtener un runner.
+Do not claim a successful build until Gradle completes with Android SDK 36 in Termux or Android Studio. Earlier GitHub Actions runs failed before a runner became available.
